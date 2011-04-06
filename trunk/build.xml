@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<project default="jar" basedir=".">
+
+	<property name="version" value="1.0beta"/>
+	<property name="src.dir" location="src/java"/>
+	<property name="res.dir" location="src/resources"/>
+	<property name="test.dir" location="src/test"/>
+	<property name="bin.dir" location="build/"/>
+	<property name="javadoc.dir" location="docs/api"/>
+
+        <path id="classpath">
+           <fileset dir="lib">
+             <include name="*.jar" />
+           </fileset>
+        </path>
+
+        <path id="testclasspath">
+           <path refid="classpath"/>
+           <pathelement location="${bin.dir}/classes/java" />
+           <pathelement location="${bin.dir}/classes/test" />
+           <pathelement location="${res.dir}"/>
+        </path>
+
+	<!-- Create build directories -->
+	<target name="prepare-directories">
+		<mkdir dir="${bin.dir}/classes/java"/>
+		<mkdir dir="${bin.dir}/classes/test"/>
+		<mkdir dir="${javadoc.dir}"/>
+	</target>
+
+	<!-- Build javadocs -->
+	<target name="javadoc">
+		<javadoc sourcepath="${src.dir}"
+		         destdir="${javadoc.dir}"
+		         author="true"
+		         version="true"
+		         use="true"
+		         windowtitle="lucene-gosen API"
+		         doctitle="lucene-gosen"
+		         source="1.5">
+			<fileset dir="${src.dir}">
+				<include name="**/*.java"/>
+			</fileset>
+		</javadoc>
+	</target>
+
+	<!-- Compile source -->
+	<target name="compile" depends="prepare-directories">
+		<javac srcdir="${src.dir}"
+		       destdir="${bin.dir}/classes/java"
+                       classpathref="classpath"
+		       includes="**/*.java"
+		       debug="true"
+		       encoding="utf-8"
+		       source="1.5"/>
+	</target>
+
+	<!-- Compile source -->
+	<target name="compile-tests" depends="compile">
+		<javac srcdir="${test.dir}"
+		       destdir="${bin.dir}/classes/test"
+                       classpathref="testclasspath"
+		       includes="**/*.java"
+		       debug="true"
+		       encoding="utf-8"
+		       source="1.5"/>
+	</target>
+
+        <!-- run tests -->
+        <target name="test" depends="compile-tests">
+           <junit printsummary="no" haltonfailure="no" maxmemory="512M" forkmode="perBatch">
+              <formatter type="brief" usefile="no"/>
+              <classpath refid="testclasspath"/>
+              <assertions>
+                <enable/>
+              </assertions>
+              <batchtest fork="yes">
+                <fileset dir="src/test" includes="**/Test*.java,**/*Test.java"/>
+              </batchtest>
+           </junit>
+        </target>
+
+	<!-- Create library jar -->
+	<target name="jar" depends="compile,copy-data">
+		<jar jarfile="lucene-gosen-${version}.jar" basedir="${bin.dir}/classes/java"/>
+	</target>
+
+        <!-- copy data files to classpath -->
+        <target name="copy-data">
+          <copy todir="${bin.dir}/classes/java">
+            <fileset dir="${res.dir}"/>
+          </copy>
+        </target>
+
+        <!-- rebuild data files -->
+        <target name="rebuild-data">
+           <sequential>
+           <subant target="compile" inheritall="false" failonerror="true">
+              <fileset dir="testdata/dictionary" includes="build.xml" />
+           </subant>
+           <copy todir="${res.dir}/net/java/sen">
+             <fileset dir="testdata/dictionary" includes="*.sen"/>
+           </copy>
+           </sequential>
+        </target>
+
+	<!-- Clean project -->
+	<target name="clean">
+		<delete dir="${bin.dir}"/>
+		<delete dir="${javadoc.dir}"/>
+		<delete file="gosen-${version}.jar"/>
+	</target>
+
+</project>
+
+
