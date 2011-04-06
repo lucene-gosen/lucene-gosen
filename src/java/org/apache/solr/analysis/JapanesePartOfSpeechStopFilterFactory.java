@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.lucene.analysis.CharArraySet;
+import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.ja.JapanesePartOfSpeechStopFilter;
 import org.apache.solr.common.ResourceLoader;
