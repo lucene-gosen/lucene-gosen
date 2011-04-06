@@ -57,7 +57,8 @@ public final class JapaneseTokenizer extends Tokenizer {
 
   // TODO: make normalization a charfilter
   public JapaneseTokenizer(Reader in) {
-    tagger = new StreamTagger(SenFactory.getStringTagger(), new NormalizeReader(in));
+    super(new NormalizeReader(in));
+    tagger = new StreamTagger(SenFactory.getStringTagger(), this.input);
   }
 
   @Override
@@ -84,8 +85,8 @@ public final class JapaneseTokenizer extends Tokenizer {
   }
 
   @Override
-  public void reset(Reader input) throws IOException {
-    super.reset(input);
-    tagger = new StreamTagger(SenFactory.getStringTagger(), new NormalizeReader(input));
+  public void reset(Reader in) throws IOException {
+    super.reset(new NormalizeReader(in));
+    tagger = new StreamTagger(SenFactory.getStringTagger(), this.input);
   }
 }
