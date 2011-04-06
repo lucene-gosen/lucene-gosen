@@ -1,0 +1,11 @@
+<?xml version='1.0'  encoding='utf-8'?>
+
+<configuration>
+
+  <dictionary-version>1.0</dictionary-version>
+
+  <tokenizer>net.java.sen.tokenizers.ja.JapaneseTokenizer</tokenizer>
+
+  <unknown-pos>未知語</unknown-pos>
+
+</configuration>
