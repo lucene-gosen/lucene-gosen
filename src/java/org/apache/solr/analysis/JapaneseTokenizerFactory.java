@@ -13,8 +13,6 @@ public class JapaneseTokenizerFactory extends BaseTokenizerFactory {
   @Override
   public void init(Map<String,String> args) {
     super.init(args);
-    // force Sen to load its files up front, can be slow
-    SenFactory.getInstance();
   }
 
   @Override
