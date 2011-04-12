@@ -66,10 +66,9 @@ public final class JapaneseTokenizer extends Tokenizer {
   private final PronunciationsAttribute pronunciationsAtt = addAttribute(PronunciationsAttribute.class);
   private final ReadingsAttribute readingsAtt = addAttribute(ReadingsAttribute.class);
 
-  // TODO: make normalization a charfilter
   public JapaneseTokenizer(Reader in) {
-    super(new NormalizeReader(in));
-    tagger = new StreamTagger(SenFactory.getStringTagger(), this.input);
+    super(in);
+    tagger = new StreamTagger(SenFactory.getStringTagger(), in);
   }
 
   @Override
@@ -97,7 +96,7 @@ public final class JapaneseTokenizer extends Tokenizer {
 
   @Override
   public void reset(Reader in) throws IOException {
-    super.reset(new NormalizeReader(in));
-    tagger = new StreamTagger(SenFactory.getStringTagger(), this.input);
+    super.reset(in);
+    tagger = new StreamTagger(SenFactory.getStringTagger(), in);
   }
 }
