@@ -24,6 +24,9 @@ import org.apache.lucene.analysis.BaseTokenStreamTestCase;
 import org.apache.lucene.analysis.util.ReusableAnalyzerBase;
 import org.apache.lucene.analysis.Tokenizer;
 
+/**
+ * Tests for {@link JapaneseTokenizer}
+ */
 public class TestJapaneseTokenizer extends BaseTokenStreamTestCase {
   private Analyzer analyzer = new ReusableAnalyzerBase() {
     @Override
@@ -33,19 +36,43 @@ public class TestJapaneseTokenizer extends BaseTokenStreamTestCase {
     }
   };
   
+  public void testDecomposition1() throws IOException {
+    assertAnalyzesTo(analyzer, "本来は、貧困層の女性や子供に医療保護を提供するために創設された制度である、" +
+                         "アメリカ低所得者医療援助制度が、今日では、その予算の約３分の１を老人に費やしている。",
+     new String[] { "本来", "は", "、", "貧困", "層", "の", "女性", "や", "子供", "に", "医療", "保護", "を",      
+                    "提供", "する", "ため", "に", "創設", "さ", "れ", "た", "制度", "で", "ある", "、", "アメリカ", 
+                    "低", "所得", "者", "医療", "援助", "制度", "が", "、", "今日", "で", "は", "、", "その",
+                    "予算", "の", "約", "３", "分の", "１", "を", "老人", "に", "費やし", "て", "いる", "。" },
+     new int[] { 0, 2, 3, 4, 6, 7,  8, 10, 11, 13, 14, 16, 18, 19, 21, 23, 25, 26, 28, 29, 30, 
+                 31, 33, 34, 36, 37, 41, 42, 44, 45, 47, 49, 51, 52, 53, 55, 56, 57, 58, 60,
+                 62, 63, 64, 65, 67, 68, 69, 71, 72, 75, 76, 78 },
+     new int[] { 2, 3, 4, 6, 7, 8, 10, 11, 13, 14, 16, 18, 19, 21, 23, 25, 26, 28, 29, 30, 31,
+                 33, 34, 36, 37, 41, 42, 44, 45, 47, 49, 51, 52, 53, 55, 56, 57, 58, 60, 62,
+                 63, 64, 65, 67, 68, 69, 71, 72, 75, 76, 78, 79 }
+    );
+  }
+
+  public void testDecomposition2() throws IOException {
+    assertAnalyzesTo(analyzer, "麻薬の密売は根こそぎ絶やさなければならない",
+      new String[] { "麻薬", "の", "密売", "は", "根こそぎ", "絶やさ", "な", "けれ", "ば", "なら", "ない" },
+      new int[] { 0, 2, 3, 5, 6,  10, 13, 14, 16, 17, 19 },
+      new int[] { 2, 3, 5, 6, 10, 13, 14, 16, 17, 19, 21 }
+    );
+  }
+  
+  public void testDecomposition3() throws IOException {
+    assertAnalyzesTo(analyzer, "魔女狩大将マシュー・ホプキンス。",
+      new String[] { "魔女", "狩", "大将", "マシュー", "・", "ホプキンス", "。" },
+      new int[] { 0, 2, 3, 5,  9, 10, 15 },
+      new int[] { 2, 3, 5, 9, 10, 15, 16 }
+    );
+  }
+  
   public void testDecomposition4() throws IOException {
     assertAnalyzesTo(analyzer, "これは本ではない",
-      new String[] { "これ", "は", "本", "で", "は", "ない" });
-
-    /*
-    Token[] testTokens = new Token[] {
-        new Token ("これ", 1848, 0, 2, new Morpheme ("名詞-代名詞-一般", "*", "*", "これ", new String[]{"コレ"}, new String[]{"コレ"}, null)),
-        new Token ("は", 2445, 2, 1, new Morpheme ("助詞-係助詞", "*", "*", "は", new String[]{"ハ"}, new String[]{"ワ"}, null)),
-        new Token ("本", 5181, 3, 1, new Morpheme ("名詞-一般", "*", "*", "本", new String[]{"ホン", "モト"}, new String[]{"ホン", "モト"}, null)),
-        new Token ("で", 6466, 4, 1, new Morpheme ("助動詞", "特殊・ダ", "連用形", "だ", new String[]{"デ"}, new String[]{"デ"}, null)),
-        new Token ("は", 6978, 5, 1, new Morpheme ("助詞-係助詞", "*", "*", "は", new String[]{"ハ"}, new String[]{"ワ"}, null)),
-        new Token ("ない", 7098, 6, 2, new Morpheme ("助動詞", "特殊・ナイ", "基本形", "ない", new String[]{"ナイ"}, new String[]{"ナイ"}, null))
-    };
-    */
+      new String[] { "これ", "は", "本", "で", "は", "ない" },
+      new int[] { 0, 2, 3, 4, 5, 6 },
+      new int[] { 2, 3, 4, 5, 6, 8 }
+    );
   }
 }
