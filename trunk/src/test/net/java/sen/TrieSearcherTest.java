@@ -21,6 +21,7 @@ package net.java.sen;
 
 import java.io.File;
 import java.io.RandomAccessFile;
+import java.nio.IntBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.NoSuchElementException;
@@ -79,7 +80,7 @@ public class TrieSearcherTest {
 		RandomAccessFile trieFile = new RandomAccessFile(tempFile, "r");
 		MappedByteBuffer trieBuffer = trieFile.getChannel().map(FileChannel.MapMode.READ_ONLY, 0, trieFile.length());
 		trieFile.close();
-		TrieSearcher searcher = new TrieSearcher (trieBuffer.asIntBuffer());
+		IntBuffer intBuffer = trieBuffer.asIntBuffer();
 
 		final String testString = "qwerty";
 		CharIterator iterator = new CharIterator() {
@@ -99,7 +100,7 @@ public class TrieSearcherTest {
 		};
 
 		int[] results = new int[256];
-		int count = searcher.commonPrefixSearch(iterator, results);
+		int count = TrieSearcher.commonPrefixSearch(intBuffer, iterator, results);
 
 		assertEquals (6, count);
 		for (int i = 0; i < 6; i++) {
