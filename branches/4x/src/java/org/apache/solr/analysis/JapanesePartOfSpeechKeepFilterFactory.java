@@ -42,7 +42,6 @@ public class JapanesePartOfSpeechKeepFilterFactory extends BaseTokenFilterFactor
   private boolean enablePositionIncrements;
   private Set<String> keepTags;
 
-  @Override
   public void inform(ResourceLoader loader) {
     String keepTagFiles = args.get("tags");
     enablePositionIncrements = getBoolean("enablePositionIncrements", false);
@@ -58,7 +57,6 @@ public class JapanesePartOfSpeechKeepFilterFactory extends BaseTokenFilterFactor
     }
   }
 
-  @Override
   public TokenStream create(TokenStream stream) {
     return new JapanesePartOfSpeechKeepFilter(enablePositionIncrements, stream, keepTags);
   }

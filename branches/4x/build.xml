@@ -38,7 +38,7 @@
 		         use="true"
 		         windowtitle="lucene-gosen API"
 		         doctitle="lucene-gosen"
-		         source="1.5">
+		         source="1.6">
 			<fileset dir="${src.dir}">
 				<include name="**/*.java"/>
 			</fileset>
@@ -53,7 +53,10 @@
 		       includes="**/*.java"
 		       debug="true"
 		       encoding="utf-8"
-		       source="1.5"/>
+		       source="1.6"
+                       target="1.6">
+                  <compilerarg line="-Xlint -Xlint:-serial"/>
+                </javac>
 	</target>
 
 	<!-- Compile source -->
@@ -64,7 +67,10 @@
 		       includes="**/*.java"
 		       debug="true"
 		       encoding="utf-8"
-		       source="1.5"/>
+		       source="1.6"
+                       target="1.6">
+                  <compilerarg line="-Xlint -Xlint:-serial"/>
+                </javac>
 	</target>
 
         <!-- run tests -->
