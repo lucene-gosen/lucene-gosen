@@ -33,12 +33,10 @@ import org.apache.lucene.analysis.ja.JapaneseTokenizer;
  */
 public class JapaneseTokenizerFactory extends BaseTokenizerFactory {
 
-  @Override
   public void init(Map<String,String> args) {
     super.init(args);
   }
 
-  @Override
   public Tokenizer create(Reader reader) {
     return new JapaneseTokenizer(reader);
   }
