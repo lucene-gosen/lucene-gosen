@@ -24,6 +24,7 @@ package net.java.sen.dictionary;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
+import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 import net.java.sen.SenFactory;
@@ -36,7 +37,7 @@ import net.java.sen.trie.TrieSearcher;
 public class Dictionary {
 
 	/**
-	 * Mapper buffer of the token file (token.sen)
+	 * Mapped buffer of the token file (token.sen)
 	 */
 	private ByteBuffer tokenBuffer = null;
 
@@ -46,9 +47,9 @@ public class Dictionary {
 	private CharBuffer partOfSpeechInfoBuffer = null;
 
 	/**
-	 * Searcher wrapping a mapped buffer of the Trie data (trie.sen)
+	 * Mapped buffer of the Trie data (trie.sen)
 	 */
-	private TrieSearcher trieSearcher = null;
+	private IntBuffer trieBuffer = null;
 
 	/**
 	 * Mapped buffer of the connection cost matrix file (connectionCost.sen)
@@ -201,7 +202,7 @@ public class Dictionary {
 
 		int size = 0;
 
-		int n = this.trieSearcher.commonPrefixSearch(iterator, this.trieSearchResults);
+		int n = TrieSearcher.commonPrefixSearch(trieBuffer, iterator, this.trieSearchResults);
 
 		for (int i = 0; i < n; i++) {
 
@@ -243,7 +244,7 @@ public class Dictionary {
 		this.unknownToken = CToken.read(this.tokenBuffer);
 		
 		// Map double array trie dictionary
-		this.trieSearcher = new TrieSearcher(SenFactory.getTrieBuffer());
+		this.trieBuffer = SenFactory.getTrieBuffer();
 
 	}
 
