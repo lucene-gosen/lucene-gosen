@@ -31,7 +31,6 @@ import org.apache.lucene.analysis.ja.JapaneseWidthFilter;
  */
 public class JapaneseWidthFilterFactory extends BaseTokenFilterFactory {
 
-  @Override
   public TokenStream create(TokenStream stream) {
     return new JapaneseWidthFilter(stream);
   }

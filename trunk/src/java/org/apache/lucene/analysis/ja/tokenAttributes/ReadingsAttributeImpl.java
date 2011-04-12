@@ -27,13 +27,11 @@ import net.java.sen.dictionary.Morpheme;
  */
 public class ReadingsAttributeImpl extends AttributeImpl implements ReadingsAttribute, Cloneable {
   private List<String> readings = null;
-  
-  @Override
+
   public List<String> getReadings() {
     return readings;
   }
   
-  @Override
   public void setReadings(List<String> readings) {
     this.readings = readings;
   }

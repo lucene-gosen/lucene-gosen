@@ -22,22 +22,18 @@ public class ConjugationAttributeImpl extends AttributeImpl implements Conjugati
   private String conjugationalForm = null;
   private String conjugationalType = null;
   
-  @Override
   public String getConjugationalForm() {
     return conjugationalForm;
   }
 
-  @Override
   public String getConjugationalType() {
     return conjugationalType;
   }
 
-  @Override
   public void setConjugationalForm(String conjugationalForm) {
     this.conjugationalForm = conjugationalForm;
   }
 
-  @Override
   public void setConjugationalType(String conjugationalType) {
     this.conjugationalType = conjugationalType;
   }
