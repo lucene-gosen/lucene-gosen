@@ -117,13 +117,13 @@ public class CommentFilter implements StreamFilter {
 	 */
 	public void preProcess(Sentence sentence) {
 
-		Iterator itr = this.ruleList.iterator();
+		Iterator<Rule> itr = this.ruleList.iterator();
 		this.commentTokens.clear();
 
 		String surface = new String(sentence.getCharacters());
 		while (itr.hasNext()) {
 			int count = 0;
-			Rule rule = (Rule) itr.next();
+			Rule rule = itr.next();
 
 			while (count < surface.length()) {
 				int start = -1;

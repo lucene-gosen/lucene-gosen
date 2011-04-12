@@ -59,7 +59,6 @@ public class Dictionary {
 	/**
 	 * Size of the first extent of the connection cost matrix
 	 */
-	@SuppressWarnings("unused")
 	private int connectionSize1;
 
 	/**
