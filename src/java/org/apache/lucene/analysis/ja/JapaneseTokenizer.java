@@ -16,7 +16,6 @@ package org.apache.lucene.analysis.ja;
  * limitations under the License.
  */
 
-
 import java.io.IOException;
 import java.io.Reader;
 
@@ -35,11 +34,23 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
 
-
 /**
  * This is a Japanese tokenizer which uses "Sen" morphological
  * analyzer.
- *
+ * <p>
+ * sets the surface form as the term text, but also sets these attributes:
+ * <ul>
+ *   <li>{@link BasicFormAttribute}
+ *   <li>{@link ConjugationAttribute}
+ *   <li>{@link PartOfSpeechAttribute}
+ *   <li>{@link PronunciationsAttribute}
+ *   <li>{@link ReadingsAttribute}
+ *   <li>{@link TypeAttribute}
+ * </ul>
+ * <p>
+ * TypeAttribute is set to the POS for simplicity, so you can use 
+ * TypeAsPayloadTokenFilterFactory if you desire to index the POS 
+ * into the payload
  */
 public final class JapaneseTokenizer extends Tokenizer {
   private StreamTagger tagger = null;
