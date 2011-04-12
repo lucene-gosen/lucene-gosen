@@ -27,26 +27,20 @@ import java.nio.IntBuffer;
  * Searches a Trie data file
  */
 public class TrieSearcher {
-
-	/**
-	 * The Trie data to search
-	 */
-	private IntBuffer trieData;
-
-
 	/**
 	 * Searches for Trie keys forming a complete substring of the given
 	 * sentence, starting at the given position within the sentence
 	 * 
+	 * @param trieData The Trie data to search
 	 * @param iterator The character iterator to read search characters from
 	 * @param results An array used to return the values of the found keys
 	 * @return The number of results found
 	 * 
 	 * @throws ArrayIndexOutOfBoundsException if results[] is too small
 	 */
-	public int commonPrefixSearch(CharIterator iterator, int results[]) {
+	public static int commonPrefixSearch(IntBuffer trieData, CharIterator iterator, int results[]) {
 
-		int b = this.trieData.get(0 << 1);
+		int b = trieData.get(0 << 1);
 		int num = 0;
 		int n;
 		int p;
@@ -54,8 +48,8 @@ public class TrieSearcher {
 		while (iterator.hasNext()) {
 
 			p = b;
-			n = this.trieData.get(p << 1);
-			if (b == this.trieData.get((p << 1) + 1) && n < 0) {
+			n = trieData.get(p << 1);
+			if (b == trieData.get((p << 1) + 1) && n < 0) {
 				// Will throw ArrayIndexOutOfBoundsException if results[] is too small
 				results[num] = -n - 1;
 				num++;
@@ -64,22 +58,22 @@ public class TrieSearcher {
 			p = b + iterator.next() + 1;
 
 
-			if (((p << 1) + 1) >= this.trieData.limit()) {
+			if (((p << 1) + 1) >= trieData.limit()) {
 				// We fell off the end of the Trie data
 				return num;
 			}
 
 
-			if (b == this.trieData.get((p << 1) + 1)) {
-				b = this.trieData.get(p << 1);
+			if (b == trieData.get((p << 1) + 1)) {
+				b = trieData.get(p << 1);
 			} else {
 				return num;
 			}
 		}
 
 		p = b;
-		n = this.trieData.get(p << 1);
-		if (b == this.trieData.get((p << 1) + 1) && (n < 0)) {
+		n = trieData.get(p << 1);
+		if (b == trieData.get((p << 1) + 1) && (n < 0)) {
 			// Will throw ArrayIndexOutOfBoundsException if results[] is too small
 			results[num] = -n - 1;
 			num++;
@@ -88,18 +82,4 @@ public class TrieSearcher {
 		return num;
 
 	}
-
-
-	/**
-	 * Creates a TrieSearcher for the given Trie data
-	 * 
-	 * @param trieData The data to search within 
-	 */
-	public TrieSearcher(IntBuffer trieData) {
-
-		this.trieData = trieData;
-
-	}
-
-
 }
