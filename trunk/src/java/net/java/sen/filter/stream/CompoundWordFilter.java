@@ -187,7 +187,7 @@ public class CompoundWordFilter implements StreamFilter {
 	/* Unchecked warnings are suppressed because there is no type safe way to
 	 * read a parameterised type from an ObjectInputStream
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public CompoundWordFilter(String compoundFile) {
 
 		try {

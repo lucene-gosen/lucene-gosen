@@ -105,11 +105,11 @@ public class CSVData {
 	public String toString() {
 
 		StringBuffer buffer = new StringBuffer();
-		Iterator iterator = this.elements.iterator();
+		Iterator<String> iterator = this.elements.iterator();
 
 		boolean isFirst = true;
 		while (iterator.hasNext()) {
-			String element = enquote((String) iterator.next());
+			String element = enquote(iterator.next());
 			if (isFirst) {
 				isFirst = false;
 			} else {
