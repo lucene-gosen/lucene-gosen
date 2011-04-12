@@ -21,12 +21,10 @@ import org.apache.lucene.util.AttributeImpl;
 public class BasicFormAttributeImpl extends AttributeImpl implements BasicFormAttribute, Cloneable {
   private String basicForm = null;
   
-  @Override
   public String getBasicForm() {
     return basicForm;
   }
   
-  @Override
   public void setBasicForm(String basicForm) {
     this.basicForm = basicForm;
   }

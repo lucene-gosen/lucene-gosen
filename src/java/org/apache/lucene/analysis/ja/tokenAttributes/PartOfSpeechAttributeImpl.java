@@ -21,12 +21,10 @@ import org.apache.lucene.util.AttributeImpl;
 public class PartOfSpeechAttributeImpl extends AttributeImpl implements PartOfSpeechAttribute, Cloneable {
   private String partOfSpeech = null;
   
-  @Override
   public String getPartOfSpeech() {
     return partOfSpeech;
   }
   
-  @Override
   public void setPartOfSpeech(String partOfSpeech) {
     this.partOfSpeech = partOfSpeech;
   }

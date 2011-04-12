@@ -53,7 +53,10 @@
 		       includes="**/*.java"
 		       debug="true"
 		       encoding="utf-8"
-		       source="1.5"/>
+		       source="1.5"
+                       target="1.5">
+                  <compilerarg line="-Xlint -Xlint:-serial"/>
+                </javac>
 	</target>
 
 	<!-- Compile source -->
@@ -64,7 +67,10 @@
 		       includes="**/*.java"
 		       debug="true"
 		       encoding="utf-8"
-		       source="1.5"/>
+		       source="1.5"
+                       target="1.5">
+                  <compilerarg line="-Xlint -Xlint:-serial"/>
+                </javac>
 	</target>
 
         <!-- run tests -->

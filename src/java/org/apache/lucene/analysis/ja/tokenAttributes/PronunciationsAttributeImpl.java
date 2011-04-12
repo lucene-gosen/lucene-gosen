@@ -23,12 +23,10 @@ import org.apache.lucene.util.AttributeImpl;
 public class PronunciationsAttributeImpl extends AttributeImpl implements PronunciationsAttribute, Cloneable {
   private List<String> pronunciations = null;
   
-  @Override
   public List<String> getPronunciations() {
     return pronunciations;
   }
   
-  @Override
   public void setPronunciations(List<String> pronunciations) {
     this.pronunciations = pronunciations;
   }
