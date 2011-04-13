@@ -18,9 +18,11 @@ package org.apache.lucene.analysis.ja;
 
 import java.io.IOException;
 
+import org.apache.lucene.analysis.KeywordMarkerFilter;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.tokenattributes.KeywordAttribute;
 
 /**
  * Convert a katakana word to a normalized form by stemming KATAKANA-HIRAGANA
@@ -29,11 +31,14 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
  * method which needs dictionaries. I think they are better than this filter in
  * quality, but they needs a well-tuned dictionary. In contract, this filter is
  * simple and maintenance-free.
- *
+ * <p>
  * Note: This filter don't supports hankaku katakana characters, so you must
  * convert them before using this filter. And this filter support only
  * pre-composed characters.
- *
+ * <p>
+ * To prevent terms from being stemmed use an instance of
+ * {@link KeywordMarkerFilter} or a custom {@link TokenFilter} that sets
+ * the {@link KeywordAttribute} before this {@link TokenStream}.
  */
 public final class JapaneseKatakanaStemFilter extends TokenFilter {
   static final char COMBINING_KATAKANA_HIRAGANA_VOICED_SOUND_MARK = '\u3099';
@@ -43,6 +48,7 @@ public final class JapaneseKatakanaStemFilter extends TokenFilter {
   static final char KATAKANA_HIRAGANA_PROLONGED_SOUND_MARK = '\u30FC';
 
   private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
+  private final KeywordAttribute keywordAtt = addAttribute(KeywordAttribute.class);
 
   public JapaneseKatakanaStemFilter(TokenStream in) {
     super(in);
@@ -54,10 +60,12 @@ public final class JapaneseKatakanaStemFilter extends TokenFilter {
   @Override
   public boolean incrementToken() throws IOException {
     if (input.incrementToken()) {
-      final char buffer[] = termAtt.buffer();
-      int length = termAtt.length();
-      if (length > 3 && buffer[length-1] == KATAKANA_HIRAGANA_PROLONGED_SOUND_MARK && isKatakanaString(buffer, length)) {
-        termAtt.setLength(length - 1);
+      if (!keywordAtt.isKeyword()) {
+        final char buffer[] = termAtt.buffer();
+        int length = termAtt.length();
+        if (length > 3 && buffer[length-1] == KATAKANA_HIRAGANA_PROLONGED_SOUND_MARK && isKatakanaString(buffer, length)) {
+          termAtt.setLength(length - 1);
+        }
       }
       return true;
     } else {

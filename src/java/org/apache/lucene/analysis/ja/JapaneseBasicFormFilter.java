@@ -21,16 +21,24 @@ import java.io.IOException;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.ja.tokenAttributes.BasicFormAttribute;
+import org.apache.lucene.analysis.KeywordMarkerFilter;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.tokenattributes.KeywordAttribute;
 
 /**
  * Replaces term text with the {@link BasicFormAttribute}.
  * <p>
  * This acts as a lemmatizer for verbs and adjectives.
+ * <p>
+ * To prevent terms from being stemmed use an instance of
+ * {@link KeywordMarkerFilter} or a custom {@link TokenFilter} that sets
+ * the {@link KeywordAttribute} before this {@link TokenStream}.
+ * </p>
  */
 public final class JapaneseBasicFormFilter extends TokenFilter {
   private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
   private final BasicFormAttribute basicFormAtt = addAttribute(BasicFormAttribute.class);
+  private final KeywordAttribute keywordAtt = addAttribute(KeywordAttribute.class);
 
   public JapaneseBasicFormFilter(TokenStream input) {
     super(input);
@@ -39,7 +47,9 @@ public final class JapaneseBasicFormFilter extends TokenFilter {
   @Override
   public boolean incrementToken() throws IOException {
     if (input.incrementToken()) {
-      termAtt.setEmpty().append(basicFormAtt.getBasicForm());
+      if (!keywordAtt.isKeyword()) {
+        termAtt.setEmpty().append(basicFormAtt.getBasicForm());
+      }
       return true;
     } else {
       return false;
