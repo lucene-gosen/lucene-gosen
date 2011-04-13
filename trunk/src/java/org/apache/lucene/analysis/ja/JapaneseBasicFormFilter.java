@@ -24,7 +24,9 @@ import org.apache.lucene.analysis.ja.tokenAttributes.BasicFormAttribute;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 
 /**
- * Replaces term text with the {@link BasicFormAttribute}
+ * Replaces term text with the {@link BasicFormAttribute}.
+ * <p>
+ * This acts as a lemmatizer for verbs and adjectives.
  */
 public final class JapaneseBasicFormFilter extends TokenFilter {
   private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
