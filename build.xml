@@ -9,6 +9,11 @@
 	<property name="bin.dir" location="build/"/>
 	<property name="javadoc.dir" location="docs/api"/>
 
+    <property name="tests.seed" value="random" />
+    <property name="tests.iter" value="1" />
+    <property name="tests.iter.min" value="${tests.iter}" />
+    <property name="testmethod" value=""/>
+
         <path id="classpath">
            <fileset dir="lib">
              <include name="*.jar" />
@@ -81,9 +86,20 @@
               <assertions>
                 <enable/>
               </assertions>
-              <batchtest fork="yes">
+              <!-- if set, just executes a single test method -->
+              <sysproperty key="testmethod" value="${testmethod}"/>
+              <!-- set the test seed -->
+              <sysproperty key="tests.seed" value="${tests.seed}"/>
+              <!-- set the number of times tests should run -->
+              <sysproperty key="tests.iter" value="${tests.iter}"/>
+              <!-- set the minimum number of times tests should run unless failure -->
+              <sysproperty key="tests.iter.min" value="${tests.iter.min}"/>
+              <batchtest fork="yes" unless="testcase">
                 <fileset dir="src/test" includes="**/Test*.java,**/*Test.java"/>
               </batchtest>
+  	          <batchtest fork="yes" if="testcase">
+  	            <fileset dir="src/test" includes="**/${testcase}.java"/>
+  	          </batchtest>
            </junit>
         </target>
 

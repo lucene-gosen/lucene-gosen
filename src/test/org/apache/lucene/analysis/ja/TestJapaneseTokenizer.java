@@ -18,11 +18,14 @@ package org.apache.lucene.analysis.ja;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.BaseTokenStreamTestCase;
 import org.apache.lucene.analysis.ReusableAnalyzerBase;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
+import org.apache.lucene.util._TestUtil;
 
 /**
  * Tests for {@link JapaneseTokenizer}
@@ -74,5 +77,19 @@ public class TestJapaneseTokenizer extends BaseTokenStreamTestCase {
       new int[] { 0, 2, 3, 4, 5, 6 },
       new int[] { 2, 3, 4, 5, 6, 8 }
     );
+  }
+  
+  /**
+   * Tokenizes random unicode strings, to ensure no exception
+   * (results could be completely bogus, but makes sure we don't crash on some input)
+   */
+  public void testReliability() throws IOException {
+    for (int i = 0; i < 1000; i++) {
+      String s = _TestUtil.randomUnicodeString(random, 100);
+      TokenStream ts = analyzer.reusableTokenStream("foo", new StringReader(s));
+      ts.reset();
+      while (ts.incrementToken()) {
+      }
+    }
   }
 }

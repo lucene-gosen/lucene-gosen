@@ -174,7 +174,7 @@ public class StreamTagger {
 					return null;
 				}
 				this.tokens = this.stringTagger.analyze(new String(this.buffer, 0, i));
-			} while (this.tokens == null);
+			} while (this.tokens == null || this.tokens.isEmpty());
 			this.currentTokenIndex = 0;
 
 			// Set the token starts to their position within the stream
