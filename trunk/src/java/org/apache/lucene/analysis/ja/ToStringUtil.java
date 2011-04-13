@@ -92,8 +92,8 @@ public class ToStringUtil {
     posTranslations.put("助詞-並立助詞", "particle-coordinate");
     posTranslations.put("助詞-終助詞", "particle-final");
     posTranslations.put("助詞-副助詞／並立助詞／終助詞", "particle-adverbial/conjunctive/final");
-    posTranslations.put("助詞-連体化", "particle-adnominalizer (no)");
-    posTranslations.put("助詞-副詞化", "particle-adnominalizer (ni/to)");
+    posTranslations.put("助詞-連体化", "particle-adnominalizer");
+    posTranslations.put("助詞-副詞化", "particle-adnominalizer");
     posTranslations.put("助詞-特殊", "particle-special");
     posTranslations.put("助動詞", "auxiliary-verb");
     posTranslations.put("感動詞", "interjection");
