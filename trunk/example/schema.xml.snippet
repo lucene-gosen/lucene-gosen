@@ -21,6 +21,12 @@
     -->
     <fieldType name="text_ja" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="false">
       <analyzer>
+        <!-- map characters before the tokenizer:
+             Optionally, instead of the JapaneseWidthFactory, you can choose to do the width
+             mappings before the text is sent to the tokenizer.
+        <charFilter class="solr.MappingCharFilterFactory" mapping="mapping-japanese.txt"/>
+        -->
+
         <!-- morphological tokenizer: sets the SURFACE form as the token, but also sets these attributes:
              BasicFormAttribute, ConjugationAttribute, PartOfSpeechAttribute, PronunciationsAttribute,
              ReadingsAttribute, and TypeAttribute.
