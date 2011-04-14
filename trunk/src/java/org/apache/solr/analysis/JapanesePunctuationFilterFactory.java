@@ -22,7 +22,7 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.ja.JapanesePunctuationFilter;
 
 /**
- * Factory for {@link #JapanesePunctuationFilter}.
+ * Factory for {@link JapanesePunctuationFilter}.
  * <pre class="prettyprint" >
  * &lt;fieldType name="text_ja" class="solr.TextField"&gt;
  *   &lt;analyzer&gt;
