@@ -57,10 +57,28 @@ public class Token {
 	private int length = -1;
 
 	/**
+	 * True if this token is the first in a new sentence
+	 */
+	private boolean sentenceStart;
+
+	/**
 	 * The morpheme data represented by this Token
 	 */
 	private Morpheme morpheme = new Morpheme();
 
+	/**
+	 * Returns whether or not this Token begins a new sentence.
+	 */
+	public boolean isSentenceStart() {
+	  return sentenceStart;
+	}
+	
+	/**
+	 * Sets whether or not this token begins a new sentence.
+	 */
+	public void setSentenceStart(boolean sentenceStart) {
+	  this.sentenceStart = sentenceStart;
+	}
 
 	/**
 	 * Gets the start of the character range of this Token within the

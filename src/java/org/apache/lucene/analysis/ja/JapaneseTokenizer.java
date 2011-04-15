@@ -90,6 +90,11 @@ public final class JapaneseTokenizer extends Tokenizer {
       // note, unlike the previous implementation, we set the surface form
       termAtt.setEmpty().append(token.getSurface());
       final int cost = token.getCost();
+      
+      if (token.isSentenceStart()) {
+        accumulatedCost = 0;
+      }
+      
       costAtt.setCost(cost - accumulatedCost);
       accumulatedCost = cost;
       basicFormAtt.setBasicForm(m.getBasicForm());
