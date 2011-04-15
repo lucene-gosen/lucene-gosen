@@ -23,7 +23,7 @@ import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.ja.JapaneseTokenizer;
 
 /**
- * Factory for {@link #JapaneseTokenizer}.
+ * Factory for {@link JapaneseTokenizer}.
  * <pre class="prettyprint" >
  * &lt;fieldType name="text_ja" class="solr.TextField"&gt;
  *   &lt;analyzer&gt;

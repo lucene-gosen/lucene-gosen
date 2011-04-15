@@ -7,7 +7,8 @@
 	<property name="res.dir" location="src/resources"/>
 	<property name="test.dir" location="src/test"/>
 	<property name="bin.dir" location="build/"/>
-	<property name="javadoc.dir" location="docs/api"/>
+  <property name="javadoc.dir" location="docs/api"/>
+  <property name="prettify.dir" location="prettify"/>
 
     <property name="tests.seed" value="random" />
     <property name="tests.iter" value="1" />
@@ -36,14 +37,30 @@
 
 	<!-- Build javadocs -->
 	<target name="javadoc">
+    <property name="javadoc.link.java" value="http://java.sun.com/javase/ja/6/docs/ja/api/"/>
+    <property name="javadoc.link.lucene" value="https://hudson.apache.org/hudson/job/Lucene-3.x/javadoc/all/"/>
+    <property name="javadoc.link.solr" value="https://hudson.apache.org/hudson/job/Solr-3.x/javadoc/"/>
+    <copy todir="${javadoc.dir}/prettify">
+      <fileset dir="${prettify.dir}"/>
+    </copy>
 		<javadoc sourcepath="${src.dir}"
 		         destdir="${javadoc.dir}"
+			       classpathref="classpath"
 		         author="true"
 		         version="true"
 		         use="true"
 		         windowtitle="lucene-gosen API"
+			       encoding="UTF-8"
 		         doctitle="lucene-gosen"
-		         source="1.6">
+		         source="1.6"
+             stylesheetfile="${javadoc.dir}/prettify/stylesheet+prettify.css">
+      <link href="${javadoc.link.java}"/>
+      <link href="${javadoc.link.lucene}"/>
+      <link href="${javadoc.link.solr}"/>
+      <header><![CDATA[
+<script src="{@docRoot}/prettify/prettify.js" type="text/javascript"></script>
+<script language="JavaScript">window.onload=function(){windowTitle();prettyPrint();}</script>
+      ]]></header>
 			<fileset dir="${src.dir}">
 				<include name="**/*.java"/>
 			</fileset>
@@ -54,14 +71,14 @@
 	<target name="compile" depends="prepare-directories">
 		<javac srcdir="${src.dir}"
 		       destdir="${bin.dir}/classes/java"
-                       classpathref="classpath"
+           classpathref="classpath"
 		       includes="**/*.java"
 		       debug="true"
 		       encoding="utf-8"
 		       source="1.6"
-                       target="1.6">
-                  <compilerarg line="-Xlint -Xlint:-serial"/>
-                </javac>
+           target="1.6">
+         <compilerarg line="-Xlint -Xlint:-serial"/>
+    </javac>
 	</target>
 
 	<!-- Compile source -->

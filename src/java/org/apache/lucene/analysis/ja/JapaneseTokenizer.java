@@ -27,6 +27,7 @@ import net.java.sen.dictionary.Token;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.ja.tokenAttributes.BasicFormAttribute;
 import org.apache.lucene.analysis.ja.tokenAttributes.ConjugationAttribute;
+import org.apache.lucene.analysis.ja.tokenAttributes.CostAttribute;
 import org.apache.lucene.analysis.ja.tokenAttributes.PartOfSpeechAttribute;
 import org.apache.lucene.analysis.ja.tokenAttributes.PronunciationsAttribute;
 import org.apache.lucene.analysis.ja.tokenAttributes.ReadingsAttribute;
@@ -65,6 +66,12 @@ public final class JapaneseTokenizer extends Tokenizer {
   private final PartOfSpeechAttribute partOfSpeechAtt = addAttribute(PartOfSpeechAttribute.class);
   private final PronunciationsAttribute pronunciationsAtt = addAttribute(PronunciationsAttribute.class);
   private final ReadingsAttribute readingsAtt = addAttribute(ReadingsAttribute.class);
+  
+  // viterbi cost
+  private final CostAttribute costAtt = addAttribute(CostAttribute.class);
+  // viterbi costs from Token.getCost() are cumulative,
+  // so we accumulate this so we can then subtract to present an absolute cost.
+  private int accumulatedCost = 0;
 
   public JapaneseTokenizer(Reader in) {
     super(in);
@@ -82,6 +89,14 @@ public final class JapaneseTokenizer extends Tokenizer {
     
       // note, unlike the previous implementation, we set the surface form
       termAtt.setEmpty().append(token.getSurface());
+      final int cost = token.getCost();
+      
+      if (token.isSentenceStart()) {
+        accumulatedCost = 0;
+      }
+      
+      costAtt.setCost(cost - accumulatedCost);
+      accumulatedCost = cost;
       basicFormAtt.setBasicForm(m.getBasicForm());
       conjugationAtt.setConjugationalForm(m.getConjugationalForm());
       conjugationAtt.setConjugationalType(m.getConjugationalType());
@@ -98,5 +113,6 @@ public final class JapaneseTokenizer extends Tokenizer {
   public void reset(Reader in) throws IOException {
     super.reset(in);
     tagger = new StreamTagger(SenFactory.getStringTagger(), in);
+    accumulatedCost = 0;
   }
 }

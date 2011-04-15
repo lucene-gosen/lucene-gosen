@@ -169,10 +169,46 @@ public class ToStringUtil {
           builder.append('a');
           break;
         case 'イ':
-          builder.append('i');
+          if (ch2 == 'ィ') {
+            builder.append("yi");
+            i++;
+          } else if (ch2 == 'ェ') {
+            builder.append("ye");
+            i++;
+          } else {
+            builder.append('i');
+          }
           break;
         case 'ウ':
-          builder.append('u');
+          switch(ch2) {
+            case 'ァ':
+              builder.append("wa");
+              i++;
+              break;
+            case 'ィ':
+              builder.append("wi");
+              i++;
+              break;
+            case 'ゥ':
+              builder.append("wu");
+              i++;
+              break;
+            case 'ェ':
+              builder.append("we");
+              i++;
+              break;
+            case 'ォ':
+              builder.append("wo");
+              i++;
+              break;
+            case 'ュ':
+              builder.append("wyu");
+              i++;
+              break;
+            default:
+              builder.append('u');
+              break;
+          }
           break;
         case 'エ':
           builder.append('e');
@@ -204,12 +240,39 @@ public class ToStringUtil {
           } else if (ch2 == 'ュ') {
             builder.append("kyu");
             i++;
+          } else if (ch2 == 'ェ') {
+            builder.append("kye");
+            i++;
           } else {
             builder.append("ki");
           }
           break;
         case 'ク':
-          builder.append("ku");
+          switch(ch2) {
+            case 'ァ':
+              builder.append("kwa");
+              i++;
+              break;
+            case 'ィ':
+              builder.append("kwi");
+              i++;
+              break;
+            case 'ェ':
+              builder.append("kwe");
+              i++;
+              break;
+            case 'ォ':
+              builder.append("kwo");
+              i++;
+              break;
+            case 'ヮ':
+              builder.append("kwa");
+              i++;
+              break;
+            default:
+              builder.append("ku");
+              break;
+          }
           break;
         case 'ケ':
           builder.append("ke");
@@ -241,12 +304,20 @@ public class ToStringUtil {
           } else if (ch2 == 'ュ') {
             builder.append("shu");
             i++;
+          } else if (ch2 == 'ェ') {
+            builder.append("she");
+            i++;
           } else {
             builder.append("shi");
           }
           break;
         case 'ス':
-          builder.append("su");
+          if (ch2 == 'ィ') {
+            builder.append("si");
+            i++;
+          } else {
+            builder.append("su");
+          }
           break;
         case 'セ':
           builder.append("se");
@@ -278,15 +349,46 @@ public class ToStringUtil {
           } else if (ch2 == 'ュ') {
             builder.append("chu");
             i++;
+          } else if (ch2 == 'ェ') {
+            builder.append("che");
+            i++;
           } else {
             builder.append("chi");
           }
           break;
         case 'ツ':
-          builder.append("tsu");
+          if (ch2 == 'ァ') {
+            builder.append("tsa");
+            i++;
+          } else if (ch2 == 'ィ') {
+            builder.append("tsi");
+            i++;
+          } else if (ch2 == 'ェ') {
+            builder.append("tse");
+            i++;
+          } else if (ch2 == 'ォ') {
+            builder.append("tso");
+            i++;
+          } else if (ch2 == 'ュ') {
+            builder.append("tsyu");
+            i++;
+          } else {
+            builder.append("tsu");
+          }
           break;
         case 'テ':
-          builder.append("te");
+          if (ch2 == 'ィ') {
+            builder.append("ti");
+            i++;
+          } else if (ch2 == 'ゥ') {
+            builder.append("tu");
+            i++;
+          } else if (ch2 == 'ュ') {
+            builder.append("tyu");
+            i++;
+          } else {
+            builder.append("te");
+          }
           break;
         case 'ト':
           if (ch2 == 'ウ') {
@@ -314,6 +416,9 @@ public class ToStringUtil {
             i++;
           } else if (ch2 == 'ュ') {
             builder.append("nyu");
+            i++;
+          } else if (ch2 == 'ェ') {
+            builder.append("nye");
             i++;
           } else {
             builder.append("ni");
@@ -352,12 +457,41 @@ public class ToStringUtil {
           } else if (ch2 == 'ュ') {
             builder.append("hyu");
             i++;
+          } else if (ch2 == 'ェ') {
+            builder.append("hye");
+            i++;
           } else {
             builder.append("hi");
           }
           break;
         case 'フ':
-          builder.append("fu");
+          if (ch2 == 'ャ') {
+            builder.append("fya");
+            i++;
+          } else if (ch2 == 'ュ') {
+            builder.append("fyu");
+            i++;
+          } else if (ch2 == 'ィ' && ch3 == 'ェ') {
+            builder.append("fye");
+            i+=2;
+          } else if (ch2 == 'ョ') {
+            builder.append("fyo");
+            i++;
+          } else if (ch2 == 'ァ') {
+            builder.append("fa");
+            i++;
+          } else if (ch2 == 'ィ') {
+            builder.append("fi");
+            i++;
+          } else if (ch2 == 'ェ') {
+            builder.append("fe");
+            i++;
+          } else if (ch2 == 'ォ') {
+            builder.append("fo");
+            i++;
+          } else {
+            builder.append("fu");
+          }
           break;
         case 'ヘ':
           builder.append("he");
@@ -365,6 +499,9 @@ public class ToStringUtil {
         case 'ホ':
           if (ch2 == 'ウ') {
             builder.append("hō");
+            i++;
+          } else if (ch2 == 'ゥ') {
+            builder.append("hu");
             i++;
           } else {
             builder.append("ho");
@@ -388,6 +525,9 @@ public class ToStringUtil {
             i++;
           } else if (ch2 == 'ュ') {
             builder.append("myu");
+            i++;
+          } else if (ch2 == 'ェ') {
+            builder.append("mye");
             i++;
           } else {
             builder.append("mi");
@@ -439,6 +579,9 @@ public class ToStringUtil {
             i++;
           } else if (ch2 == 'ュ') {
             builder.append("ryu");
+            i++;
+          } else if (ch2 == 'ェ') {
+            builder.append("rye");
             i++;
           } else {
             builder.append("ri");
@@ -522,12 +665,39 @@ public class ToStringUtil {
           } else if (ch2 == 'ュ') {
             builder.append("gyu");
             i++;
+          } else if (ch2 == 'ェ') {
+            builder.append("gye");
+            i++;
           } else {
             builder.append("gi");
           }
           break;
         case 'グ':
-          builder.append("gu");
+          switch(ch2) {
+            case 'ァ':
+              builder.append("gwa");
+              i++;
+              break;
+            case 'ィ':
+              builder.append("gwi");
+              i++;
+              break;
+            case 'ェ':
+              builder.append("gwe");
+              i++;
+              break;
+            case 'ォ':
+              builder.append("gwo");
+              i++;
+              break;
+            case 'ヮ':
+              builder.append("gwa");
+              i++;
+              break;
+            default:
+              builder.append("gu");
+              break;
+          }
           break;
         case 'ゲ':
           builder.append("ge");
@@ -559,12 +729,20 @@ public class ToStringUtil {
           } else if (ch2 == 'ュ') {
             builder.append("ju");
             i++;
+          } else if (ch2 == 'ェ') {
+            builder.append("je");
+            i++;
           } else {
             builder.append("ji");
           }
           break;
         case 'ズ':
-          builder.append("zu");
+          if (ch2 == 'ィ') {
+            builder.append("zi");
+            i++;
+          } else {
+            builder.append("zu");
+          }
           break;
         case 'ゼ':
           builder.append("ze");
@@ -587,11 +765,22 @@ public class ToStringUtil {
           builder.append("zu");
           break;
         case 'デ':
-          builder.append("de");
+          if (ch2 == 'ィ') {
+            builder.append("di");
+            i++;
+          } else if (ch2 == 'ュ') {
+            builder.append("dyu");
+            i++;
+          } else {
+            builder.append("de");
+          }
           break;
         case 'ド':
           if (ch2 == 'ウ') {
             builder.append("dō");
+            i++;
+          } else if (ch2 == 'ゥ') {
+            builder.append("du");
             i++;
           } else {
             builder.append("do");
@@ -615,6 +804,9 @@ public class ToStringUtil {
             i++;
           } else if (ch2 == 'ュ') {
             builder.append("byu");
+            i++;
+          } else if (ch2 == 'ェ') {
+            builder.append("bye");
             i++;
           } else {
             builder.append("bi");
@@ -653,6 +845,9 @@ public class ToStringUtil {
           } else if (ch2 == 'ュ') {
             builder.append("pyu");
             i++;
+          } else if (ch2 == 'ェ') {
+            builder.append("pye");
+            i++;
           } else {
             builder.append("pi");
           }
@@ -672,7 +867,39 @@ public class ToStringUtil {
           }
           break;
         case 'ヴ':
-          builder.append("v");
+          if (ch2 == 'ィ' && ch3 == 'ェ') {
+            builder.append("vye");
+            i+= 2;
+          } else {
+            builder.append('v');
+          }
+          break;
+        case 'ァ':
+          builder.append('a');
+          break;
+        case 'ィ':
+          builder.append('i');
+          break;
+        case 'ゥ':
+          builder.append('u');
+          break;
+        case 'ェ':
+          builder.append('e');
+          break;
+        case 'ォ':
+          builder.append('o');
+          break;
+        case 'ヮ':
+          builder.append("wa");
+          break;
+        case 'ャ':
+          builder.append("ya");
+          break;
+        case 'ュ':
+          builder.append("yu");
+          break;
+        case 'ョ':
+          builder.append("yo");
           break;
         case 'ー':
           break;
