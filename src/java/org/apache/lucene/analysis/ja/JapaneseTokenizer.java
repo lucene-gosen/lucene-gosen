@@ -30,7 +30,7 @@ import org.apache.lucene.analysis.ja.tokenAttributes.CostAttribute;
 import org.apache.lucene.analysis.ja.tokenAttributes.PartOfSpeechAttribute;
 import org.apache.lucene.analysis.ja.tokenAttributes.PronunciationsAttribute;
 import org.apache.lucene.analysis.ja.tokenAttributes.ReadingsAttribute;
-import org.apache.lucene.analysis.ja.tokenAttributes.SentenceIncrementAttribute;
+import org.apache.lucene.analysis.ja.tokenAttributes.SentenceStartAttribute;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
@@ -48,7 +48,7 @@ import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
  *   <li>{@link ReadingsAttribute}
  *   <li>{@link TypeAttribute}
  *   <li>{@link CostAttribute}
- *   <li>{@link SentenceIncrementAttribute}
+ *   <li>{@link SentenceStartAttribute}
  * </ul>
  * <p>
  * TypeAttribute is set to the POS for simplicity, so you can use 
@@ -70,7 +70,7 @@ public final class JapaneseTokenizer extends Tokenizer {
   private final ReadingsAttribute readingsAtt = addAttribute(ReadingsAttribute.class);
   
   // sentence increment
-  private final SentenceIncrementAttribute sentenceAtt = addAttribute(SentenceIncrementAttribute.class);
+  private final SentenceStartAttribute sentenceAtt = addAttribute(SentenceStartAttribute.class);
 
   // viterbi cost
   private final CostAttribute costAtt = addAttribute(CostAttribute.class);
@@ -98,7 +98,7 @@ public final class JapaneseTokenizer extends Tokenizer {
       
       if (token.isSentenceStart()) {
         accumulatedCost = 0;
-        sentenceAtt.setSentenceIncrement(1);
+        sentenceAtt.setSentenceStart(true);
       }
       
       costAtt.setCost(cost - accumulatedCost);

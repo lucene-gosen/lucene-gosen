@@ -19,11 +19,12 @@ package org.apache.lucene.analysis.ja.tokenAttributes;
 import org.apache.lucene.util.Attribute;
 
 /**
- * The sentenceIncrement determines the position of this token relative 
- * to sentence tokenization: it is one if the token starts a new sentence,
- * zero otherwise.
+ * Specifies if this token starts a new sentence:
+ * this can be useful if you want to adjust position increment
+ * to prevent phrase queries from matching across sentence boundaries
+ * without slop.
  */
-public interface SentenceIncrementAttribute extends Attribute {
-  public int getSentenceIncrement();
-  public void setSentenceIncrement(int sentenceIncrement);
+public interface SentenceStartAttribute extends Attribute {
+  public boolean getSentenceStart();
+  public void setSentenceStart(boolean sentenceStart);
 }
