@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.Reader;
 
 import net.java.sen.SenFactory;
-import net.java.sen.StreamTagger;
 import net.java.sen.dictionary.Morpheme;
 import net.java.sen.dictionary.Token;
 
@@ -31,6 +30,7 @@ import org.apache.lucene.analysis.ja.tokenAttributes.CostAttribute;
 import org.apache.lucene.analysis.ja.tokenAttributes.PartOfSpeechAttribute;
 import org.apache.lucene.analysis.ja.tokenAttributes.PronunciationsAttribute;
 import org.apache.lucene.analysis.ja.tokenAttributes.ReadingsAttribute;
+import org.apache.lucene.analysis.ja.tokenAttributes.SentenceIncrementAttribute;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
@@ -47,6 +47,8 @@ import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
  *   <li>{@link PronunciationsAttribute}
  *   <li>{@link ReadingsAttribute}
  *   <li>{@link TypeAttribute}
+ *   <li>{@link CostAttribute}
+ *   <li>{@link SentenceIncrementAttribute}
  * </ul>
  * <p>
  * TypeAttribute is set to the POS for simplicity, so you can use 
@@ -54,7 +56,7 @@ import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
  * into the payload
  */
 public final class JapaneseTokenizer extends Tokenizer {
-  private StreamTagger tagger = null;
+  private final StreamTagger2 tagger;
   private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
   private final OffsetAttribute offsetAtt = addAttribute(OffsetAttribute.class);
   // we set the type attribute to be the POS for simplicity (e.g. payloads searching)
@@ -67,6 +69,9 @@ public final class JapaneseTokenizer extends Tokenizer {
   private final PronunciationsAttribute pronunciationsAtt = addAttribute(PronunciationsAttribute.class);
   private final ReadingsAttribute readingsAtt = addAttribute(ReadingsAttribute.class);
   
+  // sentence increment
+  private final SentenceIncrementAttribute sentenceAtt = addAttribute(SentenceIncrementAttribute.class);
+
   // viterbi cost
   private final CostAttribute costAtt = addAttribute(CostAttribute.class);
   // viterbi costs from Token.getCost() are cumulative,
@@ -75,7 +80,7 @@ public final class JapaneseTokenizer extends Tokenizer {
 
   public JapaneseTokenizer(Reader in) {
     super(in);
-    tagger = new StreamTagger(SenFactory.getStringTagger(), in);
+    tagger = new StreamTagger2(SenFactory.getStringTagger(), in);
   }
 
   @Override
@@ -93,6 +98,7 @@ public final class JapaneseTokenizer extends Tokenizer {
       
       if (token.isSentenceStart()) {
         accumulatedCost = 0;
+        sentenceAtt.setSentenceIncrement(1);
       }
       
       costAtt.setCost(cost - accumulatedCost);
@@ -103,7 +109,7 @@ public final class JapaneseTokenizer extends Tokenizer {
       partOfSpeechAtt.setPartOfSpeech(m.getPartOfSpeech());
       pronunciationsAtt.setPronunciations(m.getPronunciations());
       readingsAtt.setReadings(m.getReadings());
-      offsetAtt.setOffset(token.getStart(), token.end());
+      offsetAtt.setOffset(correctOffset(token.getStart()), correctOffset(token.end()));
       typeAtt.setType(m.getPartOfSpeech());
       return true;
     }
@@ -112,7 +118,14 @@ public final class JapaneseTokenizer extends Tokenizer {
   @Override
   public void reset(Reader in) throws IOException {
     super.reset(in);
-    tagger = new StreamTagger(SenFactory.getStringTagger(), in);
+    tagger.reset(in);
     accumulatedCost = 0;
+  }
+
+  @Override
+  public void end() throws IOException {
+    // set final offset
+    final int finalOffset = correctOffset(tagger.end());
+    offsetAtt.setOffset(finalOffset, finalOffset);
   }
 }

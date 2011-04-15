@@ -92,4 +92,20 @@ public class TestJapaneseTokenizer extends BaseTokenStreamTestCase {
       }
     }
   }
+  
+  public void testEnd() throws IOException {
+    assertTokenStreamContents(analyzer.reusableTokenStream("foo", new StringReader("これは本ではない")),
+        new String[] { "これ", "は", "本", "で", "は", "ない" },
+        new int[] { 0, 2, 3, 4, 5, 6 },
+        new int[] { 2, 3, 4, 5, 6, 8 },
+        new Integer(8)
+    );
+    
+    assertTokenStreamContents(analyzer.reusableTokenStream("foo", new StringReader("これは本ではない    ")),
+        new String[] { "これ", "は", "本", "で", "は", "ない" },
+        new int[] { 0, 2, 3, 4, 5, 6 },
+        new int[] { 2, 3, 4, 5, 6, 8 },
+        new Integer(12)
+    );
+  }
 }
