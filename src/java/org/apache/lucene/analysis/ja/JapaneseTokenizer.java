@@ -27,6 +27,7 @@ import net.java.sen.dictionary.Token;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.ja.tokenAttributes.BasicFormAttribute;
 import org.apache.lucene.analysis.ja.tokenAttributes.ConjugationAttribute;
+import org.apache.lucene.analysis.ja.tokenAttributes.CostAttribute;
 import org.apache.lucene.analysis.ja.tokenAttributes.PartOfSpeechAttribute;
 import org.apache.lucene.analysis.ja.tokenAttributes.PronunciationsAttribute;
 import org.apache.lucene.analysis.ja.tokenAttributes.ReadingsAttribute;
@@ -65,6 +66,9 @@ public final class JapaneseTokenizer extends Tokenizer {
   private final PartOfSpeechAttribute partOfSpeechAtt = addAttribute(PartOfSpeechAttribute.class);
   private final PronunciationsAttribute pronunciationsAtt = addAttribute(PronunciationsAttribute.class);
   private final ReadingsAttribute readingsAtt = addAttribute(ReadingsAttribute.class);
+  
+  // viterbi cost
+  private final CostAttribute costAtt = addAttribute(CostAttribute.class);
 
   public JapaneseTokenizer(Reader in) {
     super(in);
@@ -82,6 +86,7 @@ public final class JapaneseTokenizer extends Tokenizer {
     
       // note, unlike the previous implementation, we set the surface form
       termAtt.setEmpty().append(token.getSurface());
+      costAtt.setCost(token.getCost());
       basicFormAtt.setBasicForm(m.getBasicForm());
       conjugationAtt.setConjugationalForm(m.getConjugationalForm());
       conjugationAtt.setConjugationalType(m.getConjugationalType());
