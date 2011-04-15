@@ -140,6 +140,7 @@ public class StreamTagger {
 			if (this.tokens != null) {
 				for (int n = 0; n < this.tokens.size(); n++) {
 					Token token = this.tokens.get(n);
+					token.setSentenceStart(n == 0);
 					token.setStart(token.getStart() + this.lastReadOffset);
 				}
 			}
@@ -181,6 +182,7 @@ public class StreamTagger {
 			if (this.tokens != null) {
 				for (int n = 0; n < this.tokens.size(); n++) {
 					Token token = this.tokens.get(n);
+					token.setSentenceStart(n == 0);
 					token.setStart(token.getStart() + this.lastReadOffset);
 				}
 			}
