@@ -76,8 +76,8 @@
           fork="true">
       <classpath>
         <pathelement location="."/>
-        <pathelement location="../../build/classes/java"/>
-        <pathelement location="../../lib/jisx0213-1.0.jar"/>
+        <pathelement location="../build/classes/java"/>
+        <pathelement location="../lib/jisx0213-1.0.jar"/>
         <pathelement path="${java.class.path}"/>
       </classpath>
       <arg line="X-EUC-JISX0213" />
@@ -92,7 +92,7 @@
           fork="true">
       <classpath>
         <pathelement location="."/>
-        <pathelement location="../../build/classes/java"/>
+        <pathelement location="../build/classes/java"/>
         <pathelement path="${java.class.path}"/>
       </classpath>
     </java>
