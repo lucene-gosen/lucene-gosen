@@ -94,8 +94,8 @@ public class SenFactory {
     return getInstance().costs.asShortBuffer();
   }
   
-  public static CharBuffer getPOSBuffer() {
-    return getInstance().pos.asCharBuffer();
+  public static ByteBuffer getPOSBuffer() {
+    return getInstance().pos.duplicate();
   }
   
   public static ByteBuffer getTokenBuffer() {
