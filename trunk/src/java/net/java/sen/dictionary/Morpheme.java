@@ -108,17 +108,9 @@ public class Morpheme {
 			char[] temp = new char[512];
 			int length;
 
-			length = buffer.get();
-			buffer.get(temp, 0, length);
-			this.partOfSpeech = new String(temp, 0, length);
-
-			length = buffer.get();
-			buffer.get(temp, 0, length);
-			this.conjugationalType = new String(temp, 0, length);
-
-			length = buffer.get();
-			buffer.get(temp, 0, length);
-			this.conjugationalForm = new String(temp, 0, length);
+			this.partOfSpeech = dictionary.posIndex[buffer.get()];
+			this.conjugationalType = dictionary.conjTypeIndex[buffer.get()];
+			this.conjugationalForm = dictionary.conjFormIndex[buffer.get()];
 
 			length = buffer.get();
 			buffer.get(temp, 0, length);
