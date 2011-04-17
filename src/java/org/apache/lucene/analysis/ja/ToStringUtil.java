@@ -99,8 +99,8 @@ public class ToStringUtil {
     posTranslations.put("感動詞", "interjection");
     posTranslations.put("記号", "symbol");
     posTranslations.put("記号-一般", "symbol-misc");
-    posTranslations.put("記号-句点", "symbol-comma");
-    posTranslations.put("記号-読点", "symbol-period");
+    posTranslations.put("記号-句点", "symbol-period");
+    posTranslations.put("記号-読点", "symbol-comma");
     posTranslations.put("記号-空白", "symbol-space");
     posTranslations.put("記号-括弧開", "symbol-open_bracket");
     posTranslations.put("記号-括弧閉", "symbol-close_bracket");
