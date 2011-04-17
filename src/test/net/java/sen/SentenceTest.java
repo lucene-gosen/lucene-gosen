@@ -851,9 +851,9 @@ public class SentenceTest {
 		testSentence.setReadingConstraint (new Reading(1, 1, "ヒ"));
 
 		Token[] testTokens = new Token[] {
-				new Token ("今", 2989, 0, 1, new Morpheme ("接頭詞-名詞接続", "*", "*", "今", new String[]{"コン", "イマ"}, new String[]{"コン", "イマ"}, null)),
-				new Token ("日", 5551, 1, 1, new Morpheme ("名詞-一般", "*", "*", "日", new String[]{"ヒ", "ニチ"}, new String[]{"ヒ", "ニチ"}, null)),
-				new Token ("は", 6470, 2, 1, new Morpheme ("助詞-係助詞", "*", "*", "は", new String[]{"ハ"}, new String[]{"ワ"}, null))
+				new Token ("今", 2989, 0, 1, new Morpheme ("接頭詞-名詞接続", "*", "*", "*", new String[]{"コン", "イマ"}, new String[]{"コン", "イマ"}, null)),
+				new Token ("日", 5551, 1, 1, new Morpheme ("名詞-一般", "*", "*", "*", new String[]{"ヒ", "ニチ"}, new String[]{"ヒ", "ニチ"}, null)),
+				new Token ("は", 6470, 2, 1, new Morpheme ("助詞-係助詞", "*", "*", "*", new String[]{"ハ"}, new String[]{"ワ"}, null))
 		};
 
 		Viterbi viterbi = getViterbi();
@@ -878,14 +878,14 @@ public class SentenceTest {
 		testSentence.setReadingConstraint (new Reading(1, 1, "ヒ"));
 
 		Token[] testTokens = new Token[] {
-				new Token ("日", 0, 1, 1, new Morpheme ("名詞-接尾-一般", "*", "*", "日", new String[]{"ビ", "ニチ"}, new String[]{"ビ", "ニチ"}, null)),
-				new Token ("日", 0, 1, 1, new Morpheme ("名詞-接尾-助数詞", "*", "*", "日", new String[]{"ニチ"}, new String[]{"ニチ"}, null)),
-				new Token ("日", 0, 1, 1, new Morpheme ("名詞-固有名詞-地域-国", "*", "*", "日", new String[]{"ニチ", "ニッ"}, new String[]{"ニチ", "ニッ"}, null)),
-				new Token ("日", 0, 1, 1, new Morpheme ("名詞-固有名詞-地域-一般", "*", "*", "日", new String[]{"ヒ"}, new String[]{"ヒ"}, null)),
-				new Token ("日", 0, 1, 1, new Morpheme ("名詞-非自立-副詞可能", "*", "*", "日", new String[]{"ヒ"}, new String[]{"ヒ"}, null)),
-				new Token ("日", 0, 1, 1, new Morpheme ("名詞-非自立-一般", "*", "*", "日", new String[]{"ヒ"}, new String[]{"ヒ"}, null)),
-				new Token ("日", 0, 1, 1, new Morpheme ("名詞-一般", "*", "*", "日", new String[]{"ヒ", "ニチ"}, new String[]{"ヒ", "ニチ"}, null)),
-				new Token ("日", 0, 1, 1, new Morpheme ("名詞-副詞可能", "*", "*", "日", new String[]{"ヒ"}, new String[]{"ヒ"}, null))
+				new Token ("日", 0, 1, 1, new Morpheme ("名詞-接尾-一般", "*", "*", "*", new String[]{"ビ", "ニチ"}, new String[]{"ビ", "ニチ"}, null)),
+				new Token ("日", 0, 1, 1, new Morpheme ("名詞-接尾-助数詞", "*", "*", "*", new String[]{"ニチ"}, new String[]{"ニチ"}, null)),
+				new Token ("日", 0, 1, 1, new Morpheme ("名詞-固有名詞-地域-国", "*", "*", "*", new String[]{"ニチ", "ニッ"}, new String[]{"ニチ", "ニッ"}, null)),
+				new Token ("日", 0, 1, 1, new Morpheme ("名詞-固有名詞-地域-一般", "*", "*", "*", new String[]{"ヒ"}, new String[]{"ヒ"}, null)),
+				new Token ("日", 0, 1, 1, new Morpheme ("名詞-非自立-副詞可能", "*", "*", "*", new String[]{"ヒ"}, new String[]{"ヒ"}, null)),
+				new Token ("日", 0, 1, 1, new Morpheme ("名詞-非自立-一般", "*", "*", "*", new String[]{"ヒ"}, new String[]{"ヒ"}, null)),
+				new Token ("日", 0, 1, 1, new Morpheme ("名詞-一般", "*", "*", "*", new String[]{"ヒ", "ニチ"}, new String[]{"ヒ", "ニチ"}, null)),
+				new Token ("日", 0, 1, 1, new Morpheme ("名詞-副詞可能", "*", "*", "*", new String[]{"ヒ"}, new String[]{"ヒ"}, null))
 		};
 	
 		Viterbi viterbi = getViterbi();
@@ -908,12 +908,12 @@ public class SentenceTest {
 		Sentence testSentence = new Sentence ("買い被る".toCharArray());
 
 		Token[] testTokens = new Token[] {
-				new Token ("買い被る", 0, 0, 4, new Morpheme ("動詞-自立", "五段・ラ行", "基本形", "買い被る", new String[]{"カイカブル"}, new String[]{"カイカブル"}, null)),
+				new Token ("買い被る", 0, 0, 4, new Morpheme ("動詞-自立", "五段・ラ行", "基本形", "*", new String[]{"カイカブル"}, new String[]{"カイカブル"}, null)),
 				new Token ("買い被", 0, 0, 3, new Morpheme ("動詞-自立", "五段・ラ行", "体言接続特殊２", "買い被る", new String[]{"カイカブ"}, new String[]{"カイカブ"}, null)),
 				new Token ("買い", 0, 0, 2, new Morpheme ("動詞-自立", "五段・ワ行促音便", "連用形", "買う", new String[]{"カイ"}, new String[]{"カイ"}, null)),
-				new Token ("買い", 0, 0, 2, new Morpheme ("名詞-接尾-一般", "*", "*", "買い", new String[]{"カイ", "ガイ"}, new String[]{"カイ", "ガイ"}, null)),
-				new Token ("買い", 0, 0, 2, new Morpheme ("名詞-一般", "*", "*", "買い", new String[]{"カイ"}, new String[]{"カイ"}, null)),
-				new Token ("買", 0, 0, 1, new Morpheme ("名詞-接尾-一般", "*", "*", "買", new String[]{"カイ", "ガイ"}, new String[]{"カイ", "ガイ"}, null))
+				new Token ("買い", 0, 0, 2, new Morpheme ("名詞-接尾-一般", "*", "*", "*", new String[]{"カイ", "ガイ"}, new String[]{"カイ", "ガイ"}, null)),
+				new Token ("買い", 0, 0, 2, new Morpheme ("名詞-一般", "*", "*", "*", new String[]{"カイ"}, new String[]{"カイ"}, null)),
+				new Token ("買", 0, 0, 1, new Morpheme ("名詞-接尾-一般", "*", "*", "*", new String[]{"カイ", "ガイ"}, new String[]{"カイ", "ガイ"}, null))
 		};
 	
 		Viterbi viterbi = getViterbi();

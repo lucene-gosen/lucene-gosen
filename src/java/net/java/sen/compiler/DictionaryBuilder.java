@@ -312,9 +312,13 @@ public class DictionaryBuilder {
 				}
         
 				DictionaryUtil.writeVInt(outputStream, index);
-        
-				DictionaryUtil.writeVInt(outputStream, basicForm.length());
-				outputStream.writeChars(basicForm);
+
+				if (basicForm.equals(csvValues[0])) {
+				  DictionaryUtil.writeVInt(outputStream, 0);
+				} else {
+				  DictionaryUtil.writeVInt(outputStream, basicForm.length());
+				  outputStream.writeChars(basicForm);
+				}
 
 				int encoding = 0; // by default we write a single-byte katakana encoding
 				

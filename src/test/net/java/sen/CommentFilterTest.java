@@ -50,12 +50,12 @@ public class CommentFilterTest {
 		String testString = "これは<a href=\"#test\">テスト</a>だ";
 
 		Token[] testTokens = new Token[] {
-				new Token ("これ", 1848, 0, 2, new Morpheme ("名詞-代名詞-一般", "*", "*", "これ", new String[]{"コレ"}, new String[]{"コレ"}, null)),
-				new Token ("は", 2445, 2, 1, new Morpheme ("助詞-係助詞", "*", "*", "は", new String[]{"ハ"}, new String[]{"ワ"}, null)),
-				new Token ("<a href=\"#test\">", 0, 3, 16, new Morpheme ("記号-注釈", "*", "*", "<a href=\"#test\">", new String[]{"<a href=\"#test\">"}, new String[]{"<a href=\"#test\">"}, null)),
-				new Token ("テスト", 5785, 19, 3, new Morpheme ("名詞-サ変接続", "*", "*", "テスト", new String[]{"テスト"}, new String[]{"テスト"}, null)),
-				new Token ("</a>", 0, 22, 4, new Morpheme ("記号-注釈", "*", "*", "</a>", new String[]{"</a>"}, new String[]{"</a>"}, null)),
-				new Token ("だ", 7298, 26, 1, new Morpheme ("助動詞", "特殊・ダ", "基本形", "だ", new String[]{"ダ"}, new String[]{"ダ"}, null))
+				new Token ("これ", 1848, 0, 2, new Morpheme ("名詞-代名詞-一般", "*", "*", "*", new String[]{"コレ"}, new String[]{"コレ"}, null)),
+				new Token ("は", 2445, 2, 1, new Morpheme ("助詞-係助詞", "*", "*", "*", new String[]{"ハ"}, new String[]{"ワ"}, null)),
+				new Token ("<a href=\"#test\">", 0, 3, 16, new Morpheme ("記号-注釈", "*", "*", "*", new String[]{"<a href=\"#test\">"}, new String[]{"<a href=\"#test\">"}, null)),
+				new Token ("テスト", 5785, 19, 3, new Morpheme ("名詞-サ変接続", "*", "*", "*", new String[]{"テスト"}, new String[]{"テスト"}, null)),
+				new Token ("</a>", 0, 22, 4, new Morpheme ("記号-注釈", "*", "*", "*", new String[]{"</a>"}, new String[]{"</a>"}, null)),
+				new Token ("だ", 7298, 26, 1, new Morpheme ("助動詞", "特殊・ダ", "基本形", "*", new String[]{"ダ"}, new String[]{"ダ"}, null))
 		};
 
 
@@ -82,8 +82,8 @@ public class CommentFilterTest {
 		String testString = "<p>test";
 
 		Token[] testTokens = new Token[] {
-				new Token ("<p>", 0, 0, 3, new Morpheme ("記号-注釈", "*", "*", "<p>", new String[]{"<p>"}, new String[]{"<p>"}, null)),
-				new Token ("test", 31059, 3, 4, new Morpheme ("未知語", null, null, "test", new String[]{}, new String[]{}, null))
+				new Token ("<p>", 0, 0, 3, new Morpheme ("記号-注釈", "*", "*", "*", new String[]{"<p>"}, new String[]{"<p>"}, null)),
+				new Token ("test", 31059, 3, 4, new Morpheme ("未知語", null, null, "*", new String[]{}, new String[]{}, null))
 		};
 
 
@@ -110,8 +110,8 @@ public class CommentFilterTest {
 		String testString = "test<p>";
 
 		Token[] testTokens = new Token[] {
-				new Token ("test", 31059, 0, 4, new Morpheme ("未知語", null, null, "test", new String[]{}, new String[]{}, null)),
-				new Token ("<p>", 0, 4, 3, new Morpheme ("記号-注釈", "*", "*", "<p>", new String[]{"<p>"}, new String[]{"<p>"}, null))
+				new Token ("test", 31059, 0, 4, new Morpheme ("未知語", null, null, "*", new String[]{}, new String[]{}, null)),
+				new Token ("<p>", 0, 4, 3, new Morpheme ("記号-注釈", "*", "*", "*", new String[]{"<p>"}, new String[]{"<p>"}, null))
 		};
 
 
@@ -138,9 +138,9 @@ public class CommentFilterTest {
 		String testString = "test<br><p>";
 
 		Token[] testTokens = new Token[] {
-				new Token ("test", 31059, 0, 4, new Morpheme ("未知語", null, null, "test", new String[]{}, new String[]{}, null)),
-				new Token ("<br>", 0, 4, 4, new Morpheme ("記号-注釈", "*", "*", "<br>", new String[]{"<br>"}, new String[]{"<br>"}, null)),
-				new Token ("<p>", 0, 8, 3, new Morpheme ("記号-注釈", "*", "*", "<p>", new String[]{"<p>"}, new String[]{"<p>"}, null))
+				new Token ("test", 31059, 0, 4, new Morpheme ("未知語", null, null, "*", new String[]{}, new String[]{}, null)),
+				new Token ("<br>", 0, 4, 4, new Morpheme ("記号-注釈", "*", "*", "*", new String[]{"<br>"}, new String[]{"<br>"}, null)),
+				new Token ("<p>", 0, 8, 3, new Morpheme ("記号-注釈", "*", "*", "*", new String[]{"<p>"}, new String[]{"<p>"}, null))
 		};
 
 
@@ -167,9 +167,9 @@ public class CommentFilterTest {
 		String testString = "<br><p>test";
 
 		Token[] testTokens = new Token[] {
-				new Token ("<br>", 0, 0, 4, new Morpheme ("記号-注釈", "*", "*", "<br>", new String[]{"<br>"}, new String[]{"<br>"}, null)),
-				new Token ("<p>", 0, 4, 3, new Morpheme ("記号-注釈", "*", "*", "<p>", new String[]{"<p>"}, new String[]{"<p>"}, null)),
-				new Token ("test", 31059, 7, 4, new Morpheme ("未知語", null, null, "test", new String[]{}, new String[]{}, null))
+				new Token ("<br>", 0, 0, 4, new Morpheme ("記号-注釈", "*", "*", "*", new String[]{"<br>"}, new String[]{"<br>"}, null)),
+				new Token ("<p>", 0, 4, 3, new Morpheme ("記号-注釈", "*", "*", "*", new String[]{"<p>"}, new String[]{"<p>"}, null)),
+				new Token ("test", 31059, 7, 4, new Morpheme ("未知語", null, null, "*", new String[]{}, new String[]{}, null))
 		};
 
 
@@ -196,10 +196,10 @@ public class CommentFilterTest {
 		String testString = "test<br><p>end";
 
 		Token[] testTokens = new Token[] {
-				new Token ("test", 31059, 0, 4, new Morpheme ("未知語", null, null, "test", new String[]{}, new String[]{}, null)),
-				new Token ("<br>", 0, 4, 4, new Morpheme ("記号-注釈", "*", "*", "<br>", new String[]{"<br>"}, new String[]{"<br>"}, null)),
-				new Token ("<p>", 0, 8, 3, new Morpheme ("記号-注釈", "*", "*", "<p>", new String[]{"<p>"}, new String[]{"<p>"}, null)),
-				new Token ("end", 61942, 11, 3, new Morpheme ("未知語", null, null, "end", new String[]{}, new String[]{}, null))
+				new Token ("test", 31059, 0, 4, new Morpheme ("未知語", null, null, "*", new String[]{}, new String[]{}, null)),
+				new Token ("<br>", 0, 4, 4, new Morpheme ("記号-注釈", "*", "*", "*", new String[]{"<br>"}, new String[]{"<br>"}, null)),
+				new Token ("<p>", 0, 8, 3, new Morpheme ("記号-注釈", "*", "*", "*", new String[]{"<p>"}, new String[]{"<p>"}, null)),
+				new Token ("end", 61942, 11, 3, new Morpheme ("未知語", null, null, "*", new String[]{}, new String[]{}, null))
 		};
 
 
@@ -226,10 +226,10 @@ public class CommentFilterTest {
 		String testString = "ランダムな《《意味のない》》テキスト";
 
 		Token[] testTokens = new Token[] {
-				new Token ("ランダム", 4666, 0, 4, new Morpheme ("名詞-形容動詞語幹", "*", "*", "ランダム", new String[]{"ランダム"}, new String[]{"ランダム"}, null)),
+				new Token ("ランダム", 4666, 0, 4, new Morpheme ("名詞-形容動詞語幹", "*", "*", "*", new String[]{"ランダム"}, new String[]{"ランダム"}, null)),
 				new Token ("な", 5027, 4, 1, new Morpheme ("助動詞", "特殊・ダ", "体言接続", "だ", new String[]{"ナ"}, new String[]{"ナ"}, null)),
-				new Token ("《《意味のない》》", 0, 5, 9, new Morpheme ("記号-注釈", "*", "*", "《《意味のない》》", new String[]{"《《意味のない》》"}, new String[]{"《《意味のない》》"}, null)),
-				new Token ("テキスト", 8488, 14, 4, new Morpheme ("名詞-一般", "*", "*", "テキスト", new String[]{"テキスト"}, new String[]{"テキスト"}, null))
+				new Token ("《《意味のない》》", 0, 5, 9, new Morpheme ("記号-注釈", "*", "*", "*", new String[]{"《《意味のない》》"}, new String[]{"《《意味のない》》"}, null)),
+				new Token ("テキスト", 8488, 14, 4, new Morpheme ("名詞-一般", "*", "*", "*", new String[]{"テキスト"}, new String[]{"テキスト"}, null))
 		};
 
 

@@ -23,6 +23,9 @@ import org.apache.lucene.util.Attribute;
 /**
  * Attribute for {@link Morpheme#getConjugationalForm()} and
  * {@link Morpheme#getConjugationalType()}.
+ * <p>
+ * Note: depending on part of speech, these values may not be applicable,
+ * and will be set to "*"
  */
 public interface ConjugationAttribute extends Attribute {
   public String getConjugationalForm();
