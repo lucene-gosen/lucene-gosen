@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Vector;
 
 import net.java.sen.dictionary.CToken;
+import net.java.sen.dictionary.DictionaryUtil;
 import net.java.sen.trie.TrieBuilder;
 import net.java.sen.util.CSVData;
 import net.java.sen.util.CSVParser;
@@ -265,7 +266,7 @@ public class DictionaryBuilder {
 				ctoken.rcAttr2 = (short) matrixBuilders[0].getDicId(key_b.toString());
 				ctoken.rcAttr1 = (short) matrixBuilders[1].getDicId(key_b.toString());
 				ctoken.lcAttr = (short) matrixBuilders[2].getDicId(key_b.toString());
-				ctoken.partOfSpeechIndex = outputStream.size() >> 1;
+				ctoken.partOfSpeechIndex = outputStream.size();
 				ctoken.length = (short) csvValues[0].length();
 				ctoken.cost = (short) Integer.parseInt(csvValues[1]);
 
@@ -294,7 +295,7 @@ public class DictionaryBuilder {
 				  posIndex.add(partOfSpeech);
 				}
 				
-				outputStream.writeChar(index);
+				DictionaryUtil.writeVInt(outputStream, index);
 
 				index = conjTypeIndex.indexOf(conjugationalType);
 				if (index < 0) {
@@ -302,7 +303,7 @@ public class DictionaryBuilder {
 				  conjTypeIndex.add(conjugationalType);
 				}
 				
-				outputStream.writeChar(index);
+				DictionaryUtil.writeVInt(outputStream, index);
 				
 				index = conjFormIndex.indexOf(conjugationalForm);
 				if (index < 0) {
@@ -310,30 +311,60 @@ public class DictionaryBuilder {
 				  conjFormIndex.add(conjugationalForm);
 				}
         
-				outputStream.writeChar(index);
+				DictionaryUtil.writeVInt(outputStream, index);
         
-				outputStream.writeChar(basicForm.length());
+				DictionaryUtil.writeVInt(outputStream, basicForm.length());
 				outputStream.writeChars(basicForm);
 
-				outputStream.writeChar(readings.size());
+				int encoding = 0; // by default we write a single-byte katakana encoding
+				
+				// but if we find any non-katakana in the readings or pronunciation, we use utf-16
+				for (String reading : readings) {
+				  for (int i = 0; i < reading.length(); i++) {
+				    char ch = reading.charAt(i);
+				    if (ch < 0x30A0 || ch > 0x30FF) {
+				      encoding = 1;
+				    }
+				  }
+				}
+				  
+				for (String pronunciation : pronunciations) {
+				  for (int i = 0; i < pronunciation.length(); i++) {
+				    char ch = pronunciation.charAt(i);
+				    if (ch < 0x30A0 || ch > 0x30FF) {
+				      encoding = 1;
+				    }
+				  }
+				}
+				
+				DictionaryUtil.writeVInt(outputStream, readings.size() << 1 | encoding);
 
 				for (int i = 0; i < readings.size(); i++) {
 				  String reading = readings.get(i);
-					outputStream.writeChar(reading.length());
-					outputStream.writeChars(reading);
-				}
-
-				// if the pronunciation is the same as the associated reading, we write a 0 for the length
-				for (int i = 0; i < pronunciations.size(); i++) {
 				  String pronunciation = pronunciations.get(i);
-				  if (i < readings.size() && pronunciation.equals(readings.get(i))) {
-				    outputStream.writeChar(0);
+				  if (pronunciation.equals(reading)) {
+				    // if the pronunciation is the same as the associated reading, we write a 0 for the length
+				    DictionaryUtil.writeVInt(outputStream, reading.length() << 1 | 0);
+				    if (encoding == 0) {
+				      DictionaryUtil.writeKatakana(outputStream, reading);
+				    } else {
+				      outputStream.writeChars(reading);
+				    }
 				  } else {
-				    outputStream.writeChar(pronunciation.length());
-				    outputStream.writeChars(pronunciation);
+				    DictionaryUtil.writeVInt(outputStream, reading.length() << 1 | 1);
+				    if (encoding == 0) {
+				      DictionaryUtil.writeKatakana(outputStream, reading);
+				    } else {
+				      outputStream.writeChars(reading);
+				    }
+				    DictionaryUtil.writeVInt(outputStream, pronunciation.length());
+				    if (encoding == 0) {
+				      DictionaryUtil.writeKatakana(outputStream, pronunciation);
+				    } else {
+				      outputStream.writeChars(pronunciation);
+				    }
 				  }
 				}
-
 			}
 
 		}

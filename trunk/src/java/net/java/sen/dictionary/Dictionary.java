@@ -44,7 +44,7 @@ public class Dictionary {
 	/**
 	 * Mapped buffer of the part-of-speech information file (partOfSpeech.sen)
 	 */
-	private CharBuffer partOfSpeechInfoBuffer = null;
+	private ByteBuffer partOfSpeechInfoBuffer = null;
 
 	/**
 	 * Mapped buffer of the Trie data (trie.sen)
@@ -169,7 +169,7 @@ public class Dictionary {
 	 *
 	 * @return The character buffer
 	 */
-	CharBuffer getPartOfSpeechInfoBuffer() {
+	ByteBuffer getPartOfSpeechInfoBuffer() {
 
 		return this.partOfSpeechInfoBuffer;
 
