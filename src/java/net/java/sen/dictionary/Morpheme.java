@@ -135,8 +135,13 @@ public class Morpheme {
 			this.pronunciations = new ArrayList<String>(numReadings);
 			for (int i = 0; i < numReadings; i++) {
 				length = buffer.get();
-				buffer.get(temp, 0, length);
-				this.pronunciations.add(new String(temp, 0, length));
+				// if the length is zero, the pronunciation is the same as its reading
+				if (length == 0) {
+				  this.pronunciations.add(this.readings.get(i));
+				} else {
+				  buffer.get(temp, 0, length);
+				  this.pronunciations.add(new String(temp, 0, length));
+				}
 			}
 
 			this.loaded = true;
