@@ -47,10 +47,10 @@ public class SpaceTest {
 		String testString = " これはテストだ";
 
 		Token[] testTokens = new Token[] {
-				new Token ("これ", 1848, 1, 2, new Morpheme ("名詞-代名詞-一般", "*", "*", "これ", new String[]{"コレ"}, new String[]{"コレ"}, null)),
-				new Token ("は", 2445, 3, 1, new Morpheme ("助詞-係助詞", "*", "*", "は", new String[]{"ハ"}, new String[]{"ワ"}, null)),
-				new Token ("テスト", 5785, 4, 3, new Morpheme ("名詞-サ変接続", "*", "*", "テスト", new String[]{"テスト"}, new String[]{"テスト"}, null)),
-				new Token ("だ", 7298, 7, 1, new Morpheme ("助動詞", "特殊・ダ", "基本形", "だ", new String[]{"ダ"}, new String[]{"ダ"}, null))
+				new Token ("これ", 1848, 1, 2, new Morpheme ("名詞-代名詞-一般", "*", "*", "*", new String[]{"コレ"}, new String[]{"コレ"}, null)),
+				new Token ("は", 2445, 3, 1, new Morpheme ("助詞-係助詞", "*", "*", "*", new String[]{"ハ"}, new String[]{"ワ"}, null)),
+				new Token ("テスト", 5785, 4, 3, new Morpheme ("名詞-サ変接続", "*", "*", "*", new String[]{"テスト"}, new String[]{"テスト"}, null)),
+				new Token ("だ", 7298, 7, 1, new Morpheme ("助動詞", "特殊・ダ", "基本形", "*", new String[]{"ダ"}, new String[]{"ダ"}, null))
 		};
 
 
@@ -74,10 +74,10 @@ public class SpaceTest {
 		String testString = " 	これはテストだ";
 
 		Token[] testTokens = new Token[] {
-				new Token ("これ", 1848, 2, 2, new Morpheme ("名詞-代名詞-一般", "*", "*", "これ", new String[]{"コレ"}, new String[]{"コレ"}, null)),
-				new Token ("は", 2445, 4, 1, new Morpheme ("助詞-係助詞", "*", "*", "は", new String[]{"ハ"}, new String[]{"ワ"}, null)),
-				new Token ("テスト", 5785, 5, 3, new Morpheme ("名詞-サ変接続", "*", "*", "テスト", new String[]{"テスト"}, new String[]{"テスト"}, null)),
-				new Token ("だ", 7298, 8, 1, new Morpheme ("助動詞", "特殊・ダ", "基本形", "だ", new String[]{"ダ"}, new String[]{"ダ"}, null))
+				new Token ("これ", 1848, 2, 2, new Morpheme ("名詞-代名詞-一般", "*", "*", "*", new String[]{"コレ"}, new String[]{"コレ"}, null)),
+				new Token ("は", 2445, 4, 1, new Morpheme ("助詞-係助詞", "*", "*", "*", new String[]{"ハ"}, new String[]{"ワ"}, null)),
+				new Token ("テスト", 5785, 5, 3, new Morpheme ("名詞-サ変接続", "*", "*", "*", new String[]{"テスト"}, new String[]{"テスト"}, null)),
+				new Token ("だ", 7298, 8, 1, new Morpheme ("助動詞", "特殊・ダ", "基本形", "*", new String[]{"ダ"}, new String[]{"ダ"}, null))
 		};
 
 
@@ -101,10 +101,10 @@ public class SpaceTest {
 		String testString = "これはテストだ ";
 
 		Token[] testTokens = new Token[] {
-				new Token ("これ", 1848, 0, 2, new Morpheme ("名詞-代名詞-一般", "*", "*", "これ", new String[]{"コレ"}, new String[]{"コレ"}, null)),
-				new Token ("は", 2445, 2, 1, new Morpheme ("助詞-係助詞", "*", "*", "は", new String[]{"ハ"}, new String[]{"ワ"}, null)),
-				new Token ("テスト", 5785, 3, 3, new Morpheme ("名詞-サ変接続", "*", "*", "テスト", new String[]{"テスト"}, new String[]{"テスト"}, null)),
-				new Token ("だ", 7298, 6, 1, new Morpheme ("助動詞", "特殊・ダ", "基本形", "だ", new String[]{"ダ"}, new String[]{"ダ"}, null))
+				new Token ("これ", 1848, 0, 2, new Morpheme ("名詞-代名詞-一般", "*", "*", "*", new String[]{"コレ"}, new String[]{"コレ"}, null)),
+				new Token ("は", 2445, 2, 1, new Morpheme ("助詞-係助詞", "*", "*", "*", new String[]{"ハ"}, new String[]{"ワ"}, null)),
+				new Token ("テスト", 5785, 3, 3, new Morpheme ("名詞-サ変接続", "*", "*", "*", new String[]{"テスト"}, new String[]{"テスト"}, null)),
+				new Token ("だ", 7298, 6, 1, new Morpheme ("助動詞", "特殊・ダ", "基本形", "*", new String[]{"ダ"}, new String[]{"ダ"}, null))
 		};
 
 
@@ -128,10 +128,10 @@ public class SpaceTest {
 		String testString = "これはテストだ 	";
 
 		Token[] testTokens = new Token[] {
-				new Token ("これ", 1848, 0, 2, new Morpheme ("名詞-代名詞-一般", "*", "*", "これ", new String[]{"コレ"}, new String[]{"コレ"}, null)),
-				new Token ("は", 2445, 2, 1, new Morpheme ("助詞-係助詞", "*", "*", "は", new String[]{"ハ"}, new String[]{"ワ"}, null)),
-				new Token ("テスト", 5785, 3, 3, new Morpheme ("名詞-サ変接続", "*", "*", "テスト", new String[]{"テスト"}, new String[]{"テスト"}, null)),
-				new Token ("だ", 7298, 6, 1, new Morpheme ("助動詞", "特殊・ダ", "基本形", "だ", new String[]{"ダ"}, new String[]{"ダ"}, null))
+				new Token ("これ", 1848, 0, 2, new Morpheme ("名詞-代名詞-一般", "*", "*", "*", new String[]{"コレ"}, new String[]{"コレ"}, null)),
+				new Token ("は", 2445, 2, 1, new Morpheme ("助詞-係助詞", "*", "*", "*", new String[]{"ハ"}, new String[]{"ワ"}, null)),
+				new Token ("テスト", 5785, 3, 3, new Morpheme ("名詞-サ変接続", "*", "*", "*", new String[]{"テスト"}, new String[]{"テスト"}, null)),
+				new Token ("だ", 7298, 6, 1, new Morpheme ("助動詞", "特殊・ダ", "基本形", "*", new String[]{"ダ"}, new String[]{"ダ"}, null))
 		};
 
 
@@ -155,10 +155,10 @@ public class SpaceTest {
 		String testString = "これは テストだ";
 
 		Token[] testTokens = new Token[] {
-				new Token ("これ", 1848, 0, 2, new Morpheme ("名詞-代名詞-一般", "*", "*", "これ", new String[]{"コレ"}, new String[]{"コレ"}, null)),
-				new Token ("は", 2445, 2, 1, new Morpheme ("助詞-係助詞", "*", "*", "は", new String[]{"ハ"}, new String[]{"ワ"}, null)),
-				new Token ("テスト", 5785, 4, 3, new Morpheme ("名詞-サ変接続", "*", "*", "テスト", new String[]{"テスト"}, new String[]{"テスト"}, null)),
-				new Token ("だ", 7298, 7, 1, new Morpheme ("助動詞", "特殊・ダ", "基本形", "だ", new String[]{"ダ"}, new String[]{"ダ"}, null))
+				new Token ("これ", 1848, 0, 2, new Morpheme ("名詞-代名詞-一般", "*", "*", "*", new String[]{"コレ"}, new String[]{"コレ"}, null)),
+				new Token ("は", 2445, 2, 1, new Morpheme ("助詞-係助詞", "*", "*", "*", new String[]{"ハ"}, new String[]{"ワ"}, null)),
+				new Token ("テスト", 5785, 4, 3, new Morpheme ("名詞-サ変接続", "*", "*", "*", new String[]{"テスト"}, new String[]{"テスト"}, null)),
+				new Token ("だ", 7298, 7, 1, new Morpheme ("助動詞", "特殊・ダ", "基本形", "*", new String[]{"ダ"}, new String[]{"ダ"}, null))
 		};
 
 
@@ -182,10 +182,10 @@ public class SpaceTest {
 		String testString = "これは 	テストだ";
 
 		Token[] testTokens = new Token[] {
-				new Token ("これ", 1848, 0, 2, new Morpheme ("名詞-代名詞-一般", "*", "*", "これ", new String[]{"コレ"}, new String[]{"コレ"}, null)),
-				new Token ("は", 2445, 2, 1, new Morpheme ("助詞-係助詞", "*", "*", "は", new String[]{"ハ"}, new String[]{"ワ"}, null)),
-				new Token ("テスト", 5785, 5, 3, new Morpheme ("名詞-サ変接続", "*", "*", "テスト", new String[]{"テスト"}, new String[]{"テスト"}, null)),
-				new Token ("だ", 7298, 8, 1, new Morpheme ("助動詞", "特殊・ダ", "基本形", "だ", new String[]{"ダ"}, new String[]{"ダ"}, null))
+				new Token ("これ", 1848, 0, 2, new Morpheme ("名詞-代名詞-一般", "*", "*", "*", new String[]{"コレ"}, new String[]{"コレ"}, null)),
+				new Token ("は", 2445, 2, 1, new Morpheme ("助詞-係助詞", "*", "*", "*", new String[]{"ハ"}, new String[]{"ワ"}, null)),
+				new Token ("テスト", 5785, 5, 3, new Morpheme ("名詞-サ変接続", "*", "*", "*", new String[]{"テスト"}, new String[]{"テスト"}, null)),
+				new Token ("だ", 7298, 8, 1, new Morpheme ("助動詞", "特殊・ダ", "基本形", "*", new String[]{"ダ"}, new String[]{"ダ"}, null))
 		};
 
 
@@ -209,10 +209,10 @@ public class SpaceTest {
 		String testString = "  	 これ は 	テストだ		 ";
 
 		Token[] testTokens = new Token[] {
-				new Token ("これ", 1848, 4, 2, new Morpheme ("名詞-代名詞-一般", "*", "*", "これ", new String[]{"コレ"}, new String[]{"コレ"}, null)),
-				new Token ("は", 2445, 7, 1, new Morpheme ("助詞-係助詞", "*", "*", "は", new String[]{"ハ"}, new String[]{"ワ"}, null)),
-				new Token ("テスト", 5785, 10, 3, new Morpheme ("名詞-サ変接続", "*", "*", "テスト", new String[]{"テスト"}, new String[]{"テスト"}, null)),
-				new Token ("だ", 7298, 13, 1, new Morpheme ("助動詞", "特殊・ダ", "基本形", "だ", new String[]{"ダ"}, new String[]{"ダ"}, null))
+				new Token ("これ", 1848, 4, 2, new Morpheme ("名詞-代名詞-一般", "*", "*", "*", new String[]{"コレ"}, new String[]{"コレ"}, null)),
+				new Token ("は", 2445, 7, 1, new Morpheme ("助詞-係助詞", "*", "*", "*", new String[]{"ハ"}, new String[]{"ワ"}, null)),
+				new Token ("テスト", 5785, 10, 3, new Morpheme ("名詞-サ変接続", "*", "*", "*", new String[]{"テスト"}, new String[]{"テスト"}, null)),
+				new Token ("だ", 7298, 13, 1, new Morpheme ("助動詞", "特殊・ダ", "基本形", "*", new String[]{"ダ"}, new String[]{"ダ"}, null))
 		};
 
 

@@ -207,7 +207,15 @@ public class CompositeTokenFilter implements StreamFilter {
 		token1.setCost(token1.getCost() + token2.getCost());
 		token1.setLength(token1.getLength() + token2.getLength());
 		token1.setSurface(token1.getSurface() + token2.getSurface());
-		token1.getMorpheme().setBasicForm(token1.getMorpheme().getBasicForm() + token2.getMorpheme().getBasicForm());
+		String basicForm1 = token1.getMorpheme().getBasicForm();
+		String basicForm2 = token2.getMorpheme().getBasicForm();
+		if (basicForm1.equals("*") && basicForm2.equals("*")) {
+		  token1.getMorpheme().setBasicForm("*");
+		} else {
+		  token1.getMorpheme().setBasicForm(
+		      (basicForm1.equals("*") ? token1.getSurface() : basicForm1) + 
+		      (basicForm2.equals("*") ? token2.getSurface() : basicForm2));
+		}
 		token1.getMorpheme().setPartOfSpeech(newPartOfSpeech);
 		token1.getMorpheme().setPronunciations(Arrays.asList(token1.getMorpheme().getPronunciations().get(0) + token2.getMorpheme().getPronunciations().get(0)));
 		token1.getMorpheme().setReadings(Arrays.asList(token1.getMorpheme().getReadings().get(0) + token2.getMorpheme().getReadings().get(0)));
