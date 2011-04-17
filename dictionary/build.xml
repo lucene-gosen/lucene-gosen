@@ -34,15 +34,15 @@
     </condition>
     <condition property="dics.preprocessed">
       <and>
-        <available file="dic.csv"/>
-        <available file="connect.csv"/>
+        <available file="dictionary.csv"/>
+        <available file="connection.csv"/>
       </and>
     </condition>
     <condition property="dics.complete">
       <and>
-        <available file="da.sen"/>
-        <available file="matrix.sen"/>
-        <available file="posInfo.sen"/>
+        <available file="trie.sen"/>
+        <available file="connectionCost.sen"/>
+        <available file="partOfSpeech.sen"/>
         <available file="token.sen"/>
       </and>
     </condition>
