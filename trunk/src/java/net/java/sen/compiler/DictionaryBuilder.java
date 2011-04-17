@@ -292,14 +292,21 @@ public class DictionaryBuilder {
 
 				outputStream.writeChar(readings.size());
 
-				for (String reading : readings) {
+				for (int i = 0; i < readings.size(); i++) {
+				  String reading = readings.get(i);
 					outputStream.writeChar(reading.length());
 					outputStream.writeChars(reading);
 				}
 
-				for (String pronunciation : pronunciations) {
-					outputStream.writeChar(pronunciation.length());
-					outputStream.writeChars(pronunciation);
+				// if the pronunciation is the same as the associated reading, we write a 0 for the length
+				for (int i = 0; i < pronunciations.size(); i++) {
+				  String pronunciation = pronunciations.get(i);
+				  if (i < readings.size() && pronunciation.equals(readings.get(i))) {
+				    outputStream.writeChar(0);
+				  } else {
+				    outputStream.writeChar(pronunciation.length());
+				    outputStream.writeChars(pronunciation);
+				  }
 				}
 
 			}
