@@ -93,6 +93,16 @@ public class TestJapaneseTokenizer extends BaseTokenStreamTestCase {
     }
   }
   
+  public void testLargeDocReliability() throws IOException {
+    for (int i = 0; i < 100; i++) {
+      String s = _TestUtil.randomUnicodeString(random, 10000);
+      TokenStream ts = analyzer.reusableTokenStream("foo", new StringReader(s));
+      ts.reset();
+      while (ts.incrementToken()) {
+      }
+    }
+  }
+  
   public void testEnd() throws IOException {
     assertTokenStreamContents(analyzer.reusableTokenStream("foo", new StringReader("これは本ではない")),
         new String[] { "これ", "は", "本", "で", "は", "ない" },
