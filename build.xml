@@ -98,7 +98,7 @@
 	</target>
 
         <!-- run tests -->
-        <target name="test" depends="compile-tests">
+        <target name="test" depends="compile-tests, build-dic">
            <junit printsummary="no" haltonfailure="no" maxmemory="512M" forkmode="perBatch">
               <formatter type="brief" usefile="no"/>
               <classpath refid="testclasspath"/>
