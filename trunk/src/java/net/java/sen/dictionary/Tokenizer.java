@@ -117,7 +117,7 @@ public abstract class Tokenizer {
 		unknownNode.length = length;
 		unknownNode.span = span;
 		unknownNode.morpheme = new Morpheme();
-		unknownNode.morpheme.setBasicForm(new String(surface, start, length));
+		unknownNode.morpheme.setBasicForm("*");
 		unknownNode.morpheme.setPartOfSpeech(this.unknownPartOfSpeechDescription);
 
 		return unknownNode;

@@ -113,8 +113,12 @@ public class Morpheme {
 			this.conjugationalForm = dictionary.conjFormIndex[DictionaryUtil.readVInt(buffer)];
 
 			length = DictionaryUtil.readVInt(buffer);
-			DictionaryUtil.readString(buffer, temp, 0, length);
-			this.basicForm = new String(temp, 0, length);
+			if (length == 0) {
+			  this.basicForm = "*"; // basic form is the same as surface form
+			} else {
+			  DictionaryUtil.readString(buffer, temp, 0, length);
+			  this.basicForm = new String(temp, 0, length);
+			}
 
 			int readingData = DictionaryUtil.readVInt(buffer);
 			int numReadings = readingData >>> 1;

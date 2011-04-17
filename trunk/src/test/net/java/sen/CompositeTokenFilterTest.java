@@ -50,7 +50,7 @@ public class CompositeTokenFilterTest {
 		String testString = "１１０";
 
 		Token[] testTokens = new Token[] {
-				new Token ("１１０", 8288, 0, 3, new Morpheme ("名詞-数", "*", "*", "１１０", new String[]{"イチイチゼロ"}, new String[]{"イチイチゼロ"}, null))
+				new Token ("１１０", 8288, 0, 3, new Morpheme ("名詞-数", "*", "*", "*", new String[]{"イチイチゼロ"}, new String[]{"イチイチゼロ"}, null))
 		};
 
 
@@ -77,10 +77,10 @@ public class CompositeTokenFilterTest {
 		String testString = "ロンドン０１７１ー１２３４５６７";
 
 		Token[] testTokens = new Token[] {
-				new Token ("ロンドン", 3040, 0, 4, new Morpheme ("名詞-固有名詞-地域-一般", "*", "*", "ロンドン", new String[]{"ロンドン"}, new String[]{"ロンドン"}, null)),
-				new Token ("０１７１", 26418, 4, 4, new Morpheme ("名詞-数", "*", "*", "０１７１", new String[]{"ゼロイチナナイチ"}, new String[]{"ゼロイチナナイチ"}, null)),
-				new Token ("ー", 40038, 8, 1, new Morpheme ("未知語", null, null, "ー", new String[]{}, new String[]{}, null)),
-				new Token ("１２３４５６７", 322155, 9, 7, new Morpheme ("名詞-数", "*", "*", "１２３４５６７", new String[]{"イチニサンヨンゴロクナナ"}, new String[]{"イチニサンヨンゴロクナナ"}, null)),
+				new Token ("ロンドン", 3040, 0, 4, new Morpheme ("名詞-固有名詞-地域-一般", "*", "*", "*", new String[]{"ロンドン"}, new String[]{"ロンドン"}, null)),
+				new Token ("０１７１", 26418, 4, 4, new Morpheme ("名詞-数", "*", "*", "*", new String[]{"ゼロイチナナイチ"}, new String[]{"ゼロイチナナイチ"}, null)),
+				new Token ("ー", 40038, 8, 1, new Morpheme ("未知語", null, null, "*", new String[]{}, new String[]{}, null)),
+				new Token ("１２３４５６７", 322155, 9, 7, new Morpheme ("名詞-数", "*", "*", "*", new String[]{"イチニサンヨンゴロクナナ"}, new String[]{"イチニサンヨンゴロクナナ"}, null)),
 		};
 
 

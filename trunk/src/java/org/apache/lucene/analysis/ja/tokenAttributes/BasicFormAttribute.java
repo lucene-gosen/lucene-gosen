@@ -22,6 +22,9 @@ import org.apache.lucene.util.Attribute;
 
 /**
  * Attribute for {@link Morpheme#getBasicForm()}.
+ * <p>
+ * Note: depending on part of speech, this value may not be applicable,
+ * and will be set to "*"
  */
 public interface BasicFormAttribute extends Attribute {
   public String getBasicForm();

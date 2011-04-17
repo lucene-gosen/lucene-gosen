@@ -147,7 +147,7 @@ public class CommentFilter implements StreamFilter {
 						count = end;
 						tokenStr = surface.substring(start, end);
 
-						Morpheme morpheme = new Morpheme (rule.partOfSpeech, "*", "*", tokenStr, new String[]{tokenStr}, new String[]{tokenStr}, null);
+						Morpheme morpheme = new Morpheme (rule.partOfSpeech, "*", "*", "*", new String[]{tokenStr}, new String[]{tokenStr}, null);
 						
                         Token token = new Token(
                         		tokenStr,
