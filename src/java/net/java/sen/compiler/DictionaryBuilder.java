@@ -23,6 +23,7 @@ package net.java.sen.compiler;
 
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -37,6 +38,7 @@ import java.util.List;
 import java.util.Vector;
 
 import net.java.sen.dictionary.CToken;
+import net.java.sen.dictionary.DictionaryUtil;
 import net.java.sen.trie.TrieBuilder;
 import net.java.sen.util.CSVData;
 import net.java.sen.util.CSVParser;
@@ -66,6 +68,11 @@ public class DictionaryBuilder {
 	 * Compiled part of speech data filename
 	 */
 	private static final String PART_OF_SPEECH_DATA_FILENAME = "partOfSpeech.sen";
+	
+	 /**
+   * Compiled part of speech index filename
+   */
+  private static final String PART_OF_SPEECH_INDEX_FILENAME = "posIndex.sen";
 
 	/**
 	 * Compiled token data filename
@@ -76,6 +83,11 @@ public class DictionaryBuilder {
 	 * Compiled trie data filename
 	 */
 	private static final String TRIE_DATA_FILENAME = "trie.sen";
+
+	/**
+	 * Compiled header data filename
+	 */
+	private static final String HEADER_DATA_FILENAME = "header.sen";
 
 	/**
 	 * Default connection cost
@@ -199,6 +211,7 @@ public class DictionaryBuilder {
 	 * 
 	 * @param dictionaryCSVFilenames The filenames of the dictionary CSV data file and any additional dictionaries 
 	 * @param partOfSpeechDataFilename The filename for the part-of-speech data file
+	 * @param partOfSpeechDataFilename The filename for the part-of-speech index file
 	 * @param matrixBuilders The three <code>CostMatrixBuilder</code>s
 	 * @param partOfSpeechStart The starting index of the part-of-speech data within a CSV line
 	 * @param partOfSpeechSize The number of part-of-speech values within a CSV line
@@ -211,7 +224,7 @@ public class DictionaryBuilder {
 	 *
 	 * @throws IOException 
 	 */
-	private void createPartOfSpeechDataFile(List<String> dictionaryCSVFilenames, String partOfSpeechDataFilename,
+	private void createPartOfSpeechDataFile(List<String> dictionaryCSVFilenames, String partOfSpeechDataFilename, String partOfSpeechIndexFilename,
 			CostMatrixBuilder[] matrixBuilders, int partOfSpeechStart, int partOfSpeechSize, String charset,
 			String bosPartOfSpeech, String eosPartOfSpeech, String unknownPartOfSpeech, VirtualTupleList dictionaryList, CToken[] standardCTokens) throws IOException
 	{
@@ -222,6 +235,10 @@ public class DictionaryBuilder {
 		CSVData pos_b = new CSVData();
 
 		DataOutputStream outputStream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(partOfSpeechDataFilename)));
+
+		List<String> posIndex = new ArrayList<String>();
+		List<String> conjTypeIndex = new ArrayList<String>();
+		List<String> conjFormIndex = new ArrayList<String>();
 
 		for (String dictionaryCSVFilename : dictionaryCSVFilenames) {
 			
@@ -249,7 +266,7 @@ public class DictionaryBuilder {
 				ctoken.rcAttr2 = (short) matrixBuilders[0].getDicId(key_b.toString());
 				ctoken.rcAttr1 = (short) matrixBuilders[1].getDicId(key_b.toString());
 				ctoken.lcAttr = (short) matrixBuilders[2].getDicId(key_b.toString());
-				ctoken.partOfSpeechIndex = outputStream.size() >> 1;
+				ctoken.partOfSpeechIndex = outputStream.size();
 				ctoken.length = (short) csvValues[0].length();
 				ctoken.cost = (short) Integer.parseInt(csvValues[1]);
 
@@ -272,35 +289,106 @@ public class DictionaryBuilder {
 				List<String> readings = splitCompoundField(csvValues[partOfSpeechStart + 7]);
 				List<String> pronunciations = splitCompoundField(csvValues[partOfSpeechStart + 8]);
 
-				outputStream.writeChar(partOfSpeech.length());
-				outputStream.writeChars(partOfSpeech);
+				int index = posIndex.indexOf(partOfSpeech);
+				if (index < 0) {
+				  index = posIndex.size();
+				  posIndex.add(partOfSpeech);
+				}
+				
+				DictionaryUtil.writeVInt(outputStream, index);
 
-				outputStream.writeChar(conjugationalType.length());
-				outputStream.writeChars(conjugationalType);
-
-				outputStream.writeChar(conjugationalForm.length());
-				outputStream.writeChars(conjugationalForm);
-
-				outputStream.writeChar(basicForm.length());
+				index = conjTypeIndex.indexOf(conjugationalType);
+				if (index < 0) {
+				  index = conjTypeIndex.size();
+				  conjTypeIndex.add(conjugationalType);
+				}
+				
+				DictionaryUtil.writeVInt(outputStream, index);
+				
+				index = conjFormIndex.indexOf(conjugationalForm);
+				if (index < 0) {
+				  index = conjFormIndex.size();
+				  conjFormIndex.add(conjugationalForm);
+				}
+        
+				DictionaryUtil.writeVInt(outputStream, index);
+        
+				DictionaryUtil.writeVInt(outputStream, basicForm.length());
 				outputStream.writeChars(basicForm);
 
-				outputStream.writeChar(readings.size());
-
+				int encoding = 0; // by default we write a single-byte katakana encoding
+				
+				// but if we find any non-katakana in the readings or pronunciation, we use utf-16
 				for (String reading : readings) {
-					outputStream.writeChar(reading.length());
-					outputStream.writeChars(reading);
+				  for (int i = 0; i < reading.length(); i++) {
+				    char ch = reading.charAt(i);
+				    if (ch < 0x30A0 || ch > 0x30FF) {
+				      encoding = 1;
+				    }
+				  }
 				}
-
+				  
 				for (String pronunciation : pronunciations) {
-					outputStream.writeChar(pronunciation.length());
-					outputStream.writeChars(pronunciation);
+				  for (int i = 0; i < pronunciation.length(); i++) {
+				    char ch = pronunciation.charAt(i);
+				    if (ch < 0x30A0 || ch > 0x30FF) {
+				      encoding = 1;
+				    }
+				  }
 				}
+				
+				DictionaryUtil.writeVInt(outputStream, readings.size() << 1 | encoding);
 
+				for (int i = 0; i < readings.size(); i++) {
+				  String reading = readings.get(i);
+				  String pronunciation = pronunciations.get(i);
+				  if (pronunciation.equals(reading)) {
+				    // if the pronunciation is the same as the associated reading, we write a 0 for the length
+				    DictionaryUtil.writeVInt(outputStream, reading.length() << 1 | 0);
+				    if (encoding == 0) {
+				      DictionaryUtil.writeKatakana(outputStream, reading);
+				    } else {
+				      outputStream.writeChars(reading);
+				    }
+				  } else {
+				    DictionaryUtil.writeVInt(outputStream, reading.length() << 1 | 1);
+				    if (encoding == 0) {
+				      DictionaryUtil.writeKatakana(outputStream, reading);
+				    } else {
+				      outputStream.writeChars(reading);
+				    }
+				    DictionaryUtil.writeVInt(outputStream, pronunciation.length());
+				    if (encoding == 0) {
+				      DictionaryUtil.writeKatakana(outputStream, pronunciation);
+				    } else {
+				      outputStream.writeChars(pronunciation);
+				    }
+				  }
+				}
 			}
 
 		}
 
 		outputStream.close();
+		
+    // write all the unique parts of speech, conj types, and conj forms we found
+    DataOutputStream index = new DataOutputStream(new FileOutputStream(partOfSpeechIndexFilename));
+    index.writeChar(posIndex.size());
+    for (String pos : posIndex) {
+      index.writeUTF(pos);
+    }
+		
+    index.writeChar(conjTypeIndex.size());
+    for (String conjType : conjTypeIndex) {
+      index.writeUTF(conjType);
+    }
+    
+    index.writeChar(conjFormIndex.size());
+    for (String conjForm : conjFormIndex) {
+      index.writeUTF(conjForm);
+    }
+		
+		index.close();
 
 		dictionaryList.sort();
 
@@ -504,6 +592,17 @@ public class DictionaryBuilder {
 
 	}
 
+	/**
+	 * Creates the header file containing resource lengths
+	 */
+	private void createHeaderFile(String headerFilename) throws IOException {
+	  DataOutputStream os = new DataOutputStream(new FileOutputStream(headerFilename));
+	  os.writeInt((int) new File(CONNECTION_COST_DATA_FILENAME).length());
+	  os.writeInt((int) new File(PART_OF_SPEECH_DATA_FILENAME).length());
+	  os.writeInt((int) new File(TOKEN_DATA_FILENAME).length());
+	  os.writeInt((int) new File(TRIE_DATA_FILENAME).length());
+	  os.close();
+	}
 
 	/**
 	 * Compiles CSV source data into the data files used for analysis
@@ -536,6 +635,7 @@ public class DictionaryBuilder {
 		createPartOfSpeechDataFile(
 				dictionaryCSVFilenames,
 				PART_OF_SPEECH_DATA_FILENAME,
+				PART_OF_SPEECH_INDEX_FILENAME,
 				matrixBuilders,
 				PART_OF_SPEECH_START,
 				PART_OF_SPEECH_SIZE,
@@ -564,7 +664,7 @@ public class DictionaryBuilder {
 
 		// Create Trie file (da.sen)
 		createTrieFile(TRIE_DATA_FILENAME, trieData);
-
+		createHeaderFile(HEADER_DATA_FILENAME);
 	}
 
 

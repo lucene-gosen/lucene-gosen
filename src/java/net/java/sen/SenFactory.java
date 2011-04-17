@@ -20,6 +20,7 @@
 
 package net.java.sen;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -59,20 +60,42 @@ public class SenFactory {
   }
   
   private SenFactory() throws IOException {
-    costs = loadBuffer("connectionCost.sen", 8979816).asReadOnlyBuffer();
-    pos = loadBuffer("partOfSpeech.sen", 25122058).asReadOnlyBuffer();
-    tokens = loadBuffer("token.sen", 5295234).asReadOnlyBuffer();
-    trie = loadBuffer("trie.sen", 7698400).asReadOnlyBuffer();
+    // read main data files
+    DataInputStream in = new DataInputStream(SenFactory.class.getResourceAsStream("header.sen"));
+    costs = loadBuffer("connectionCost.sen", in.readInt()).asReadOnlyBuffer();
+    pos = loadBuffer("partOfSpeech.sen", in.readInt()).asReadOnlyBuffer();
+    tokens = loadBuffer("token.sen", in.readInt()).asReadOnlyBuffer();
+    trie = loadBuffer("trie.sen", in.readInt()).asReadOnlyBuffer();
+    in.close();
+    
+    // read index files
+    in = new DataInputStream(SenFactory.class.getResourceAsStream("posIndex.sen"));
+    posIndex = new String[in.readChar()];
+    for (int i = 0; i < posIndex.length; i++) {
+      posIndex[i] = in.readUTF();
+    }
+    
+    conjTypeIndex = new String[in.readChar()];
+    for (int i = 0; i < conjTypeIndex.length; i++) {
+      conjTypeIndex[i] = in.readUTF();
+    }
+    
+    conjFormIndex = new String[in.readChar()];
+    for (int i = 0; i < conjFormIndex.length; i++) {
+      conjFormIndex[i] = in.readUTF();
+    }
+    in.close();
   }
   
+  private final String[] posIndex, conjTypeIndex, conjFormIndex;
   private final ByteBuffer costs, pos, tokens, trie;
 
   public static ShortBuffer getConnectionCostBuffer() {
     return getInstance().costs.asShortBuffer();
   }
   
-  public static CharBuffer getPOSBuffer() {
-    return getInstance().pos.asCharBuffer();
+  public static ByteBuffer getPOSBuffer() {
+    return getInstance().pos.duplicate();
   }
   
   public static ByteBuffer getTokenBuffer() {
@@ -81,6 +104,18 @@ public class SenFactory {
   
   public static IntBuffer getTrieBuffer() {
     return getInstance().trie.asIntBuffer();
+  }
+  
+  public static String[] getPOSIndex() {
+    return getInstance().posIndex;
+  }
+  
+  public static String[] getConjTypeIndex() {
+    return getInstance().conjTypeIndex;
+  }
+  
+  public static String[] getConjFormIndex() {
+    return getInstance().conjFormIndex;
   }
   
   public static final String unknownPOS = "未知語";
