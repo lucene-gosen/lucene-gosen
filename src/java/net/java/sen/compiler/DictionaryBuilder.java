@@ -67,6 +67,11 @@ public class DictionaryBuilder {
 	 * Compiled part of speech data filename
 	 */
 	private static final String PART_OF_SPEECH_DATA_FILENAME = "partOfSpeech.sen";
+	
+	 /**
+   * Compiled part of speech index filename
+   */
+  private static final String PART_OF_SPEECH_INDEX_FILENAME = "posIndex.sen";
 
 	/**
 	 * Compiled token data filename
@@ -205,6 +210,7 @@ public class DictionaryBuilder {
 	 * 
 	 * @param dictionaryCSVFilenames The filenames of the dictionary CSV data file and any additional dictionaries 
 	 * @param partOfSpeechDataFilename The filename for the part-of-speech data file
+	 * @param partOfSpeechDataFilename The filename for the part-of-speech index file
 	 * @param matrixBuilders The three <code>CostMatrixBuilder</code>s
 	 * @param partOfSpeechStart The starting index of the part-of-speech data within a CSV line
 	 * @param partOfSpeechSize The number of part-of-speech values within a CSV line
@@ -217,7 +223,7 @@ public class DictionaryBuilder {
 	 *
 	 * @throws IOException 
 	 */
-	private void createPartOfSpeechDataFile(List<String> dictionaryCSVFilenames, String partOfSpeechDataFilename,
+	private void createPartOfSpeechDataFile(List<String> dictionaryCSVFilenames, String partOfSpeechDataFilename, String partOfSpeechIndexFilename,
 			CostMatrixBuilder[] matrixBuilders, int partOfSpeechStart, int partOfSpeechSize, String charset,
 			String bosPartOfSpeech, String eosPartOfSpeech, String unknownPartOfSpeech, VirtualTupleList dictionaryList, CToken[] standardCTokens) throws IOException
 	{
@@ -228,6 +234,10 @@ public class DictionaryBuilder {
 		CSVData pos_b = new CSVData();
 
 		DataOutputStream outputStream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(partOfSpeechDataFilename)));
+
+		List<String> posIndex = new ArrayList<String>();
+		List<String> conjTypeIndex = new ArrayList<String>();
+		List<String> conjFormIndex = new ArrayList<String>();
 
 		for (String dictionaryCSVFilename : dictionaryCSVFilenames) {
 			
@@ -278,15 +288,30 @@ public class DictionaryBuilder {
 				List<String> readings = splitCompoundField(csvValues[partOfSpeechStart + 7]);
 				List<String> pronunciations = splitCompoundField(csvValues[partOfSpeechStart + 8]);
 
-				outputStream.writeChar(partOfSpeech.length());
-				outputStream.writeChars(partOfSpeech);
+				int index = posIndex.indexOf(partOfSpeech);
+				if (index < 0) {
+				  index = posIndex.size();
+				  posIndex.add(partOfSpeech);
+				}
+				
+				outputStream.writeChar(index);
 
-				outputStream.writeChar(conjugationalType.length());
-				outputStream.writeChars(conjugationalType);
-
-				outputStream.writeChar(conjugationalForm.length());
-				outputStream.writeChars(conjugationalForm);
-
+				index = conjTypeIndex.indexOf(conjugationalType);
+				if (index < 0) {
+				  index = conjTypeIndex.size();
+				  conjTypeIndex.add(conjugationalType);
+				}
+				
+				outputStream.writeChar(index);
+				
+				index = conjFormIndex.indexOf(conjugationalForm);
+				if (index < 0) {
+				  index = conjFormIndex.size();
+				  conjFormIndex.add(conjugationalForm);
+				}
+        
+				outputStream.writeChar(index);
+        
 				outputStream.writeChar(basicForm.length());
 				outputStream.writeChars(basicForm);
 
@@ -314,6 +339,25 @@ public class DictionaryBuilder {
 		}
 
 		outputStream.close();
+		
+    // write all the unique parts of speech, conj types, and conj forms we found
+    DataOutputStream index = new DataOutputStream(new FileOutputStream(partOfSpeechIndexFilename));
+    index.writeChar(posIndex.size());
+    for (String pos : posIndex) {
+      index.writeUTF(pos);
+    }
+		
+    index.writeChar(conjTypeIndex.size());
+    for (String conjType : conjTypeIndex) {
+      index.writeUTF(conjType);
+    }
+    
+    index.writeChar(conjFormIndex.size());
+    for (String conjForm : conjFormIndex) {
+      index.writeUTF(conjForm);
+    }
+		
+		index.close();
 
 		dictionaryList.sort();
 
@@ -560,6 +604,7 @@ public class DictionaryBuilder {
 		createPartOfSpeechDataFile(
 				dictionaryCSVFilenames,
 				PART_OF_SPEECH_DATA_FILENAME,
+				PART_OF_SPEECH_INDEX_FILENAME,
 				matrixBuilders,
 				PART_OF_SPEECH_START,
 				PART_OF_SPEECH_SIZE,

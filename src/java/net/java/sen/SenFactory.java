@@ -60,14 +60,34 @@ public class SenFactory {
   }
   
   private SenFactory() throws IOException {
+    // read main data files
     DataInputStream in = new DataInputStream(SenFactory.class.getResourceAsStream("header.sen"));
     costs = loadBuffer("connectionCost.sen", in.readInt()).asReadOnlyBuffer();
     pos = loadBuffer("partOfSpeech.sen", in.readInt()).asReadOnlyBuffer();
     tokens = loadBuffer("token.sen", in.readInt()).asReadOnlyBuffer();
     trie = loadBuffer("trie.sen", in.readInt()).asReadOnlyBuffer();
     in.close();
+    
+    // read index files
+    in = new DataInputStream(SenFactory.class.getResourceAsStream("posIndex.sen"));
+    posIndex = new String[in.readChar()];
+    for (int i = 0; i < posIndex.length; i++) {
+      posIndex[i] = in.readUTF();
+    }
+    
+    conjTypeIndex = new String[in.readChar()];
+    for (int i = 0; i < conjTypeIndex.length; i++) {
+      conjTypeIndex[i] = in.readUTF();
+    }
+    
+    conjFormIndex = new String[in.readChar()];
+    for (int i = 0; i < conjFormIndex.length; i++) {
+      conjFormIndex[i] = in.readUTF();
+    }
+    in.close();
   }
   
+  private final String[] posIndex, conjTypeIndex, conjFormIndex;
   private final ByteBuffer costs, pos, tokens, trie;
 
   public static ShortBuffer getConnectionCostBuffer() {
@@ -84,6 +104,18 @@ public class SenFactory {
   
   public static IntBuffer getTrieBuffer() {
     return getInstance().trie.asIntBuffer();
+  }
+  
+  public static String[] getPOSIndex() {
+    return getInstance().posIndex;
+  }
+  
+  public static String[] getConjTypeIndex() {
+    return getInstance().conjTypeIndex;
+  }
+  
+  public static String[] getConjFormIndex() {
+    return getInstance().conjFormIndex;
   }
   
   public static final String unknownPOS = "未知語";

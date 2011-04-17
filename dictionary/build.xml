@@ -43,6 +43,7 @@
         <available file="trie.sen"/>
         <available file="connectionCost.sen"/>
         <available file="partOfSpeech.sen"/>
+        <available file="posIndex.sen"/>
         <available file="token.sen"/>
         <available file="header.sen"/>
       </and>

@@ -98,6 +98,9 @@ public class Dictionary {
 	 */
 	private CToken results[] = new CToken[256];
 
+	String posIndex[];
+	String conjTypeIndex[];
+	String conjFormIndex[];
 
 	/**
 	 * Map the connection cost matrix file (matrix.sen)
@@ -245,6 +248,10 @@ public class Dictionary {
 		// Map double array trie dictionary
 		this.trieBuffer = SenFactory.getTrieBuffer();
 
+		// indexes (unique POS values, etc)
+		this.posIndex = SenFactory.getPOSIndex();
+		this.conjTypeIndex = SenFactory.getConjTypeIndex();
+		this.conjFormIndex = SenFactory.getConjFormIndex();
 	}
 
 
