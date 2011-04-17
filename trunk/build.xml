@@ -123,7 +123,7 @@
         </target>
 
 	<!-- Create library jar -->
-	<target name="jar" depends="compile,copy-data">
+	<target name="jar" depends="compile, build-dic, copy-data">
 		<jar jarfile="lucene-gosen-${version}.jar" basedir="${bin.dir}/classes/java"/>
 	</target>
 
@@ -135,7 +135,7 @@
         </target>
 
         <!-- rebuild data files -->
-        <target name="rebuild-data">
+        <target name="build-dic">
            <sequential>
            <subant target="compile" inheritall="false" failonerror="true">
               <fileset dir="${dic.dir}" includes="build.xml" />
@@ -151,6 +151,9 @@
 		<delete dir="${bin.dir}"/>
 		<delete dir="${javadoc.dir}"/>
 		<delete file="lucene-gosen-${version}.jar"/>
+		<delete>
+      <fileset dir="${res.dir}/net/java/sen" includes="*.sen"/>
+		</delete>
 	</target>
 
 </project>
