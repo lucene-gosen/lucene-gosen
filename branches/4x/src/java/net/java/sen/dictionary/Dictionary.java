@@ -44,7 +44,7 @@ public class Dictionary {
 	/**
 	 * Mapped buffer of the part-of-speech information file (partOfSpeech.sen)
 	 */
-	private CharBuffer partOfSpeechInfoBuffer = null;
+	private ByteBuffer partOfSpeechInfoBuffer = null;
 
 	/**
 	 * Mapped buffer of the Trie data (trie.sen)
@@ -98,6 +98,9 @@ public class Dictionary {
 	 */
 	private CToken results[] = new CToken[256];
 
+	String posIndex[];
+	String conjTypeIndex[];
+	String conjFormIndex[];
 
 	/**
 	 * Map the connection cost matrix file (matrix.sen)
@@ -166,7 +169,7 @@ public class Dictionary {
 	 *
 	 * @return The character buffer
 	 */
-	CharBuffer getPartOfSpeechInfoBuffer() {
+	ByteBuffer getPartOfSpeechInfoBuffer() {
 
 		return this.partOfSpeechInfoBuffer;
 
@@ -245,6 +248,10 @@ public class Dictionary {
 		// Map double array trie dictionary
 		this.trieBuffer = SenFactory.getTrieBuffer();
 
+		// indexes (unique POS values, etc)
+		this.posIndex = SenFactory.getPOSIndex();
+		this.conjTypeIndex = SenFactory.getConjTypeIndex();
+		this.conjFormIndex = SenFactory.getConjFormIndex();
 	}
 
 

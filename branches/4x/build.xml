@@ -2,11 +2,13 @@
 
 <project default="jar" basedir=".">
 
-	<property name="version" value="1.0beta"/>
+	<property name="version" value="1.0-dev"/>
+
 	<property name="src.dir" location="src/java"/>
 	<property name="res.dir" location="src/resources"/>
 	<property name="test.dir" location="src/test"/>
-	<property name="bin.dir" location="build/"/>
+  <property name="bin.dir" location="build"/>
+  <property name="dic.dir" location="dictionary"/>
   <property name="javadoc.dir" location="docs/api"/>
   <property name="prettify.dir" location="prettify"/>
 
@@ -96,7 +98,7 @@
 	</target>
 
         <!-- run tests -->
-        <target name="test" depends="compile-tests">
+        <target name="test" depends="compile-tests, build-dic">
            <junit printsummary="no" haltonfailure="no" maxmemory="512M" forkmode="perBatch">
               <formatter type="brief" usefile="no"/>
               <classpath refid="testclasspath"/>
@@ -121,7 +123,7 @@
         </target>
 
 	<!-- Create library jar -->
-	<target name="jar" depends="compile,copy-data">
+	<target name="jar" depends="compile, build-dic, copy-data">
 		<jar jarfile="lucene-gosen-${version}.jar" basedir="${bin.dir}/classes/java"/>
 	</target>
 
@@ -133,13 +135,13 @@
         </target>
 
         <!-- rebuild data files -->
-        <target name="rebuild-data">
+        <target name="build-dic">
            <sequential>
            <subant target="compile" inheritall="false" failonerror="true">
-              <fileset dir="testdata/dictionary" includes="build.xml" />
+              <fileset dir="${dic.dir}" includes="build.xml" />
            </subant>
            <copy todir="${res.dir}/net/java/sen">
-             <fileset dir="testdata/dictionary" includes="*.sen"/>
+             <fileset dir="${dic.dir}" includes="*.sen"/>
            </copy>
            </sequential>
         </target>
@@ -148,7 +150,10 @@
 	<target name="clean">
 		<delete dir="${bin.dir}"/>
 		<delete dir="${javadoc.dir}"/>
-		<delete file="gosen-${version}.jar"/>
+		<delete file="lucene-gosen-${version}.jar"/>
+		<delete>
+      <fileset dir="${res.dir}/net/java/sen" includes="*.sen"/>
+		</delete>
 	</target>
 
 </project>

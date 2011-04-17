@@ -20,7 +20,7 @@
 
 package net.java.sen.dictionary;
 
-import java.nio.CharBuffer;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -103,40 +103,46 @@ public class Morpheme {
 
 		if (!this.loaded) {
 
-			CharBuffer buffer = this.dictionary.getPartOfSpeechInfoBuffer();
+			ByteBuffer buffer = this.dictionary.getPartOfSpeechInfoBuffer();
 			buffer.position(this.partOfSpeechIndex);
 			char[] temp = new char[512];
 			int length;
 
-			length = buffer.get();
-			buffer.get(temp, 0, length);
-			this.partOfSpeech = new String(temp, 0, length);
+			this.partOfSpeech = dictionary.posIndex[DictionaryUtil.readVInt(buffer)];
+			this.conjugationalType = dictionary.conjTypeIndex[DictionaryUtil.readVInt(buffer)];
+			this.conjugationalForm = dictionary.conjFormIndex[DictionaryUtil.readVInt(buffer)];
 
-			length = buffer.get();
-			buffer.get(temp, 0, length);
-			this.conjugationalType = new String(temp, 0, length);
-
-			length = buffer.get();
-			buffer.get(temp, 0, length);
-			this.conjugationalForm = new String(temp, 0, length);
-
-			length = buffer.get();
-			buffer.get(temp, 0, length);
+			length = DictionaryUtil.readVInt(buffer);
+			DictionaryUtil.readString(buffer, temp, 0, length);
 			this.basicForm = new String(temp, 0, length);
 
-			int numReadings = buffer.get();
+			int readingData = DictionaryUtil.readVInt(buffer);
+			int numReadings = readingData >>> 1;
 
 			this.readings = new ArrayList<String>(numReadings);
-			for (int i = 0; i < numReadings; i++) {
-				length = buffer.get();
-				buffer.get(temp, 0, length);
-				this.readings.add(new String(temp, 0, length));
-			}
 			this.pronunciations = new ArrayList<String>(numReadings);
+			
 			for (int i = 0; i < numReadings; i++) {
-				length = buffer.get();
-				buffer.get(temp, 0, length);
-				this.pronunciations.add(new String(temp, 0, length));
+				length = DictionaryUtil.readVInt(buffer);
+				final int readingLength = length >>> 1;
+				if ((readingData & 1) == 0) {
+				  DictionaryUtil.readKatakana(buffer, temp, 0, readingLength);
+				} else {
+				  DictionaryUtil.readString(buffer, temp, 0, readingLength);
+				}
+				String reading = new String(temp, 0, readingLength);
+				this.readings.add(reading);
+				if ((length & 1) != 0) {
+				  final int pronunciationLength = DictionaryUtil.readVInt(buffer);
+				  if ((readingData & 1) == 0) {
+				    DictionaryUtil.readKatakana(buffer, temp, 0, pronunciationLength);
+				  } else {
+				    DictionaryUtil.readString(buffer, temp, 0, pronunciationLength);
+				  }
+				  this.pronunciations.add(new String(temp, 0, pronunciationLength));
+				} else {
+				  this.pronunciations.add(reading);
+				}
 			}
 
 			this.loaded = true;
