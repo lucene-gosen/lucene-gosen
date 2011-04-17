@@ -2,11 +2,13 @@
 
 <project default="jar" basedir=".">
 
-	<property name="version" value="1.0beta"/>
+	<property name="version" value="1.0-dev"/>
+
 	<property name="src.dir" location="src/java"/>
 	<property name="res.dir" location="src/resources"/>
 	<property name="test.dir" location="src/test"/>
-	<property name="bin.dir" location="build/"/>
+  <property name="bin.dir" location="build"/>
+  <property name="dic.dir" location="dictionary"/>
   <property name="javadoc.dir" location="docs/api"/>
   <property name="prettify.dir" location="prettify"/>
 
@@ -136,10 +138,10 @@
         <target name="rebuild-data">
            <sequential>
            <subant target="compile" inheritall="false" failonerror="true">
-              <fileset dir="testdata/dictionary" includes="build.xml" />
+              <fileset dir="${dic.dir}" includes="build.xml" />
            </subant>
            <copy todir="${res.dir}/net/java/sen">
-             <fileset dir="testdata/dictionary" includes="*.sen"/>
+             <fileset dir="${dic.dir}" includes="*.sen"/>
            </copy>
            </sequential>
         </target>
@@ -148,7 +150,7 @@
 	<target name="clean">
 		<delete dir="${bin.dir}"/>
 		<delete dir="${javadoc.dir}"/>
-		<delete file="gosen-${version}.jar"/>
+		<delete file="lucene-gosen-${version}.jar"/>
 	</target>
 
 </project>
