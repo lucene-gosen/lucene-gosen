@@ -20,6 +20,7 @@
 
 package net.java.sen;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -59,10 +60,12 @@ public class SenFactory {
   }
   
   private SenFactory() throws IOException {
-    costs = loadBuffer("connectionCost.sen", 8979816).asReadOnlyBuffer();
-    pos = loadBuffer("partOfSpeech.sen", 25122058).asReadOnlyBuffer();
-    tokens = loadBuffer("token.sen", 5295234).asReadOnlyBuffer();
-    trie = loadBuffer("trie.sen", 7698400).asReadOnlyBuffer();
+    DataInputStream in = new DataInputStream(SenFactory.class.getResourceAsStream("header.sen"));
+    costs = loadBuffer("connectionCost.sen", in.readInt()).asReadOnlyBuffer();
+    pos = loadBuffer("partOfSpeech.sen", in.readInt()).asReadOnlyBuffer();
+    tokens = loadBuffer("token.sen", in.readInt()).asReadOnlyBuffer();
+    trie = loadBuffer("trie.sen", in.readInt()).asReadOnlyBuffer();
+    in.close();
   }
   
   private final ByteBuffer costs, pos, tokens, trie;
