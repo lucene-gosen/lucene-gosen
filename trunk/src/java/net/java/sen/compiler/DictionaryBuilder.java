@@ -23,6 +23,7 @@ package net.java.sen.compiler;
 
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -76,6 +77,11 @@ public class DictionaryBuilder {
 	 * Compiled trie data filename
 	 */
 	private static final String TRIE_DATA_FILENAME = "trie.sen";
+
+	/**
+	 * Compiled header data filename
+	 */
+	private static final String HEADER_DATA_FILENAME = "header.sen";
 
 	/**
 	 * Default connection cost
@@ -504,6 +510,17 @@ public class DictionaryBuilder {
 
 	}
 
+	/**
+	 * Creates the header file containing resource lengths
+	 */
+	private void createHeaderFile(String headerFilename) throws IOException {
+	  DataOutputStream os = new DataOutputStream(new FileOutputStream(headerFilename));
+	  os.writeInt((int) new File(CONNECTION_COST_DATA_FILENAME).length());
+	  os.writeInt((int) new File(PART_OF_SPEECH_DATA_FILENAME).length());
+	  os.writeInt((int) new File(TOKEN_DATA_FILENAME).length());
+	  os.writeInt((int) new File(TRIE_DATA_FILENAME).length());
+	  os.close();
+	}
 
 	/**
 	 * Compiles CSV source data into the data files used for analysis
@@ -564,7 +581,7 @@ public class DictionaryBuilder {
 
 		// Create Trie file (da.sen)
 		createTrieFile(TRIE_DATA_FILENAME, trieData);
-
+		createHeaderFile(HEADER_DATA_FILENAME);
 	}
 
 
