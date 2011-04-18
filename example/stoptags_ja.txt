@@ -363,11 +363,11 @@
 #
 #  symbol-comma: Commas
 #  e.g. [,、]
-記号-句点
+記号-読点
 #
 #  symbol-period: Periods and full stops.
 #  e.g. [.．。]
-記号-読点
+記号-句点
 #
 #  symbol-space: Full-width whitespace.
 記号-空白

@@ -51,9 +51,9 @@
 		         author="true"
 		         version="true"
 		         use="true"
-		         windowtitle="lucene-gosen API"
+		         windowtitle="lucene-gosen-${version} API"
 			       encoding="UTF-8"
-		         doctitle="lucene-gosen"
+		         doctitle="lucene-gosen-${version}"
 		         source="1.6"
              stylesheetfile="${javadoc.dir}/prettify/stylesheet+prettify.css">
       <link href="${javadoc.link.java}"/>
