@@ -99,8 +99,8 @@ public class ToStringUtil {
     posTranslations.put("感動詞", "interjection");
     posTranslations.put("記号", "symbol");
     posTranslations.put("記号-一般", "symbol-misc");
-    posTranslations.put("記号-句点", "symbol-comma");
-    posTranslations.put("記号-読点", "symbol-period");
+    posTranslations.put("記号-句点", "symbol-period");
+    posTranslations.put("記号-読点", "symbol-comma");
     posTranslations.put("記号-空白", "symbol-space");
     posTranslations.put("記号-括弧開", "symbol-open_bracket");
     posTranslations.put("記号-括弧閉", "symbol-close_bracket");
@@ -118,6 +118,114 @@ public class ToStringUtil {
    */
   public static String getPOSTranslation(String s) {
     return posTranslations.get(s);
+  }
+  
+  // a translation map for conjugational types, only used for reflectWith
+  private static final HashMap<String,String> conjTypeTranslations = new HashMap<String,String>();
+  static {
+    conjTypeTranslations.put("*", "*");
+    conjTypeTranslations.put("形容詞・アウオ段", "adj-group-a-o-u");
+    conjTypeTranslations.put("形容詞・イ段", "adj-group-i");
+    conjTypeTranslations.put("不変化型", "non-inflectional");
+    conjTypeTranslations.put("特殊・タ", "special-da");
+    conjTypeTranslations.put("特殊・ダ", "special-ta");
+    conjTypeTranslations.put("文語・ゴトシ", "classical-gotoshi");
+    conjTypeTranslations.put("特殊・ジャ", "special-ja");
+    conjTypeTranslations.put("特殊・ナイ", "special-nai");
+    conjTypeTranslations.put("五段・ラ行特殊", "5-row-cons-r-special");
+    conjTypeTranslations.put("特殊・ヌ", "special-nu");
+    conjTypeTranslations.put("文語・キ", "classical-ki");
+    conjTypeTranslations.put("特殊・タイ", "special-tai");
+    conjTypeTranslations.put("文語・ベシ", "classical-beshi");
+    conjTypeTranslations.put("特殊・ヤ", "special-ya");
+    conjTypeTranslations.put("文語・マジ", "classical-maji");
+    conjTypeTranslations.put("下二・タ行", "2-row-lower-cons-t");
+    conjTypeTranslations.put("特殊・デス", "special-desu");
+    conjTypeTranslations.put("特殊・マス", "special-masu");
+    conjTypeTranslations.put("五段・ラ行アル", "5-row-aru");
+    conjTypeTranslations.put("文語・ナリ", "classical-nari");
+    conjTypeTranslations.put("文語・リ", "classical-ri");
+    conjTypeTranslations.put("文語・ケリ", "classical-keri");
+    conjTypeTranslations.put("文語・ル", "classical-ru");
+    conjTypeTranslations.put("五段・カ行イ音便", "5-row-cons-k-i-onbin");
+    conjTypeTranslations.put("五段・サ行", "5-row-cons-s");
+    conjTypeTranslations.put("一段", "1-row");
+    conjTypeTranslations.put("五段・ワ行促音便", "5-row-cons-w-cons-onbin");
+    conjTypeTranslations.put("五段・マ行", "5-row-cons-m");
+    conjTypeTranslations.put("五段・タ行", "5-row-cons-t");
+    conjTypeTranslations.put("五段・ラ行", "5-row-cons-r");
+    conjTypeTranslations.put("サ変・−スル", "irregular-suffix-suru");
+    conjTypeTranslations.put("五段・ガ行", "5-row-cons-g");
+    conjTypeTranslations.put("サ変・−ズル", "irregular-suffix-zuru");
+    conjTypeTranslations.put("五段・バ行 ", "5-row-cons-b");
+    conjTypeTranslations.put("五段・ワ行ウ音便", "5-row-cons-w-u-onbin");
+    conjTypeTranslations.put("下二・ダ行", "2-row-lower-cons-d");
+    conjTypeTranslations.put("五段・カ行促音便ユク", "5-row-cons-k-cons-onbin-yuku");
+    conjTypeTranslations.put("上二・ダ行", "2-row-upper-cons-d");
+    conjTypeTranslations.put("五段・カ行促音便", "5-row-cons-k-cons-onbin");
+    conjTypeTranslations.put("一段・得ル", "1-row-eru");
+    conjTypeTranslations.put("四段・タ行", "4-row-cons-t");
+    conjTypeTranslations.put("五段・ナ行", "5-row-cons-n");
+    conjTypeTranslations.put("下二・ハ行", "2-row-lower-cons-h");
+    conjTypeTranslations.put("四段・ハ行", "4-row-cons-h");
+    conjTypeTranslations.put("四段・バ行", "4-row-cons-b");
+    conjTypeTranslations.put("サ変・スル", "irregular-suru");
+    conjTypeTranslations.put("上二・ハ行", "2-row-upper-cons-h");
+    conjTypeTranslations.put("下二・マ行", "2-row-lower-cons-m");
+    conjTypeTranslations.put("四段・サ行", "4-row-cons-s");
+    conjTypeTranslations.put("下二・ガ行", "2-row-lower-cons-g");
+    conjTypeTranslations.put("カ変・来ル", "kuru-kanji");
+    conjTypeTranslations.put("一段・クレル", "1-row-kureru");
+    conjTypeTranslations.put("下二・得", "2-row-lower-u");
+    conjTypeTranslations.put("カ変・クル", "kuru-kana");
+    conjTypeTranslations.put("ラ変", "irregular-cons-r");
+    conjTypeTranslations.put("下二・カ行", "2-row-lower-cons-k");
+  }
+  
+  /**
+   * Get the english form of a conjugational type
+   */
+  public static String getConjTypeTranslation(String s) {
+    return conjTypeTranslations.get(s);
+  }
+
+  // a translation map for conjugated forms, only used for reflectWith
+  private static final HashMap<String,String> conjFormTranslations = new HashMap<String,String>();
+  static {
+    conjFormTranslations.put("*", "*");
+    conjFormTranslations.put("基本形", "base");
+    conjFormTranslations.put("文語基本形", "classical-base");
+    conjFormTranslations.put("未然ヌ接続", "imperfective-nu-connection");
+    conjFormTranslations.put("未然ウ接続", "imperfective-u-connection");
+    conjFormTranslations.put("連用タ接続", "conjunctive-ta-connection");
+    conjFormTranslations.put("連用テ接続", "conjunctive-te-connection");
+    conjFormTranslations.put("連用ゴザイ接続", "conjunctive-gozai-connection");
+    conjFormTranslations.put("体言接続", "uninflected-connection");
+    conjFormTranslations.put("仮定形", "subjunctive");
+    conjFormTranslations.put("命令ｅ", "imperative-e");
+    conjFormTranslations.put("仮定縮約１", "conditional-contracted-1");
+    conjFormTranslations.put("仮定縮約２", "conditional-contracted-2");
+    conjFormTranslations.put("ガル接続", "garu-connection");
+    conjFormTranslations.put("未然形", "imperfective");
+    conjFormTranslations.put("連用形", "conjunctive");
+    conjFormTranslations.put("音便基本形", "onbin-base");
+    conjFormTranslations.put("連用デ接続", "conjunctive-de-connection");
+    conjFormTranslations.put("未然特殊", "imperfective-special");
+    conjFormTranslations.put("命令ｉ", "imperative-i");
+    conjFormTranslations.put("連用ニ接続", "conjunctive-ni-connection");
+    conjFormTranslations.put("命令ｙｏ", "imperative-yo");
+    conjFormTranslations.put("体言接続特殊", "adnominal-special");
+    conjFormTranslations.put("命令ｒｏ", "imperative-ro");
+    conjFormTranslations.put("体言接続特殊２", "uninflected-special-connection-2");
+    conjFormTranslations.put("未然レル接続", "imperfective-reru-connection");
+    conjFormTranslations.put("現代基本形", "modern-base");
+  }
+  
+  /**
+   * Get the english form of a conjugated form
+   */
+  public static String getConjFormTranslation(String s) {
+    return conjFormTranslations.get(s);
   }
   
   /**
