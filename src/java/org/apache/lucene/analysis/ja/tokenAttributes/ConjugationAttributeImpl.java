@@ -16,7 +16,9 @@ package org.apache.lucene.analysis.ja.tokenAttributes;
  * limitations under the License.
  */
 
+import org.apache.lucene.analysis.ja.ToStringUtil;
 import org.apache.lucene.util.AttributeImpl;
+import org.apache.lucene.util.AttributeReflector;
 
 public class ConjugationAttributeImpl extends AttributeImpl implements ConjugationAttribute, Cloneable {
   private String conjugationalForm = null;
@@ -49,5 +51,15 @@ public class ConjugationAttributeImpl extends AttributeImpl implements Conjugati
     ConjugationAttribute t = (ConjugationAttribute) target;
     t.setConjugationalForm(conjugationalForm);
     t.setConjugationalType(conjugationalType);
+  }
+  
+  @Override
+  public void reflectWith(AttributeReflector reflector) {
+    String enForm = conjugationalForm == null ? null : ToStringUtil.getConjFormTranslation(conjugationalForm);
+    String enType = conjugationalType == null ? null : ToStringUtil.getConjTypeTranslation(conjugationalType);
+    reflector.reflect(ConjugationAttribute.class, "conjugationalForm", conjugationalForm);
+    reflector.reflect(ConjugationAttribute.class, "conjugationalForm (en)", enForm);
+    reflector.reflect(ConjugationAttribute.class, "conjugationalType", conjugationalType);
+    reflector.reflect(ConjugationAttribute.class, "conjugationalType (en)", enType);
   }
 }
