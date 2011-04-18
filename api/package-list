@@ -1,0 +1,13 @@
+net.java.sen
+net.java.sen.compiler
+net.java.sen.dictionary
+net.java.sen.filter
+net.java.sen.filter.reading
+net.java.sen.filter.stream
+net.java.sen.tokenizers.ja
+net.java.sen.tools
+net.java.sen.trie
+net.java.sen.util
+org.apache.lucene.analysis.ja
+org.apache.lucene.analysis.ja.tokenAttributes
+org.apache.solr.analysis
