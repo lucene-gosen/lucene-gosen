@@ -66,7 +66,7 @@
   <target name="clean">
     <delete>
       <fileset dir="." includes="*.sen"/>
-      <fileset dir="." includes="*.csv"/>
+      <fileset dir="." includes="connection.csv, dictionary.csv"/>
     </delete>
     <delete dir="ipadic-${ipadic.version}"/>
     <delete file="${ipadic.archive}" />
@@ -88,8 +88,14 @@
     </java>
   </target>
 
+  <target name="reset-custom-dics" unless="custom.dics">
+    <property name="custom.dics" value=""/>
+  </target>
+
   <!-- Default task - compiles the ipadic dictionary -->
-  <target name="compile" depends="preprocess" unless="dics.complete">
+	<!-- If you have a custom dictionary to be compiled, specify it by -Dcustom.dics=dic1.csv -->
+	<!-- If you have two or more custom dictionaries, specify -Dcustom.dics="dic1.csv dic2.csv ..." -->
+	<target name="compile" depends="preprocess,reset-custom-dics" unless="dics.complete">
     <java classname="net.java.sen.tools.DictionaryCompiler"
           fork="true">
       <classpath>
@@ -97,6 +103,7 @@
         <pathelement location="../build/classes/java"/>
         <pathelement path="${java.class.path}"/>
       </classpath>
+      <arg line="${custom.dics}"/>
     </java>
   </target>
 
