@@ -2,6 +2,10 @@
 
 <project default="jar" basedir=".">
 
+  <!-- set default dictionary type -->
+  <!-- to change the dictionary type to naist-chasen, ant -Ddictype=naist-chasen -->
+  <property name="dictype" value="ipadic"/>
+
 	<property name="version" value="1.0-dev"/>
 
 	<property name="src.dir" location="src/java"/>
@@ -141,7 +145,7 @@
               <fileset dir="${dic.dir}" includes="build.xml" />
            </subant>
            <copy todir="${res.dir}/net/java/sen">
-             <fileset dir="${dic.dir}" includes="*.sen"/>
+             <fileset dir="${dic.dir}/${dictype}" includes="*.sen"/>
            </copy>
            </sequential>
         </target>
