@@ -6,7 +6,7 @@
   <!-- to change the dictionary type to naist-chasen, ant -Ddictype=naist-chasen -->
   <property name="dictype" value="ipadic"/>
 
-  <property name="version" value="1.0-dev"/>
+  <property name="version" value="1.0.0"/>
 
   <property name="src.dir" location="src/java"/>
   <property name="res.dir" location="src/resources"/>
