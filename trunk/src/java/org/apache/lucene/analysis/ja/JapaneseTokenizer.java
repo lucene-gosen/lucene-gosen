@@ -20,8 +20,10 @@ import java.io.IOException;
 import java.io.Reader;
 
 import net.java.sen.SenFactory;
+import net.java.sen.StringTagger;
 import net.java.sen.dictionary.Morpheme;
 import net.java.sen.dictionary.Token;
+import net.java.sen.filter.StreamFilter;
 
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.ja.tokenAttributes.BasicFormAttribute;
@@ -79,8 +81,15 @@ public final class JapaneseTokenizer extends Tokenizer {
   private int accumulatedCost = 0;
 
   public JapaneseTokenizer(Reader in) {
+    this(in, null);
+  }
+
+  public JapaneseTokenizer(Reader in, StreamFilter filter) {
     super(in);
-    tagger = new StreamTagger2(SenFactory.getStringTagger(), in);
+    StringTagger stringTagger = SenFactory.getStringTagger();
+    if(filter != null)
+      stringTagger.addFilter(filter);
+    tagger = new StreamTagger2(stringTagger, in);
   }
 
   @Override
