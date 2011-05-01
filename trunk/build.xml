@@ -10,7 +10,9 @@
 
   <property name="src.dir" location="src/java"/>
   <property name="res.dir" location="src/resources"/>
+  <property name="cdic.dir" location="src/compiled-dictionaries"/>
   <property name="test.dir" location="src/test"/>
+  <property name="dist.dir" location="dist"/>
   <property name="bin.dir" location="build"/>
   <property name="dic.dir" location="dictionary"/>
   <property name="javadoc.dir" location="docs/api"/>
@@ -32,6 +34,7 @@
     <pathelement location="${bin.dir}/classes/java" />
     <pathelement location="${bin.dir}/classes/test" />
     <pathelement location="${res.dir}"/>
+    <pathelement location="${cdic.dir}/${dictype}"/>
   </path>
 
   <!-- Create build directories -->
@@ -39,6 +42,7 @@
     <mkdir dir="${bin.dir}/classes/java"/>
     <mkdir dir="${bin.dir}/classes/test"/>
     <mkdir dir="${javadoc.dir}"/>
+    <mkdir dir="${dist.dir}"/>
   </target>
 
   <!-- Build javadocs -->
@@ -128,29 +132,33 @@
     </junit>
   </target>
 
-  <!-- Create library jar -->
-  <target name="jar" depends="compile, build-dic, copy-data">
-    <jar jarfile="lucene-gosen-${version}.jar" basedir="${bin.dir}/classes/java"/>
+  <!-- Create a library jar for the specified dictionary type -->
+  <target name="jar" depends="compile, build-dic">
+    <jar jarfile="${dist.dir}/lucene-gosen-${version}-${dictype}.jar">
+      <fileset dir="${bin.dir}/classes/java"/>
+      <fileset dir="${cdic.dir}/${dictype}"/>
+    </jar>
   </target>
 
-  <!-- copy data files to classpath -->
-  <target name="copy-data">
-    <copy todir="${bin.dir}/classes/java">
-      <fileset dir="${res.dir}"/>
-    </copy>
+  <target name="dist" description="make packages for distribution">
+    <antcall target="jar">
+      <param name="dictype" value="ipadic"/>
+    </antcall>
+    <antcall target="jar">
+      <param name="dictype" value="naist-chasen"/>
+    </antcall>
   </target>
 
-  <!-- rebuild data files -->
+  <!-- build a dictionary and copy the compiled files to src -->
   <target name="build-dic" depends="compile"
-  	      description="build dictionary. dictionary type can be set via -Ddictype=[ipadic | naist-chasen].">
+  	      description="build a dictionary. The dictionary type can be set via -Ddictype=[ipadic | naist-chasen].">
     <sequential>
       <subant target="compile" inheritall="false" failonerror="true">
         <fileset dir="${dic.dir}" includes="build.xml" />
       </subant>
-      <delete>
-        <fileset dir="${res.dir}/net/java/sen" includes="*.sen"/>
-      </delete>
-      <copy todir="${res.dir}/net/java/sen">
+      <delete dir="${cdic.dir}/${dictype}"/>
+      <mkdir dir="${cdic.dir}/${dictype}/net/java/sen"/>
+      <copy todir="${cdic.dir}/${dictype}/net/java/sen">
         <fileset dir="${dic.dir}/${dictype}" includes="*.sen"/>
       </copy>
     </sequential>
@@ -160,10 +168,8 @@
   <target name="clean">
     <delete dir="${bin.dir}"/>
     <delete dir="${javadoc.dir}"/>
-    <delete file="lucene-gosen-${version}.jar"/>
-    <delete>
-      <fileset dir="${res.dir}/net/java/sen" includes="*.sen"/>
-    </delete>
+    <delete dir="${cdic.dir}"/>
+    <delete dir="${dist.dir}"/>
   </target>
 
 </project>
