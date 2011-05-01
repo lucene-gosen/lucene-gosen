@@ -42,7 +42,7 @@
   </target>
 
   <!-- Build javadocs -->
-  <target name="javadoc">
+  <target name="javadoc" description="generate Javadocs">
     <property name="javadoc.link.java" value="http://java.sun.com/javase/ja/6/docs/ja/api/"/>
     <property name="javadoc.link.lucene" value="https://hudson.apache.org/hudson/job/Lucene-3.x/javadoc/all/"/>
     <property name="javadoc.link.solr" value="https://hudson.apache.org/hudson/job/Solr-3.x/javadoc/"/>
@@ -74,7 +74,8 @@
   </target>
 
   <!-- Compile source -->
-  <target name="compile" depends="prepare-directories">
+  <target name="compile" depends="prepare-directories"
+  	      description="compile Java source files">
     <javac srcdir="${src.dir}"
            destdir="${bin.dir}/classes/java"
            classpathref="classpath"
@@ -102,7 +103,8 @@
   </target>
 
   <!-- run tests -->
-  <target name="test" depends="compile-tests, build-dic">
+  <target name="test" depends="compile-tests, build-dic"
+  	      description="execute JUnit tests">
     <junit printsummary="no" haltonfailure="no" maxmemory="512M" forkmode="perBatch">
       <formatter type="brief" usefile="no"/>
       <classpath refid="testclasspath"/>
@@ -139,11 +141,15 @@
   </target>
 
   <!-- rebuild data files -->
-  <target name="build-dic">
+  <target name="build-dic" depends="compile"
+  	      description="build dictionary. dictionary type can be set via -Ddictype=[ipadic | naist-chasen].">
     <sequential>
       <subant target="compile" inheritall="false" failonerror="true">
         <fileset dir="${dic.dir}" includes="build.xml" />
       </subant>
+      <delete>
+        <fileset dir="${res.dir}/net/java/sen" includes="*.sen"/>
+      </delete>
       <copy todir="${res.dir}/net/java/sen">
         <fileset dir="${dic.dir}/${dictype}" includes="*.sen"/>
       </copy>
