@@ -90,8 +90,10 @@
   </target>
 
   <!-- Default task - compiles the ipadic dictionary -->
-	<!-- If you have a custom dictionary to be compiled, specify it by -Dcustom.dics=dic1.csv -->
-	<!-- If you have two or more custom dictionaries, specify -Dcustom.dics="dic1.csv dic2.csv ..." -->
+	<!-- If you have a custom dictionary to be compiled, specify it
+	     by -Dcustom.dics=/abs/path/to/dic1.csv
+	     If you have two or more custom dictionaries, specify
+	     -Dcustom.dics="/abs/path/to/dic1.csv /abs/path/to/dic2.csv ..." -->
 	<target name="compile" depends="preprocess,reset-custom-dics" unless="dics.complete">
     <java classname="net.java.sen.tools.DictionaryCompiler"
           fork="true" dir="${dictype}">
