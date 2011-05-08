@@ -1,0 +1,39 @@
+lucene-gosen Change Log
+
+========== trunk / YYYY-MM-DD ===================================
+
+Important Notice
+
+New Features & Improvements
+
+Bug Fixes
+
+* http://code.google.com/p/lucene-gosen/issues/detail?id=4
+  JapaneseBasicFormFilter can throw NPE when it is used with WordDelimiterFilter.
+  basicForm can be null when WDF creates a synonym term.
+  (an anonymous user via koji)
+
+API Changes
+
+Javadoc Fixes
+
+Others
+
+
+========== 1.0.0 / 2011-05-02 ===================================
+
+Important Notice
+
+* The first stable one is released.
+
+New Features & Improvements
+
+Bug Fixes
+
+API Changes
+
+Javadoc Fixes
+
+Others
+
+
