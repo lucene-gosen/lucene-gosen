@@ -19,6 +19,9 @@ Javadoc Fixes
 
 Others
 
+* add clean-sen target to dictionary/build.xml so that users, who want to compile
+  custom dictionary, can delete *.sen files before compiling their dictionaries. (koji)
+
 
 ========== 1.0.0 / 2011-05-02 ===================================
 
