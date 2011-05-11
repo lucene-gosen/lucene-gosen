@@ -13,6 +13,11 @@ Bug Fixes
   basicForm can be null when WDF creates a synonym term.
   (an anonymous user via koji)
 
+* http://code.google.com/p/lucene-gosen/issues/detail?id=5
+  Incorrect Highlighting. The tagger did not correctly accumulate buffer offsets
+  and sentence offsets.
+  (Shinichiro Abe via rmuir)
+
 API Changes
 
 Javadoc Fixes
