@@ -16,28 +16,60 @@ package org.apache.solr.analysis;
  * limitations under the License.
  */
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Map;
 
+import net.java.sen.filter.stream.CompositeTokenFilter;
+
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.ja.JapaneseTokenizer;
+import org.apache.solr.common.ResourceLoader;
+import org.apache.solr.util.plugin.ResourceLoaderAware;
 
 /**
  * Factory for {@link JapaneseTokenizer}.
  * <pre class="prettyprint" >
  * &lt;fieldType name="text_ja" class="solr.TextField"&gt;
  *   &lt;analyzer&gt;
- *     &lt;tokenizer class="solr.JapaneseTokenizerFactory"/&gt;
+ *     &lt;tokenizer class="solr.JapaneseTokenizerFactory" compositePOS="compositePOS.txt"/&gt;
  *   &lt;/analyzer&gt;
  * &lt;/fieldType&gt;</pre>
  */
-public class JapaneseTokenizerFactory extends BaseTokenizerFactory {
+public class JapaneseTokenizerFactory extends BaseTokenizerFactory implements ResourceLoaderAware {
+  
+  private CompositeTokenFilter compositeTokenFilter;
 
   public void init(Map<String,String> args) {
     super.init(args);
   }
 
+  public void inform(ResourceLoader loader) {
+    String compositePosFile = args.get("compositePOS");
+    if(compositePosFile != null){
+      compositeTokenFilter = new CompositeTokenFilter();
+      BufferedReader reader = null;
+      try{
+        reader = new BufferedReader( new InputStreamReader(
+            loader.openResource(compositePosFile), "UTF-8"));
+        compositeTokenFilter.readRules(reader);
+      }
+      catch(IOException e){
+        throw new RuntimeException(e);
+      }
+      finally {
+        try {
+          if(reader != null)
+            reader.close();
+        } catch (IOException e) {
+        }
+      }
+    }
+  }
+
   public Tokenizer create(Reader reader) {
-    return new JapaneseTokenizer(reader);
+    return new JapaneseTokenizer(reader, compositeTokenFilter);
   }
 }

@@ -21,6 +21,7 @@
 
 package net.java.sen.compiler;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -29,6 +30,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import net.java.sen.util.CSVParser;
 
 /**
  * Builds an axis of the Connection Cost matrix from supplied part-of-speech /
@@ -213,9 +215,10 @@ class CostMatrixBuilder {
 	 * @param rule The rule
 	 * @return TODO how is this ID defined?
 	 */
-	public int getDicId(String rule) {
+	public int getDicId(String rule) throws IOException{
 
-		String csv[] = rule.split(",");
+		CSVParser parser = new CSVParser(rule);
+		String csv[] = parser.nextTokens();
 
 		String lex = csv[csv.length - 1];
 
