@@ -19,6 +19,7 @@ package org.apache.lucene.analysis.ja;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.Arrays;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.BaseTokenStreamTestCase;
@@ -77,6 +78,29 @@ public class TestJapaneseTokenizer extends BaseTokenStreamTestCase {
       new int[] { 0, 2, 3, 4, 5, 6 },
       new int[] { 2, 3, 4, 5, 6, 8 }
     );
+  }
+  
+  /** Tests that sentence offset is incorporated into the resulting offsets */
+  public void testTwoSentences() throws IOException {
+    assertAnalyzesTo(analyzer, "魔女狩大将マシュー・ホプキンス。 魔女狩大将マシュー・ホプキンス。",
+      new String[] { "魔女", "狩", "大将", "マシュー", "・", "ホプキンス", "。", "魔女", "狩", "大将", "マシュー", "・", "ホプキンス", "。" },
+      new int[] { 0, 2, 3, 5,  9, 10, 15, 17, 19, 20, 22, 26, 27, 32 },
+      new int[] { 2, 3, 5, 9, 10, 15, 16, 19, 20, 22, 26, 27, 32, 33 }
+    );
+  }
+  
+  /** Tests that for large documents the buffer offset is accumulated */
+  public void testOffsetAccumulation() throws IOException {
+      StringBuilder sb = new StringBuilder();
+      char whitespace[] = new char[4094];
+      Arrays.fill(whitespace, '\n');
+      sb.append(whitespace);
+      sb.append("testing 1234");
+      String input = sb.toString();
+      assertAnalyzesTo(analyzer, input, 
+       new String[] { "testing", "1234" },
+       new int[] { 4094, 4102 },
+       new int[] { 4101, 4106 });
   }
   
   /**
