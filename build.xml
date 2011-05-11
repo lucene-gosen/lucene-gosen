@@ -109,27 +109,31 @@
   <!-- run tests -->
   <target name="test" depends="compile-tests, build-dic"
   	      description="execute JUnit tests">
-    <junit printsummary="no" haltonfailure="no" maxmemory="512M" forkmode="perBatch">
-      <formatter type="brief" usefile="no"/>
-      <classpath refid="testclasspath"/>
-      <assertions>
-        <enable/>
-      </assertions>
-      <!-- if set, just executes a single test method -->
-      <sysproperty key="testmethod" value="${testmethod}"/>
-      <!-- set the test seed -->
-      <sysproperty key="tests.seed" value="${tests.seed}"/>
-      <!-- set the number of times tests should run -->
-      <sysproperty key="tests.iter" value="${tests.iter}"/>
-      <!-- set the minimum number of times tests should run unless failure -->
-      <sysproperty key="tests.iter.min" value="${tests.iter.min}"/>
-      <batchtest fork="yes" unless="testcase">
-        <fileset dir="src/test" includes="**/Test*.java,**/*Test.java"/>
-      </batchtest>
-      <batchtest fork="yes" if="testcase">
-        <fileset dir="src/test" includes="**/${testcase}.java"/>
-      </batchtest>
-    </junit>
+    <sequential>
+      <junit printsummary="no" haltonfailure="no" maxmemory="512M" forkmode="perBatch"
+             errorProperty="tests.failed" failureProperty="tests.failed">
+        <formatter type="brief" usefile="no"/>
+        <classpath refid="testclasspath"/>
+        <assertions>
+          <enable/>
+        </assertions>
+        <!-- if set, just executes a single test method -->
+        <sysproperty key="testmethod" value="${testmethod}"/>
+        <!-- set the test seed -->
+        <sysproperty key="tests.seed" value="${tests.seed}"/>
+        <!-- set the number of times tests should run -->
+        <sysproperty key="tests.iter" value="${tests.iter}"/>
+        <!-- set the minimum number of times tests should run unless failure -->
+        <sysproperty key="tests.iter.min" value="${tests.iter.min}"/>
+        <batchtest fork="yes" unless="testcase">
+          <fileset dir="src/test" includes="**/Test*.java,**/*Test.java"/>
+        </batchtest>
+        <batchtest fork="yes" if="testcase">
+          <fileset dir="src/test" includes="**/${testcase}.java"/>
+        </batchtest>
+      </junit>
+      <fail if="tests.failed">Tests failed!</fail>
+    </sequential>
   </target>
 
   <!-- Create a library jar for the specified dictionary type -->
