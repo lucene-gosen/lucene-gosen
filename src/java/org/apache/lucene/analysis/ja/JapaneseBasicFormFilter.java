@@ -49,7 +49,7 @@ public final class JapaneseBasicFormFilter extends TokenFilter {
     if (input.incrementToken()) {
       if (!keywordAtt.isKeyword()) {
         String basicForm = basicFormAtt.getBasicForm();
-        if (!basicForm.equals("*")) termAtt.setEmpty().append(basicFormAtt.getBasicForm());
+        if (basicForm != null && !basicForm.equals("*")) termAtt.setEmpty().append(basicFormAtt.getBasicForm());
       }
       return true;
     } else {

@@ -7,15 +7,15 @@
   $ ant -Dproxy.host=proxy.hoehoe.jp -Dproxy.port=8080
 
 -->
-<project name="ipadic" default="compile" basedir=".">
-  <property name="ipadic.home" value="http://chasen.aist-nara.ac.jp/stable/ipadic"/>
-  <property name="ipadic.version" value="2.6.0"/>
-  <property name="ipadic.archive"  value="ipadic-${ipadic.version}.tar.gz"/>
-  <property name="ipadic.dir"  value="ipadic-${ipadic.version}"/>
+<project name="dictionary" default="compile" basedir=".">
 
-  <property name="proxy.port" value="80" />
+	<!-- set default dictionary type -->
+	<!-- to change the dictionary type to naist-chasen, ant -Ddictype=naist-chasen -->
+  <property name="dictype" value="ipadic"/>
+  <property file="${dictype}.properties"/>
 
   <!-- Configures a web proxy if the property "proxy.host" is defined -->
+  <property name="proxy.port" value="80" />
   <target name="prepare-proxy" if="proxy.host">
     <setproxy proxyhost="${proxy.host}" proxyport="${proxy.port}" />
   </target>
@@ -26,56 +26,60 @@
   <!-- Sets the property "dics.preprocessed" if the dictionary is already preprocessed -->
   <!-- Sets the property "dics.complete" if the dictionary is already compiled -->
   <target name="check-build-status">
-    <available file="${ipadic.archive}" property="ipadic.archive.present"/>
+    <available file="${dictype}/${dic.archive}" property="dic.archive.present"/>
     <condition property="dics.unpacked">
       <and>
-        <available file="ipadic-${ipadic.version}/Noun.dic"/>
+        <available file="${dictype}/${dic.unpacked.file}"/>
       </and>
     </condition>
     <condition property="dics.preprocessed">
       <and>
-        <available file="dictionary.csv"/>
-        <available file="connection.csv"/>
+        <available file="${dictype}/dictionary.csv"/>
+        <available file="${dictype}/connection.csv"/>
       </and>
     </condition>
     <condition property="dics.complete">
       <and>
-        <available file="trie.sen"/>
-        <available file="connectionCost.sen"/>
-        <available file="partOfSpeech.sen"/>
-        <available file="posIndex.sen"/>
-        <available file="token.sen"/>
-        <available file="header.sen"/>
+        <available file="${dictype}/trie.sen"/>
+        <available file="${dictype}/connectionCost.sen"/>
+        <available file="${dictype}/partOfSpeech.sen"/>
+        <available file="${dictype}/posIndex.sen"/>
+        <available file="${dictype}/token.sen"/>
+        <available file="${dictype}/header.sen"/>
       </and>
     </condition>
   </target>
 
   <!-- Downloads the ipadic dictionary -->
-  <target name="download" depends="prepare-proxy,check-build-status" unless="ipadic.archive.present">
-    <get src="${ipadic.home}/${ipadic.archive}" dest="${ipadic.archive}" />
+  <target name="download" depends="prepare-proxy,check-build-status" unless="dic.archive.present">
+  	<mkdir dir="${dictype}"/>
+    <get src="${dic.home}/${dic.archive}" dest="${dictype}/${dic.archive}" />
   </target>
 
-  <!-- Unpacks the ipadic dictionary -->
+  <!-- Unpacks the dictionary -->
   <target name="unpack" depends="download,check-build-status" unless="dics.unpacked">
-    <gunzip src="${ipadic.archive}"/>
-    <untar src="${ipadic.dir}.tar" dest="." />
-    <delete file="${ipadic.dir}.tar"/>
+    <gunzip src="${dictype}/${dic.archive}"/>
+    <untar src="${dictype}/${dic.dir}.tar" dest="${dictype}" />
+    <delete file="${dictype}/${dic.dir}.tar"/>
   </target>
 
-  <!-- Deletes the ipadic dictionary and compiled files -->
-  <target name="clean">
+  <!-- Deletes dictionary and compiled files -->
+  <target name="clean" description="delete all dictionaries.">
+    <delete dir="ipadic"/>
+    <delete dir="naist-chasen"/>
+  </target>
+
+  <!-- Deletes compiled dictionary -->
+  <target name="clean-sen" description="delete compiled *.sen files. you may want to do this before compiling custom dictionaries.">
     <delete>
-      <fileset dir="." includes="*.sen"/>
-      <fileset dir="." includes="*.csv"/>
+      <fileset dir="${dictype}" includes="*.sen"/>
     </delete>
-    <delete dir="ipadic-${ipadic.version}"/>
-    <delete file="${ipadic.archive}" />
   </target>
 
-  <!-- Preprocesses the ipadic dictionary for compilation -->
+  <!-- Preprocesses the dictionary for compilation -->
   <target name="preprocess" depends="unpack" unless="dics.preprocessed">
     <java classname="net.java.sen.tools.DictionaryPreprocessor"
-          fork="true">
+          fork="true" dir="${dictype}">
       <classpath>
         <pathelement location="."/>
         <pathelement location="../build/classes/java"/>
@@ -83,20 +87,30 @@
         <pathelement path="${java.class.path}"/>
       </classpath>
       <arg line="X-EUC-JISX0213" />
-      <arg line="ipadic-${ipadic.version}" />
+      <arg line="${dic.dir}" />
       <arg line="." />
     </java>
   </target>
 
+  <target name="reset-custom-dics" unless="custom.dics">
+    <property name="custom.dics" value=""/>
+  </target>
+
   <!-- Default task - compiles the ipadic dictionary -->
-  <target name="compile" depends="preprocess" unless="dics.complete">
+	<!-- If you have a custom dictionary to be compiled, specify it
+	     by -Dcustom.dics=/abs/path/to/dic1.csv
+	     If you have two or more custom dictionaries, specify
+	     -Dcustom.dics="/abs/path/to/dic1.csv /abs/path/to/dic2.csv ..." -->
+  <target name="compile" depends="preprocess,reset-custom-dics" unless="dics.complete"
+          description="compile dictionaries">
     <java classname="net.java.sen.tools.DictionaryCompiler"
-          fork="true">
+          fork="true" dir="${dictype}">
       <classpath>
         <pathelement location="."/>
         <pathelement location="../build/classes/java"/>
         <pathelement path="${java.class.path}"/>
       </classpath>
+      <arg line="${custom.dics}"/>
     </java>
   </target>
 
@@ -104,4 +118,3 @@
   <target name="all" depends="clean,unpack,compile"/>
 
 </project>
-

@@ -197,7 +197,7 @@ public class IpadicPreprocessor {
 		String expression =
 			"^\\(" +
 				"品詞 \\(([\\S]*)(?: ([\\S]*))?(?: ([\\S]*))?(?: ([\\S]*))?\\)\\) " +
-				"\\(\\(見出し語 \\(\"?([^\" ]+)\"? (\\d+)\\)\\) " +
+				"\\(\\(見出し語 \\(\"?([^\"]+)\"? (\\d+)\\)\\) " +
 				"\\(読み \"?([^\" ]+)\"?\\) " +
 				"\\(発音 \"?([^\" ]+)\"?\\) " +
 				"(?:\\(活用型 ([^)]*)\\) )?" +
@@ -270,7 +270,7 @@ public class IpadicPreprocessor {
 
 				if (ctypeList == null) {
 
-					String csvLine = String.format("%1$s,%2$s,%3$s,%4$s,%5$s,%6$s,%7$s,%8$s,%9$s,%10$s,%11$s\n",
+					String csvLine = String.format("\"%1$s\",%2$s,%3$s,%4$s,%5$s,%6$s,%7$s,%8$s,\"%9$s\",\"%10$s\",\"%11$s\"\n",
 							lex, score, pos1, pos2, pos3, pos4, ctype, "*", base, reading, pronunciation);
 					writer.write(csvLine);
 
@@ -295,7 +295,7 @@ public class IpadicPreprocessor {
 						String composedPronunciation = pronunciationBase + extension2;
 
 						if (composedLex.length() > 0) {
-							String csvLine = String.format("%1$s,%2$s,%3$s,%4$s,%5$s,%6$s,%7$s,%8$s,%9$s,%10$s,%11$s\n",
+							String csvLine = String.format("\"%1$s\",%2$s,%3$s,%4$s,%5$s,%6$s,%7$s,%8$s,\"%9$s\",\"%10$s\",\"%11$s\"\n",
 									composedLex, score, pos1, pos2, pos3, pos4, ctype, cform, base, composedReading, composedPronunciation);
 							writer.write(csvLine);
 						}

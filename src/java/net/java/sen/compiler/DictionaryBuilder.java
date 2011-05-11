@@ -180,7 +180,7 @@ public class DictionaryBuilder {
 
 		List<String> splitFieldList;
 
-		if ((compoundField.length() == 0) || (compoundField.charAt(0) != '{')) {
+		if ((compoundField.length() == 0) || (compoundField.charAt(0) == '{' && compoundField.indexOf('}') > 0) == false) {
 
 			// No alternatives
 			splitFieldList = new ArrayList<String>(1);
