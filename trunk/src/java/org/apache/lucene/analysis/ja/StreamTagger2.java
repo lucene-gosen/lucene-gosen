@@ -180,7 +180,7 @@ public final class StreamTagger2 {
         for (int i = 0; i < tokens.size(); i++) {
           Token token = tokens.get(i);
           token.setSentenceStart(i == 0);
-          token.setStart(token.getStart() + offset);
+          token.setStart(token.getStart() + start + offset);
         }
         index = 0;
         return true;
