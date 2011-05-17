@@ -8,6 +8,10 @@ New Features & Improvements
 
 Bug Fixes
 
+* http://code.google.com/p/lucene-gosen/issues/detail?id=7
+  The compiled jar file didn't include resources (such as stopwords and
+  stoptags) needed by JapaneseAnalyzer.  (rmuir)
+
 API Changes
 
 Javadoc Fixes
