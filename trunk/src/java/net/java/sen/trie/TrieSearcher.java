@@ -49,7 +49,7 @@ public class TrieSearcher {
 
 			p = b;
 			n = trieData.get(p << 1);
-			if (b == trieData.get((p << 1) + 1) && n < 0) {
+			if (n < 0 && b == trieData.get((p << 1) + 1)) {
 				// Will throw ArrayIndexOutOfBoundsException if results[] is too small
 				results[num] = -n - 1;
 				num++;
@@ -73,7 +73,7 @@ public class TrieSearcher {
 
 		p = b;
 		n = trieData.get(p << 1);
-		if (b == trieData.get((p << 1) + 1) && (n < 0)) {
+		if ((n < 0) && b == trieData.get((p << 1) + 1)) {
 			// Will throw ArrayIndexOutOfBoundsException if results[] is too small
 			results[num] = -n - 1;
 			num++;
