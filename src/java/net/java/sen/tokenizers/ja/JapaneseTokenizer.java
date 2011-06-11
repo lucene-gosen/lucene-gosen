@@ -72,25 +72,22 @@ public class JapaneseTokenizer extends Tokenizer {
 	 * @return The character class
 	 */
 	private int getCharClass(char c) {
-
-		Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
-
-		if (ub == Character.UnicodeBlock.BASIC_LATIN) {
-			if (c == ' ' || c == '\t' || c == '\r' || c == '\n') {
-				return SPACE;
-			}
-			return Character.getType(c);
-		} else if (ub == Character.UnicodeBlock.HIRAGANA) {
-			return HIRAGANA;
-		} else if (ub == Character.UnicodeBlock.KATAKANA && Character.getType(c) != Character.CONNECTOR_PUNCTUATION) {
-			return KATAKANA;
-		} else if (ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS) {
-			return KANJI;
-		} else if (ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS) {
-			return HALF_WIDTH;
-		}
-		return OTHER;
-
+    // TODO: I think we are recalculating this over and over (n^2),
+    // which is why the method is so sensitive to performance.
+    // maybe instead we should calculate up-front in the sentence?
+    if (c <= 0x7F) {
+      return (c == ' ' || c == '\t' || c == '\r' || c == '\n') ? SPACE : Character.getType(Character.toLowerCase(c));
+    } else if (c >= 0x3040 && c <= 0x309F) {
+      return HIRAGANA;
+    } else if (c >= 0x30A0 && c <= 0x30FF && Character.getType(c) != Character.CONNECTOR_PUNCTUATION) {
+      return KATAKANA;
+    } else if (c >= 0x4E00 && c <= 0x9FFF) {
+      return KANJI;
+    } else if (c >= 0xFF00 && c <= 0xFFEF) {
+      return HALF_WIDTH;
+    } else {
+      return OTHER;
+    }
 	}
 
 
