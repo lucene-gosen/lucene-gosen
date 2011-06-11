@@ -19,9 +19,9 @@
 
 package net.java.sen;
 
-import static org.junit.Assert.*;
-
 import java.util.List;
+
+import org.apache.lucene.util.LuceneTestCase;
 
 import net.java.sen.ReadingProcessor;
 import net.java.sen.SenFactory;
@@ -34,7 +34,7 @@ import net.java.sen.dictionary.Viterbi;
 /**
  * Test utilities
  */
-public class SenTestUtil {
+public class SenTestUtil extends LuceneTestCase {
 
 	/**
 	 * A StringTagger for testing

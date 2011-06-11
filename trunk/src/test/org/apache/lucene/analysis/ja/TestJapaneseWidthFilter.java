@@ -59,4 +59,8 @@ public class TestJapaneseWidthFilter extends BaseTokenStreamTestCase {
     assertAnalyzesTo(analyzer, "ﾊﾟﾅｿﾆｯｸ",
       new String[] { "パナソニック" });
   }
+  
+  public void testRandomData() throws IOException {
+    checkRandomData(random, analyzer, 10000);
+  }
 }

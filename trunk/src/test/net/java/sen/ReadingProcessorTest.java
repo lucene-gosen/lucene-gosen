@@ -24,6 +24,7 @@ import java.util.List;
 import net.java.sen.ReadingProcessor;
 import net.java.sen.dictionary.Reading;
 
+import org.apache.lucene.util.LuceneTestCase;
 import org.junit.Test;
 
 import static net.java.sen.SenTestUtil.*;
@@ -32,7 +33,7 @@ import static net.java.sen.SenTestUtil.*;
 /**
  * Tests the usage of ReadingProcessor
  */
-public class ReadingProcessorTest {
+public class ReadingProcessorTest extends LuceneTestCase {
 
 	/**
 	 * Test simple reading analysis

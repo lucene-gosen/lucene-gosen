@@ -40,4 +40,8 @@ public class TestJapaneseKatakanaStemFilter extends BaseTokenStreamTestCase {
         new String[] { "スパゲッティ" }
     );
   }
+  
+  public void testRandomData() throws IOException {
+    checkRandomData(random, analyzer, 10000);
+  }
 }

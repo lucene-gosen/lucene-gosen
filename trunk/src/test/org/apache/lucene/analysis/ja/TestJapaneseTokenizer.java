@@ -108,13 +108,7 @@ public class TestJapaneseTokenizer extends BaseTokenStreamTestCase {
    * (results could be completely bogus, but makes sure we don't crash on some input)
    */
   public void testReliability() throws IOException {
-    for (int i = 0; i < 1000; i++) {
-      String s = _TestUtil.randomUnicodeString(random, 100);
-      TokenStream ts = analyzer.reusableTokenStream("foo", new StringReader(s));
-      ts.reset();
-      while (ts.incrementToken()) {
-      }
-    }
+    checkRandomData(random, analyzer, 10000);
   }
   
   public void testLargeDocReliability() throws IOException {

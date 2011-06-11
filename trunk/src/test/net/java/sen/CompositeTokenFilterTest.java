@@ -31,13 +31,14 @@ import net.java.sen.dictionary.Morpheme;
 import net.java.sen.dictionary.Token;
 import net.java.sen.filter.stream.CompositeTokenFilter;
 
+import org.apache.lucene.util.LuceneTestCase;
 import org.junit.Test;
 
 
 /**
  * Test Composite Token filter
  */
-public class CompositeTokenFilterTest {
+public class CompositeTokenFilterTest extends LuceneTestCase {
 
 	/**
 	 * Number composite

@@ -28,13 +28,14 @@ import net.java.sen.StringTagger;
 import net.java.sen.dictionary.Morpheme;
 import net.java.sen.dictionary.Token;
 
+import org.apache.lucene.util.LuceneTestCase;
 import org.junit.Test;
 
 
 /**
  * Tests space skipping during string analysis
  */
-public class SpaceTest {
+public class SpaceTest extends LuceneTestCase {
 
 	/**
 	 * Leading space

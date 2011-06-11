@@ -40,4 +40,8 @@ public class TestJapaneseBasicFormFilter extends BaseTokenStreamTestCase {
         new String[] { "それ", "は", "まだ", "実験", "段階", "に", "ある", "ます", "。" }
     );
   }
+  
+  public void testRandomStrings() throws IOException {
+    checkRandomData(random, analyzer, 10000);
+  }
 }

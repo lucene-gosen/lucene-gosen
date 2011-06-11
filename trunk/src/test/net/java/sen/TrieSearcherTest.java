@@ -30,14 +30,14 @@ import net.java.sen.trie.CharIterator;
 import net.java.sen.trie.TrieBuilder;
 import net.java.sen.trie.TrieSearcher;
 
+import org.apache.lucene.util.LuceneTestCase;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 
 /**
  * Test for TrieSearcher
  */
-public class TrieSearcherTest {
+public class TrieSearcherTest extends LuceneTestCase {
 
 	/**
 	 * Tests basic TrieSearcher functionality

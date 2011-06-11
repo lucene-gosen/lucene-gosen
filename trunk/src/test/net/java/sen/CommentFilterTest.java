@@ -31,13 +31,14 @@ import net.java.sen.dictionary.Morpheme;
 import net.java.sen.dictionary.Token;
 import net.java.sen.filter.stream.CommentFilter;
 
+import org.apache.lucene.util.LuceneTestCase;
 import org.junit.Test;
 
 
 /**
  * Test comment filter
  */
-public class CommentFilterTest {
+public class CommentFilterTest extends LuceneTestCase {
 
 	/**
 	 * HTML removal

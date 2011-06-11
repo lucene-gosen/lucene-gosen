@@ -17,12 +17,9 @@ package org.apache.lucene.analysis.ja;
  */
 
 import java.io.IOException;
-import java.io.StringReader;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.BaseTokenStreamTestCase;
-import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.util._TestUtil;
 
 /**
  * Simple tests for {@link JapaneseAnalyzer} 
@@ -54,12 +51,6 @@ public class TestJapaneseAnalyzer extends BaseTokenStreamTestCase {
    */
   public void testReliability() throws IOException {
     Analyzer analyzer = new JapaneseAnalyzer(TEST_VERSION_CURRENT);
-    for (int i = 0; i < 1000; i++) {
-      String s = _TestUtil.randomUnicodeString(random, 100);
-      TokenStream ts = analyzer.reusableTokenStream("foo", new StringReader(s));
-      ts.reset();
-      while (ts.incrementToken()) {
-      }
-    }
+    checkRandomData(random, analyzer, 10000);
   }
 }
