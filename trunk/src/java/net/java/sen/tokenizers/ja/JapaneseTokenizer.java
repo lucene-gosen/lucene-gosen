@@ -74,7 +74,7 @@ public class JapaneseTokenizer extends Tokenizer {
 	private int getCharClass(char c) {
 
 		Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
-		int type = Character.getType(Character.toLowerCase(c));
+		int type = Character.getType(c);
 
 		if (ub == Character.UnicodeBlock.BASIC_LATIN) {
 			if (c == ' ' || c == '\t' || c == '\r' || c == '\n') {
