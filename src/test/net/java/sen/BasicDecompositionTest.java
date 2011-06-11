@@ -26,6 +26,7 @@ import net.java.sen.StringTagger;
 import net.java.sen.dictionary.Morpheme;
 import net.java.sen.dictionary.Token;
 
+import org.apache.lucene.util.LuceneTestCase;
 import org.junit.Test;
 
 import static net.java.sen.SenTestUtil.*;
@@ -34,7 +35,7 @@ import static net.java.sen.SenTestUtil.*;
 /**
  * Tests basic string analysis
  */
-public class BasicDecompositionTest {
+public class BasicDecompositionTest extends LuceneTestCase {
 
 	/**
 	 * Tests string decomposition

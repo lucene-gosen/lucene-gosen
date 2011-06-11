@@ -25,6 +25,7 @@ import net.java.sen.ReadingProcessor;
 import net.java.sen.dictionary.Reading;
 import net.java.sen.filter.reading.NumberFilter;
 
+import org.apache.lucene.util.LuceneTestCase;
 import org.junit.Test;
 
 import static net.java.sen.SenTestUtil.*;
@@ -33,7 +34,7 @@ import static net.java.sen.SenTestUtil.*;
 /**
  * Tests usage of NumberFilter in reading processing
  */
-public class NumberFilterTest {
+public class NumberFilterTest extends LuceneTestCase {
 
 
 	/**

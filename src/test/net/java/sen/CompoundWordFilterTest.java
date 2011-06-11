@@ -33,13 +33,14 @@ import net.java.sen.dictionary.Token;
 import net.java.sen.filter.stream.CompoundWordFilter;
 import net.java.sen.tools.CompoundWordTableCompiler;
 
+import org.apache.lucene.util.LuceneTestCase;
 import org.junit.Test;
 
 
 /**
  * Test Compound Word Filter
  */
-public class CompoundWordFilterTest {
+public class CompoundWordFilterTest extends LuceneTestCase {
 
 	/**
 	 * Single compound token

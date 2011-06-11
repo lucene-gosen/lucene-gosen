@@ -30,15 +30,15 @@ import net.java.sen.dictionary.SentenceIterator;
 import net.java.sen.dictionary.Token;
 import net.java.sen.dictionary.Viterbi;
 
+import org.apache.lucene.util.LuceneTestCase;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import static net.java.sen.SenTestUtil.*;
 
 
 /**
  * Tests the usage of Sentence
  */
-public class SentenceTest {
+public class SentenceTest extends LuceneTestCase {
 
 	/**
 	 * Test class representing an expected Sentence span
