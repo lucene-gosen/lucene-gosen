@@ -74,16 +74,15 @@ public class JapaneseTokenizer extends Tokenizer {
 	private int getCharClass(char c) {
 
 		Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
-		int type = Character.getType(c);
 
 		if (ub == Character.UnicodeBlock.BASIC_LATIN) {
 			if (c == ' ' || c == '\t' || c == '\r' || c == '\n') {
 				return SPACE;
 			}
-			return type;
+			return Character.getType(c);
 		} else if (ub == Character.UnicodeBlock.HIRAGANA) {
 			return HIRAGANA;
-		} else if (ub == Character.UnicodeBlock.KATAKANA && type != Character.CONNECTOR_PUNCTUATION) {
+		} else if (ub == Character.UnicodeBlock.KATAKANA && Character.getType(c) != Character.CONNECTOR_PUNCTUATION) {
 			return KATAKANA;
 		} else if (ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS) {
 			return KANJI;
