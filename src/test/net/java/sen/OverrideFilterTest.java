@@ -31,18 +31,15 @@ import org.junit.Test;
 
 import static net.java.sen.SenTestUtil.*;
 
-
 /**
  * Tests usage of OverrideFilter in reading processing
  */
 public class OverrideFilterTest extends LuceneTestCase {
-
 	/**
 	 * Tests override of default visibility
 	 */
 	@Test
 	public void testHide() {
-
 		String testString = "３週間寒さが続いた";
 
 		Reading[] expectedReadings = new Reading[] {
@@ -62,16 +59,13 @@ public class OverrideFilterTest extends LuceneTestCase {
 		List<Reading> readings = processor.getDisplayReadings();
 
 		compareReadings (expectedReadings, readings);
-
 	}
-
 
 	/**
 	 * Tests override of default skipping of number kanji
 	 */
 	@Test
 	public void testNumbers() {
-
 		String testString = "一億三千";
 
 		Reading[] expectedReadings = new Reading[] {
@@ -90,8 +84,5 @@ public class OverrideFilterTest extends LuceneTestCase {
 		List<Reading> readings = processor.getDisplayReadings();
 
 		compareReadings (expectedReadings, readings);
-
 	}
-
-
 }

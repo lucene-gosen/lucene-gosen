@@ -33,80 +33,74 @@ import net.java.sen.trie.TrieSearcher;
 import org.apache.lucene.util.LuceneTestCase;
 import org.junit.Test;
 
-
 /**
  * Test for TrieSearcher
  */
 public class TrieSearcherTest extends LuceneTestCase {
-
-	/**
-	 * Tests basic TrieSearcher functionality
-	 *
-	 * @throws Exception 
-	 */
-	@Test
-	public void testCharIterator() throws Exception {
-
-		String[] keys = new String[] {
-				"a",
-				"ab",
-				"abc",
-				"q",
-				"qw",
-				"qwe",
-				"qwer",
-				"qwert",
-				"qwerty",
-				"qwertyu"
-		};
-
-		int[] values = new int[] {
-				101,
-				201,
-				301,
-				401,
-				501,
-				601,
-				701,
-				801,
-				901,
-				1001
-		};
-
-		TrieBuilder builder = new TrieBuilder(keys, values, 10);
-		File tempFile = File.createTempFile("tst", null);
-		builder.build (tempFile.getAbsolutePath());
-
-		RandomAccessFile trieFile = new RandomAccessFile(tempFile, "r");
-		MappedByteBuffer trieBuffer = trieFile.getChannel().map(FileChannel.MapMode.READ_ONLY, 0, trieFile.length());
-		trieFile.close();
-		IntBuffer intBuffer = trieBuffer.asIntBuffer();
-
-		final String testString = "qwerty";
-		CharIterator iterator = new CharIterator() {
-
-			int i = 0;
-
-			public boolean hasNext() {
-				return this.i < testString.length();
-			}
-
-			public char next() throws NoSuchElementException {
-				char nextChar = testString.charAt(this.i);
-				this.i++;
-				return nextChar;
-			}
-			
-		};
-
-		int[] results = new int[256];
-		int count = TrieSearcher.commonPrefixSearch(intBuffer, iterator, results);
-
-		assertEquals (6, count);
-		for (int i = 0; i < 6; i++) {
-			assertEquals (values[i + 3], results[i]);
-		}
-
-	}
-
+  
+  /**
+   * Tests basic TrieSearcher functionality
+   *
+   * @throws Exception 
+   */
+  @Test
+  public void testCharIterator() throws Exception {
+    String[] keys = new String[] {
+        "a",
+        "ab",
+        "abc",
+        "q",
+        "qw",
+        "qwe",
+        "qwer",
+        "qwert",
+        "qwerty",
+        "qwertyu"
+    };
+    
+    int[] values = new int[] {
+        101,
+        201,
+        301,
+        401,
+        501,
+        601,
+        701,
+        801,
+        901,
+        1001
+    };
+    
+    TrieBuilder builder = new TrieBuilder(keys, values, 10);
+    File tempFile = File.createTempFile("tst", null);
+    builder.build (tempFile.getAbsolutePath());
+    
+    RandomAccessFile trieFile = new RandomAccessFile(tempFile, "r");
+    MappedByteBuffer trieBuffer = trieFile.getChannel().map(FileChannel.MapMode.READ_ONLY, 0, trieFile.length());
+    trieFile.close();
+    IntBuffer intBuffer = trieBuffer.asIntBuffer();
+    
+    final String testString = "qwerty";
+    CharIterator iterator = new CharIterator() {
+      int i = 0;
+      
+      public boolean hasNext() {
+        return this.i < testString.length();
+      }
+      
+      public char next() throws NoSuchElementException {
+        char nextChar = testString.charAt(this.i);
+        this.i++;
+        return nextChar;
+      }
+    };
+    
+    int[] results = new int[256];
+    int count = TrieSearcher.commonPrefixSearch(intBuffer, iterator, results);
+    
+    assertEquals (6, count);
+    for (int i = 0; i < 6; i++) {
+      assertEquals (values[i + 3], results[i]);
+    }
+  }
 }
