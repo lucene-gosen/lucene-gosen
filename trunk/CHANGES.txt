@@ -2,6 +2,10 @@ lucene-gosen Change Log
 
 ========== trunk / YYYY-MM-DD ===================================
 
+(No changes)
+
+========== 1.1.0 / 2011-06-12 ===================================
+
 Important Notice
 
 New Features & Improvements
