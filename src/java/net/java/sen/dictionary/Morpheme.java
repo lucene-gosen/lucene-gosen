@@ -57,7 +57,13 @@ public class Morpheme {
 	/**
 	 * Indicates if the part-of-speech data has been loaded
 	 */
-	private boolean loaded;
+	private LoadState loaded;
+	
+	private static enum LoadState {
+	  NONE,
+	  BASIC,
+	  FULL
+	}
 
 	/**
 	 * The conjugation type of the morpheme
@@ -99,15 +105,17 @@ public class Morpheme {
 	 * Loads the part-of-speech data from the {@link Dictionary}
 	 *
 	 */
-	private void load() {
+	private void load(LoadState requested) {
+	  if (loaded.compareTo(requested) >= 0) {
+	    return; // we already loaded what we need
+	  }
 
-		if (!this.loaded) {
-
-			ByteBuffer buffer = this.dictionary.getPartOfSpeechInfoBuffer();
-			buffer.position(this.partOfSpeechIndex);
-			char[] temp = new char[512];
-			int length;
-
+    ByteBuffer buffer = this.dictionary.getPartOfSpeechInfoBuffer();
+    buffer.position(this.partOfSpeechIndex);
+    char[] temp = new char[512];
+    int length;
+    
+		if (loaded == LoadState.NONE) {
 			this.partOfSpeech = dictionary.posIndex[DictionaryUtil.readVInt(buffer)];
 			this.conjugationalType = dictionary.conjTypeIndex[DictionaryUtil.readVInt(buffer)];
 			this.conjugationalForm = dictionary.conjFormIndex[DictionaryUtil.readVInt(buffer)];
@@ -119,7 +127,19 @@ public class Morpheme {
 			  DictionaryUtil.readString(buffer, temp, 0, length);
 			  this.basicForm = new String(temp, 0, length);
 			}
-
+		} else {
+		  // we've already loaded the basic data, but not the full, just skip over bytes
+		  DictionaryUtil.readVInt(buffer); // POS
+		  DictionaryUtil.readVInt(buffer); // conjType
+		  DictionaryUtil.readVInt(buffer); // conjForm
+		  length = DictionaryUtil.readVInt(buffer); // length
+		  if (length != 0)
+		    DictionaryUtil.readString(buffer, temp, 0, length); // basicForm
+		}
+		
+		loaded = LoadState.BASIC;
+		
+		if (requested == LoadState.FULL) {
 			int readingData = DictionaryUtil.readVInt(buffer);
 			int numReadings = readingData >>> 1;
 
@@ -148,11 +168,8 @@ public class Morpheme {
 				  this.pronunciations.add(reading);
 				}
 			}
-
-			this.loaded = true;
-
+			this.loaded = LoadState.FULL;
 		}
-
 	}
 
 
@@ -162,13 +179,8 @@ public class Morpheme {
 	 * @return The conjugation type
 	 */
 	public String getConjugationalType() {
-
-		if (!this.loaded) {
-			this.load();
-		}
-
+	  load(LoadState.BASIC);
 		return this.conjugationalType;
-
 	}
 
 
@@ -178,13 +190,8 @@ public class Morpheme {
 	 * @param conjugationalType The conjugation type
 	 */
 	public void setConjugationalType(String conjugationalType) {
-
-		if (!this.loaded) {
-			this.load();
-		}
-
+	  load(LoadState.BASIC);
 		this.conjugationalType = conjugationalType;
-
 	}
 
 
@@ -194,13 +201,8 @@ public class Morpheme {
 	 * @return The conjugation form
 	 */
 	public String getConjugationalForm() {
-
-		if (!this.loaded) {
-			this.load();
-		}
-
+	  load(LoadState.BASIC);
 		return this.conjugationalForm;
-
 	}
 
 
@@ -210,13 +212,8 @@ public class Morpheme {
 	 * @param conjugationalForm The conjugation form
 	 */
 	public void setConjugationalForm(String conjugationalForm) {
-
-		if (!this.loaded) {
-			this.load();
-		}
-
+	  load(LoadState.BASIC);
 		this.conjugationalForm = conjugationalForm;
-
 	}
 
 
@@ -226,13 +223,8 @@ public class Morpheme {
 	 * @return The unconjugated form
 	 */
 	public String getBasicForm() {
-
-		if (!this.loaded) {
-			this.load();
-		}
-
+	  load(LoadState.BASIC);
 		return this.basicForm;
-
 	}
 
 
@@ -242,13 +234,8 @@ public class Morpheme {
 	 * @param basicString The unconjugated form 
 	 */
 	public void setBasicForm(String basicString) {
-
-		if (!this.loaded) {
-			this.load();
-		}
-
+	  load(LoadState.BASIC);
 		this.basicForm = basicString;
-
 	}
 
 
@@ -258,13 +245,8 @@ public class Morpheme {
 	 * @return The readings
 	 */
 	public List<String> getReadings() {
-
-		if (!this.loaded) {
-			this.load();
-		}
-
+	  load(LoadState.FULL);
 		return this.readings;
-
 	}
 
 
@@ -274,13 +256,8 @@ public class Morpheme {
 	 * @param readings The readings
 	 */
 	public void setReadings(List<String> readings) {
-
-		if (!this.loaded) {
-			this.load();
-		}
-
+	  load(LoadState.FULL);
 		this.readings = new ArrayList<String>(readings);
-
 	}
 
 
@@ -290,13 +267,8 @@ public class Morpheme {
 	 * @return The pronunciations
 	 */
 	public List<String> getPronunciations() {
-
-		if (!this.loaded) {
-			this.load();
-		}
-
+	  load(LoadState.FULL);
 		return this.pronunciations;
-
 	}
 
 	
@@ -306,13 +278,8 @@ public class Morpheme {
 	 * @param pronunciations the pronunciations
 	 */
 	public void setPronunciations(List<String> pronunciations) {
-
-		if (!this.loaded) {
-			this.load();
-		}
-
+	  load(LoadState.FULL);
 		this.pronunciations = new ArrayList<String>(pronunciations);
-
 	}
 
 	
@@ -322,13 +289,8 @@ public class Morpheme {
 	 * @return The part-of-speech in Chasen format
 	 */
 	public String getPartOfSpeech() {
-
-		if (!this.loaded) {
-			this.load();
-		}
-
+	  load(LoadState.BASIC);
 		return this.partOfSpeech;
-
 	}
 
 
@@ -338,13 +300,8 @@ public class Morpheme {
 	 * @param partOfSpeech The part-of-speech
 	 */
 	public void setPartOfSpeech(String partOfSpeech) {
-
-		if (!this.loaded) {
-			this.load();
-		}
-
+	  load(LoadState.BASIC);
 		this.partOfSpeech = partOfSpeech;
-
 	}
 
 
@@ -452,9 +409,7 @@ public class Morpheme {
 	@Override
 	public String toString() {
 
-		if (!this.loaded) {
-			this.load();
-		}
+		load(LoadState.FULL);
 
 		StringBuilder partOfSpeechData = new StringBuilder();
 		String[] parts = this.partOfSpeech.split("-");
@@ -492,7 +447,7 @@ public class Morpheme {
 
 		this.dictionary = dictionary;
 		this.partOfSpeechIndex = partOfSpeechIndex;
-		this.loaded = false;
+		this.loaded = LoadState.NONE;
 
 	}
 
@@ -518,7 +473,7 @@ public class Morpheme {
 		this.partOfSpeech = partOfSpeech;
 		this.additionalInformation = additionalInformation;
 
-		this.loaded = true;
+		this.loaded = LoadState.FULL;
 
 	}
 
@@ -531,7 +486,7 @@ public class Morpheme {
 
 		this.readings = new ArrayList<String>();
 		this.pronunciations = new ArrayList<String>();
-		this.loaded = true;
+		this.loaded = LoadState.FULL;
 
 	}
 

@@ -25,5 +25,5 @@ import org.apache.lucene.util.Attribute;
  */
 public interface PartOfSpeechAttribute extends Attribute {
   public String getPartOfSpeech();
-  public void setPartOfSpeech(String partOfSpeech);
+  public void setMorpheme(Morpheme morpheme);
 }
