@@ -16,45 +16,42 @@ package org.apache.lucene.analysis.ja.tokenAttributes;
  * limitations under the License.
  */
 
+import net.java.sen.dictionary.Morpheme;
+
 import org.apache.lucene.analysis.ja.ToStringUtil;
 import org.apache.lucene.util.AttributeImpl;
 import org.apache.lucene.util.AttributeReflector;
 
 public class ConjugationAttributeImpl extends AttributeImpl implements ConjugationAttribute, Cloneable {
-  private String conjugationalForm = null;
-  private String conjugationalType = null;
+  private Morpheme morpheme;
   
   public String getConjugationalForm() {
-    return conjugationalForm;
+    return morpheme == null ? null : morpheme.getConjugationalForm();
   }
 
   public String getConjugationalType() {
-    return conjugationalType;
+    return morpheme == null ? null : morpheme.getConjugationalType();
   }
 
-  public void setConjugationalForm(String conjugationalForm) {
-    this.conjugationalForm = conjugationalForm;
-  }
-
-  public void setConjugationalType(String conjugationalType) {
-    this.conjugationalType = conjugationalType;
+  public void setMorpheme(Morpheme morpheme) {
+    this.morpheme = morpheme;
   }
 
   @Override
   public void clear() {
-    this.conjugationalForm = null;
-    this.conjugationalType = null;
+    this.morpheme = null;
   }
 
   @Override
   public void copyTo(AttributeImpl target) {
     ConjugationAttribute t = (ConjugationAttribute) target;
-    t.setConjugationalForm(conjugationalForm);
-    t.setConjugationalType(conjugationalType);
+    t.setMorpheme(morpheme);
   }
   
   @Override
   public void reflectWith(AttributeReflector reflector) {
+    String conjugationalForm = getConjugationalForm();
+    String conjugationalType = getConjugationalType();
     String enForm = conjugationalForm == null ? null : ToStringUtil.getConjFormTranslation(conjugationalForm);
     String enType = conjugationalType == null ? null : ToStringUtil.getConjTypeTranslation(conjugationalType);
     reflector.reflect(ConjugationAttribute.class, "conjugationalForm", conjugationalForm);

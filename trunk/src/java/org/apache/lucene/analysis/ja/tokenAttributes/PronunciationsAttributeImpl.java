@@ -19,34 +19,37 @@ package org.apache.lucene.analysis.ja.tokenAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.java.sen.dictionary.Morpheme;
+
 import org.apache.lucene.analysis.ja.ToStringUtil;
 import org.apache.lucene.util.AttributeImpl;
 import org.apache.lucene.util.AttributeReflector;
 
 public class PronunciationsAttributeImpl extends AttributeImpl implements PronunciationsAttribute, Cloneable {
-  private List<String> pronunciations = null;
+  private Morpheme morpheme;
   
   public List<String> getPronunciations() {
-    return pronunciations;
+    return morpheme == null ? null : morpheme.getPronunciations();
   }
   
-  public void setPronunciations(List<String> pronunciations) {
-    this.pronunciations = pronunciations;
+  public void setMorpheme(Morpheme morpheme) {
+    this.morpheme = morpheme;
   }
 
   @Override
   public void clear() {
-    pronunciations = null;
+    morpheme = null;
   }
 
   @Override
   public void copyTo(AttributeImpl target) {
     PronunciationsAttribute t = (PronunciationsAttribute) target;
-    t.setPronunciations(pronunciations);
+    t.setMorpheme(morpheme);
   }
   
   @Override
   public void reflectWith(AttributeReflector reflector) {
+    List<String> pronunciations = getPronunciations();
     List<String> enPronunciations = null;
     if (pronunciations != null) {
       enPronunciations = new ArrayList<String>(pronunciations.size());

@@ -16,27 +16,37 @@ package org.apache.lucene.analysis.ja.tokenAttributes;
  * limitations under the License.
  */
 
+import net.java.sen.dictionary.Morpheme;
+
+import org.apache.lucene.analysis.ja.ToStringUtil;
 import org.apache.lucene.util.AttributeImpl;
+import org.apache.lucene.util.AttributeReflector;
 
 public class BasicFormAttributeImpl extends AttributeImpl implements BasicFormAttribute, Cloneable {
-  private String basicForm = null;
+  private Morpheme morpheme;
   
   public String getBasicForm() {
-    return basicForm;
+    return morpheme == null ? null : morpheme.getBasicForm();
   }
   
-  public void setBasicForm(String basicForm) {
-    this.basicForm = basicForm;
+  @Override
+  public void setMorpheme(Morpheme morpheme) {
+    this.morpheme = morpheme;
   }
 
   @Override
   public void clear() {
-    basicForm = null;
+    morpheme = null;
   }
 
   @Override
   public void copyTo(AttributeImpl target) {
     BasicFormAttribute t = (BasicFormAttribute) target;
-    t.setBasicForm(basicForm);
+    t.setMorpheme(morpheme);
+  }
+  
+  @Override
+  public void reflectWith(AttributeReflector reflector) {
+    reflector.reflect(BasicFormAttribute.class, "basicForm", getBasicForm());
   }
 }

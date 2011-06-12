@@ -29,10 +29,7 @@
 
         <!-- morphological tokenizer: sets the SURFACE form as the token, but also sets these attributes:
              BasicFormAttribute, ConjugationAttribute, PartOfSpeechAttribute, PronunciationsAttribute,
-             ReadingsAttribute, and TypeAttribute.
-
-             TypeAttribute is set to the POS for simplicity, so you can use TypeAsPayloadTokenFilterFactory
-             if you desire to index the POS into the payload
+             ReadingsAttribute, and SentenceStartAttribute.
         -->
         <tokenizer class="solr.JapaneseTokenizerFactory"/>
 

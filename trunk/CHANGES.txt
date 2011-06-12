@@ -6,6 +6,12 @@ Important Notice
 
 New Features & Improvements
 
+* http://code.google.com/p/lucene-gosen/issues/detail?id=8
+  Morphological data is lazy-loaded for better performance. Due to this,
+  the part-of-speech tag is no longer put in TypeAttribute by the
+  tokenizer, you should always access it with PartOfSpeechAttribute.
+  (rmuir)
+
 Bug Fixes
 
 * http://code.google.com/p/lucene-gosen/issues/detail?id=7
