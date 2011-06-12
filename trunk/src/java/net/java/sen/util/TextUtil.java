@@ -19,34 +19,30 @@
 
 package net.java.sen.util;
 
-
 /**
  * Miscellaneous text utilities
  */
 public class TextUtil {
-
-	/**
-	 * Swap hiragana and katakana
-	 *
-	 * @param result The string to convert
-	 * @return The converted string
-	 */
-	public static String invertKanaCase(String result) {
-	
-		StringBuffer foldedStringBuffer = new StringBuffer(result);
-		int length = foldedStringBuffer.length();
-		for (int i = 0; i < length; i++) {
-			char character = foldedStringBuffer.charAt(i);
-			if ((character >= 0x30a1) && (character < 0x30f4)) {
-				// Katakana -> hiragana
-				foldedStringBuffer.setCharAt (i, (char)(character - 96));
-			} else if ((character >= 0x3041) && (character < 0x3094)) {
-				// Hiragana -> katakana
-				foldedStringBuffer.setCharAt (i, (char)(character + 96));
-			}
-		}
-		return foldedStringBuffer.toString();
-	
-	}
-
+  
+  /**
+   * Swap hiragana and katakana
+   *
+   * @param result The string to convert
+   * @return The converted string
+   */
+  public static String invertKanaCase(String result) {
+    StringBuffer foldedStringBuffer = new StringBuffer(result);
+    int length = foldedStringBuffer.length();
+    for (int i = 0; i < length; i++) {
+      char character = foldedStringBuffer.charAt(i);
+      if ((character >= 0x30a1) && (character < 0x30f4)) {
+        // Katakana -> hiragana
+        foldedStringBuffer.setCharAt (i, (char)(character - 96));
+      } else if ((character >= 0x3041) && (character < 0x3094)) {
+        // Hiragana -> katakana
+        foldedStringBuffer.setCharAt (i, (char)(character + 96));
+      }
+    }
+    return foldedStringBuffer.toString();
+  }
 }

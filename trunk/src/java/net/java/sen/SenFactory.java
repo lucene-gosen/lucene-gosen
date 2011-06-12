@@ -24,7 +24,6 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
@@ -89,7 +88,7 @@ public class SenFactory {
   
   private final String[] posIndex, conjTypeIndex, conjFormIndex;
   private final ByteBuffer costs, pos, tokens, trie;
-
+  
   public static ShortBuffer getConnectionCostBuffer() {
     return getInstance().costs.asShortBuffer();
   }
@@ -119,64 +118,61 @@ public class SenFactory {
   }
   
   public static final String unknownPOS = "未知語";
-
-	private static ByteBuffer loadBuffer(String resource, int size) throws IOException {
-	  InputStream in = SenFactory.class.getResourceAsStream(resource);
-	  ByteBuffer buffer = ByteBuffer.allocateDirect(size);
-	  buffer.limit(size);
-	  
-	  byte[] buf = new byte[1024];
-
-	  while (true) {
-	      int numBytes = in.read(buf);
-	      if (numBytes == -1) break;
-	      
-	      buffer.put(buf, 0, numBytes);
-	  }
-	  
-	  buffer.rewind();
-	  in.close();
-	  
-	  return buffer;
-	}
-
-	/**
-	 * Builds a Tokenizer for the given dictionary configuration
-	 *
-	 * @param configurationFilename The dictionary configuration filename
-	 * @return The constructed Tokenizer
-	 */
-	private static Tokenizer getTokenizer() {
-		return new JapaneseTokenizer(new Dictionary(), unknownPOS);
-	}
-
-
-	/**
-	 * Creates a Viterbi from the given configuration
-	 *
-	 * @return A Viterbi
-	 */
-	public static Viterbi getViterbi() {
-	  return new Viterbi(getTokenizer());
-	}
-
-
-	/**
-	 * Creates a StringTagger from the given configuration
-	 *
-	 * @return A StringTagger
-	 */
-	public static StringTagger getStringTagger() {
-	  return new StringTagger(getTokenizer());
-	}
-
-
-	/**
-	 * Creates a ReadingProcessor from the given configuration
-	 *
-	 * @return A ReadingProcessor
-	 */
-	public static ReadingProcessor getReadingProcessor() {
-	  return new ReadingProcessor(getTokenizer());
-	}
+  
+  private static ByteBuffer loadBuffer(String resource, int size) throws IOException {
+    InputStream in = SenFactory.class.getResourceAsStream(resource);
+    ByteBuffer buffer = ByteBuffer.allocateDirect(size);
+    buffer.limit(size);
+    
+    byte[] buf = new byte[1024];
+    
+    while (true) {
+      int numBytes = in.read(buf);
+      if (numBytes == -1) break;
+      
+      buffer.put(buf, 0, numBytes);
+    }
+    
+    buffer.rewind();
+    in.close();
+    
+    return buffer;
+  }
+  
+  /**
+   * Builds a Tokenizer for the given dictionary configuration
+   *
+   * @param configurationFilename The dictionary configuration filename
+   * @return The constructed Tokenizer
+   */
+  private static Tokenizer getTokenizer() {
+    return new JapaneseTokenizer(new Dictionary(), unknownPOS);
+  }
+  
+  /**
+   * Creates a Viterbi from the given configuration
+   *
+   * @return A Viterbi
+   */
+  public static Viterbi getViterbi() {
+    return new Viterbi(getTokenizer());
+  }
+  
+  /**
+   * Creates a StringTagger from the given configuration
+   *
+   * @return A StringTagger
+   */
+  public static StringTagger getStringTagger() {
+    return new StringTagger(getTokenizer());
+  }
+  
+  /**
+   * Creates a ReadingProcessor from the given configuration
+   *
+   * @return A ReadingProcessor
+   */
+  public static ReadingProcessor getReadingProcessor() {
+    return new ReadingProcessor(getTokenizer());
+  }
 }

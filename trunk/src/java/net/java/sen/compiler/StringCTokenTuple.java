@@ -25,33 +25,23 @@ import net.java.sen.dictionary.CToken;
  * A tuple comprising a String and a CToken
  */
 public class StringCTokenTuple implements Comparable<StringCTokenTuple> {
-
-	/**
-	 * The tuple's String
-	 */
-	public String key = null;
-
-	/**
-	 * The tuple's CToken
-	 */
-	public CToken value = null;
-
-
-	/* (non-Javadoc)
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 */
-	public int compareTo(StringCTokenTuple o) {
-		return this.key.compareTo(o.key);
-	}
-
-
-	/**
-	 * @param key The tuple's String
-	 * @param value The tuple's CToken
-	 */
-	public StringCTokenTuple(String key, CToken value) {
-		this.key = key;
-		this.value = value;
-	}
-
+  
+  /** The tuple's String */
+  public final String key;
+  
+  /** The tuple's CToken  */
+  public final CToken value;
+  
+  public int compareTo(StringCTokenTuple other) {
+    return key.compareTo(other.key);
+  }
+  
+  /**
+   * @param key The tuple's String
+   * @param value The tuple's CToken
+   */
+  public StringCTokenTuple(String key, CToken value) {
+    this.key = key;
+    this.value = value;
+  }
 }

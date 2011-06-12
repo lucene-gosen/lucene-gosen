@@ -24,34 +24,29 @@ import java.io.IOException;
 
 import net.java.sen.compiler.IpadicPreprocessor;
 
-
 /**
  * Preprocesses an input dictionary into the intermediate CSV format used by the
  * dictionary compiler. Currently assumes an ipadic dictionary
  */
 public class DictionaryPreprocessor {
-
-	/**
-	 * Precompiles a dictionary into the intermediate form used by the
-	 * dictionary compiler
-	 *
-	 * @param args The directory of the unpacked input dictionary
-	 * @throws FileNotFoundException 
-	 * @throws IOException 
-	 */
-	public static void main(String[] args) throws FileNotFoundException, IOException {
-
-		if (args.length != 3) {
-			System.out.println("Syntax: java DictionaryPreprocessor <input charset> <dictionary directory> <output directory>");
-			System.exit(1);
-		}
-
-		String inputCharset = args[0];
-		String inputDirectory = args[1];
-		String outputDirectory = args[2];
-
-		new IpadicPreprocessor(inputCharset, inputDirectory).build(outputDirectory);
-
-	}
-
+  /**
+   * Precompiles a dictionary into the intermediate form used by the
+   * dictionary compiler
+   *
+   * @param args The directory of the unpacked input dictionary
+   * @throws FileNotFoundException 
+   * @throws IOException 
+   */
+  public static void main(String[] args) throws FileNotFoundException, IOException {
+    if (args.length != 3) {
+      System.out.println("Syntax: java DictionaryPreprocessor <input charset> <dictionary directory> <output directory>");
+      System.exit(1);
+    }
+    
+    String inputCharset = args[0];
+    String inputDirectory = args[1];
+    String outputDirectory = args[2];
+    
+    new IpadicPreprocessor(inputCharset, inputDirectory).build(outputDirectory);
+  }
 }

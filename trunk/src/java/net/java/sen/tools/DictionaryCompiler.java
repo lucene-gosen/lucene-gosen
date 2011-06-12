@@ -25,24 +25,18 @@ import java.io.IOException;
 
 import net.java.sen.compiler.DictionaryBuilder;
 
-
 /**
  * Compiles source CSV data into the dictionary data files used for analysis
  */
 public class DictionaryCompiler {
-
-	/**
-	 * Main method
-	 * 
-	 * @param args &lt;Custom dictionary file&gt; (optional)
-	 * @throws IOException 
-	 */
-	public static void main(String args[]) throws IOException {
-
-		String[] customDictionaries = args;
-		new DictionaryBuilder(customDictionaries);
-
-	}
-
-
+  /**
+   * Main method
+   * 
+   * @param args &lt;Custom dictionary file&gt; (optional)
+   * @throws IOException 
+   */
+  public static void main(String args[]) throws IOException {
+    String[] customDictionaries = args;
+    new DictionaryBuilder(customDictionaries);
+  }
 }

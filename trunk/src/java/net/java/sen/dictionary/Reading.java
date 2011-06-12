@@ -19,76 +19,45 @@
 
 package net.java.sen.dictionary;
 
-
 /**
  * A class representing a reading applied to a set of characters within a
  * sentence
  */
 public class Reading {
-
-	/**
-	 * The starting point within the sentence
-	 */
-	public final int start;
-
-	/**
-	 * The number of characters of the sentence covered by the reading
-	 */
-	public final int length;
-
-	/**
-	 * The reading text applied to the covered span
-	 */
-	public final String text;
-
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object object) {
-
-		if (object instanceof Reading) {
-
-			Reading other = (Reading) object;
-			if (
-					   (this.start == other.start)
-					&& (this.length == other.length)
-					&& (this.text.equals(other.text))
-			   )
-			{
-				return true;
-			}
-		}
-
-		return false;
-
-	}
-
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-
-		return "Reading:{" + this.start + ":" + this.length + ":" + this.text + "}";
-
-	}
-
-
-	/**
-	 * @param start The starting point within the sentence
-	 * @param length The number of characters of the sentence covered by the
-	 *               reading
-	 * @param text The reading text applied to the covered span
-	 */
-	public Reading(int start, int length, String text) {
-
-		this.start = start;
-		this.length = length;
-		this.text = text;
-
-	}
-
+  
+  /** The starting point within the sentence */
+  public final int start;
+  
+  /** The number of characters of the sentence covered by the reading */
+  public final int length;
+  
+  /** The reading text applied to the covered span */
+  public final String text;
+  
+  @Override
+  public boolean equals(Object object) {
+    if (object instanceof Reading) {
+      Reading other = (Reading) object;
+      return (start == other.start && length == other.length && text.equals(other.text));
+    }
+    
+    return false;
+  }
+  
+  @Override
+  public String toString() {
+    return "Reading:{" + start + ":" + length + ":" + text + "}";
+  }
+  
+  /**
+   * @param start The starting point within the sentence
+   * @param length The number of characters of the sentence covered by the
+   *               reading
+   * @param text The reading text applied to the covered span
+   */
+  public Reading(int start, int length, String text) {
+    this.start = start;
+    this.length = length;
+    this.text = text;
+  }
 }
