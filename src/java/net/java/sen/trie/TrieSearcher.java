@@ -22,64 +22,58 @@ package net.java.sen.trie;
 
 import java.nio.IntBuffer;
 
-
 /**
  * Searches a Trie data file
  */
 public class TrieSearcher {
-	/**
-	 * Searches for Trie keys forming a complete substring of the given
-	 * sentence, starting at the given position within the sentence
-	 * 
-	 * @param trieData The Trie data to search
-	 * @param iterator The character iterator to read search characters from
-	 * @param results An array used to return the values of the found keys
-	 * @return The number of results found
-	 * 
-	 * @throws ArrayIndexOutOfBoundsException if results[] is too small
-	 */
-	public static int commonPrefixSearch(IntBuffer trieData, CharIterator iterator, int results[]) {
-
-		int b = trieData.get(0 << 1);
-		int num = 0;
-		int n;
-		int p;
-
-		while (iterator.hasNext()) {
-
-			p = b;
-			n = trieData.get(p << 1);
-			if (n < 0 && b == trieData.get((p << 1) + 1)) {
-				// Will throw ArrayIndexOutOfBoundsException if results[] is too small
-				results[num] = -n - 1;
-				num++;
-			}
-
-			p = b + iterator.next() + 1;
-
-
-			if (((p << 1) + 1) >= trieData.limit()) {
-				// We fell off the end of the Trie data
-				return num;
-			}
-
-
-			if (b == trieData.get((p << 1) + 1)) {
-				b = trieData.get(p << 1);
-			} else {
-				return num;
-			}
-		}
-
-		p = b;
-		n = trieData.get(p << 1);
-		if ((n < 0) && b == trieData.get((p << 1) + 1)) {
-			// Will throw ArrayIndexOutOfBoundsException if results[] is too small
-			results[num] = -n - 1;
-			num++;
-		}
-
-		return num;
-
-	}
+  /**
+   * Searches for Trie keys forming a complete substring of the given
+   * sentence, starting at the given position within the sentence
+   * 
+   * @param trieData The Trie data to search
+   * @param iterator The character iterator to read search characters from
+   * @param results An array used to return the values of the found keys
+   * @return The number of results found
+   * 
+   * @throws ArrayIndexOutOfBoundsException if results[] is too small
+   */
+  public static int commonPrefixSearch(IntBuffer trieData, CharIterator iterator, int results[]) {
+    int b = trieData.get(0 << 1);
+    int num = 0;
+    int n;
+    int p;
+    
+    while (iterator.hasNext()) {
+      p = b;
+      n = trieData.get(p << 1);
+      if (n < 0 && b == trieData.get((p << 1) + 1)) {
+        // Will throw ArrayIndexOutOfBoundsException if results[] is too small
+        results[num] = -n - 1;
+        num++;
+      }
+      
+      p = b + iterator.next() + 1;
+      
+      if (((p << 1) + 1) >= trieData.limit()) {
+        // We fell off the end of the Trie data
+        return num;
+      }
+      
+      if (b == trieData.get((p << 1) + 1)) {
+        b = trieData.get(p << 1);
+      } else {
+        return num;
+      }
+    }
+    
+    p = b;
+    n = trieData.get(p << 1);
+    if ((n < 0) && b == trieData.get((p << 1) + 1)) {
+      // Will throw ArrayIndexOutOfBoundsException if results[] is too small
+      results[num] = -n - 1;
+      num++;
+    }
+    
+    return num;
+  }
 }

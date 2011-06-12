@@ -32,103 +32,73 @@ import java.nio.ByteBuffer;
  * the Viterbi lattice.
  */
 final public class CToken implements Cloneable {
-
-	/**
-	 * The length in bytes of a stored CToken
-	 */
-	final public static long SIZE = 14;
-
-	/**
-	 * Used in Viterbi path cost calculation
-	 */
-	public short rcAttr2 = 0;
-
-	/**
-	 * Used in Viterbi path cost calculation
-	 */
-	public short rcAttr1 = 0;
-
-	/**
-	 * Used in Viterbi path cost calculation
-	 */
-	public short lcAttr = 0;
-
-	/**
-	 * The length of the morpheme this CToken wraps
-	 */
-	public short length = 0;
-
-	/**
-	 * The cost of this CToken
-	 */
-	public short cost = 0;
-
-	/**
-	 * The file index in the part-of-speech information file of the morpheme 
-	 * data this CToken wraps
-	 */
-	public int partOfSpeechIndex = 0;
-
-
-	/**
-	 * Read a CToken from a ByteBuffer
-	 *
-	 * @param buffer The ByteBuffer to read from
-	 * @return The CToken
-	 */
-	public static CToken read(ByteBuffer buffer) {
-
-		CToken token = new CToken();
-
-		token.rcAttr2 = buffer.getShort();
-		token.rcAttr1 = buffer.getShort();
-		token.lcAttr = buffer.getShort();
-		token.length = buffer.getShort();
-		token.cost = buffer.getShort();
-		token.partOfSpeechIndex = buffer.getInt();
-
-		return token;
-
-	}
-
-
-	/**
-	 * Write a CToken to a DataOutput
-	 *
-	 * @param output The DataOutput to write to
-	 * @param token The CToken to write
-	 * @throws IOException
-	 */
-	public static void write(DataOutput output, CToken token) throws IOException {
-
-		output.writeShort(token.rcAttr2);
-		output.writeShort(token.rcAttr1);
-		output.writeShort(token.lcAttr);
-		output.writeShort(token.length);
-		output.writeShort(token.cost);
-		output.writeInt(token.partOfSpeechIndex);
-
-	}
-
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#clone()
-	 */
-	@Override
-	protected CToken clone() {
-
-		// Class contains only shorts and ints - a shallow copy is sufficient
-		
-		CToken cloneToken = null;
-		try {
-			cloneToken = (CToken) super.clone();
-		} catch (CloneNotSupportedException e) {
-			// Can't happen
-			e.printStackTrace();
-		}
-		return cloneToken;
-
-	}
-
-
+  
+  /** The length in bytes of a stored CToken */
+  final public static long SIZE = 14;
+  
+  /** Used in Viterbi path cost calculation */
+  public short rcAttr2 = 0;
+  
+  /** Used in Viterbi path cost calculation */
+  public short rcAttr1 = 0;
+  
+  /** Used in Viterbi path cost calculation */
+  public short lcAttr = 0;
+  
+  /** The length of the morpheme this CToken wraps */
+  public short length = 0;
+  
+  /** The cost of this CToken */
+  public short cost = 0;
+  
+  /**
+   * The file index in the part-of-speech information file of the morpheme 
+   * data this CToken wraps
+   */
+  public int partOfSpeechIndex = 0;
+  
+  /**
+   * Read a CToken from a ByteBuffer
+   *
+   * @param buffer The ByteBuffer to read from
+   * @return The CToken
+   */
+  public static CToken read(ByteBuffer buffer) {
+    CToken token = new CToken();
+    
+    token.rcAttr2 = buffer.getShort();
+    token.rcAttr1 = buffer.getShort();
+    token.lcAttr = buffer.getShort();
+    token.length = buffer.getShort();
+    token.cost = buffer.getShort();
+    token.partOfSpeechIndex = buffer.getInt();
+    
+    return token;
+  }
+  
+  /**
+   * Write a CToken to a DataOutput
+   *
+   * @param output The DataOutput to write to
+   * @param token The CToken to write
+   * @throws IOException
+   */
+  public static void write(DataOutput output, CToken token) throws IOException {
+    output.writeShort(token.rcAttr2);
+    output.writeShort(token.rcAttr1);
+    output.writeShort(token.lcAttr);
+    output.writeShort(token.length);
+    output.writeShort(token.cost);
+    output.writeInt(token.partOfSpeechIndex);
+  }
+  
+  @Override
+  protected CToken clone() {
+    // Class contains only shorts and ints - a shallow copy is sufficient
+    try {
+      return (CToken) super.clone();
+    } catch (CloneNotSupportedException e) {
+      throw new RuntimeException(e); // Can't happen
+    }
+  }
 }

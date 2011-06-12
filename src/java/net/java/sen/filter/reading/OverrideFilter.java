@@ -27,61 +27,41 @@ import net.java.sen.dictionary.Token;
 import net.java.sen.filter.ReadingFilter;
 import net.java.sen.filter.ReadingNode;
 
-
 /**
  * A reading filter that overrides decisions on reading visibility made by
  * earlier filters. Typically this filter will be set as the last in a
  * chain of filters to allow changes to be made interactively
  */
 public class OverrideFilter implements ReadingFilter {
-
-	/**
-	 * A map of visibility override settings. Where an entry exists for a given
-	 * integer index, any <code>ReadingNode</code> starting at that index will
-	 * have its visibility set to the stored value
-	 */
-	private Map<Integer,Boolean> visibility = new HashMap<Integer,Boolean>();
-
-
-	/* (non-Javadoc)
-	 * @see net.java.sen.filter.ReadingFilter#filterReadings(java.util.List, net.java.sen.filter.ReadingNode)
-	 */
-	public void filterReadings(List<Token> tokens, ReadingNode readingNode) {
-
-		for (ReadingNode node = readingNode; node != null; node = node.next) {
-
-			Boolean visible = this.visibility.get(tokens.get(node.firstToken).getStart());
-			if (visible != null) {
-				node.visible = visible;
-			}
-
-		}
-
-	}
-
-
-	/* (non-Javadoc)
-	 * @see net.java.sen.filter.ReadingFilter#reset()
-	 */
-	public void reset() {
-
-		this.visibility.clear();
-
-	}
-
-
-	/**
-	 * Sets a visibility override at a given character index
-	 *
-	 * @param position The position to set the override at
-	 * @param visible The visibility to set. <code>null</code> removes the
-	 *                override
-	 */
-	public void setVisible(int position, Boolean visible) {
-
-		this.visibility.put(position,visible);
-
-	}
-
-
+  /**
+   * A map of visibility override settings. Where an entry exists for a given
+   * integer index, any <code>ReadingNode</code> starting at that index will
+   * have its visibility set to the stored value
+   */
+  private Map<Integer,Boolean> visibility = new HashMap<Integer,Boolean>();
+  
+  public void filterReadings(List<Token> tokens, ReadingNode readingNode) {
+    for (ReadingNode node = readingNode; node != null; node = node.next) {  
+      Boolean visible = visibility.get(tokens.get(node.firstToken).getStart());
+      
+      if (visible != null) {
+        node.visible = visible;
+      }
+    }
+  }
+  
+  public void reset() {
+    visibility.clear();
+  }
+  
+  /**
+   * Sets a visibility override at a given character index
+   *
+   * @param position The position to set the override at
+   * @param visible The visibility to set. <code>null</code> removes the
+   *                override
+   */
+  public void setVisible(int position, Boolean visible) {
+    visibility.put(position,visible);
+  }
 }

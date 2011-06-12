@@ -34,7 +34,6 @@ import java.util.List;
 
 import net.java.sen.dictionary.CToken;
 
-
 /**
  * A file-mapped list of {@link StringCTokenTuple <code>StringCTokenTuple</code>}s.
  * Slightly slower than a simple in-memory sort, but capable of storing and
@@ -49,158 +48,133 @@ import net.java.sen.dictionary.CToken;
  * <p>  - Call {@link #get} to retrieve entries from the sorted list
  */
 public class VirtualTupleList {
-
-	/**
-	 * A RandomAccessFile used to create the memory mapped buffer during sorting
-	 */
-	private RandomAccessFile file;
-
-	/**
-	 * A memory mapped buffer used to retrieve list entries. Created when the
-	 * buffer is sorted
-	 */
-	private MappedByteBuffer mappedBuffer = null;
-
-	/**
-	 * An OutputStream to the temporary file used to store entries in the list
-	 */
-	private DataOutputStream outputStream;
-
-	/**
-	 * An index of entry positions within the temporary file
-	 */
-	private List<Integer> indices = new ArrayList<Integer>();
-
-	/**
-	 * A Comparator for indices within the list
-	 */
-	private Comparator<Integer> comparator = new VirtualListComparator();
-
-
-	/**
-	 * A Comparator class for indices within the list
-	 */
-	private class VirtualListComparator implements Comparator<Integer> {
-
-		/* (non-Javadoc)
-		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-		 */
-		public int compare(Integer o1, Integer o2) {
-
-			String first = getString(o1);
-			String second = getString(o2);
-			return first.compareTo(second);
-
-		}
-		
-	}
-
-
-	/**
-	 * Adds a StringCTokenTuple to the list. Passed in as the Tuple's
-	 * constituent parts to avoid creating an object that we immediately
-	 * serialise and throw away
-	 *
-	 * @param string The string
-	 * @param ctoken The CToken
-	 * @throws IOException 
-	 */
-	public void add(String string, CToken ctoken) throws IOException {
-
-		int position = this.outputStream.size();
-
-		CToken.write(this.outputStream, ctoken);
-		this.outputStream.writeShort(string.length());
-		this.outputStream.writeChars(string);
-
-		this.indices.add(position);
-			
-	}
-
-
-	/**
-	 * Retrieves an entry from the list. Only valid after the list has been
-	 * sorted
-	 *
-	 * @param index The index of the entry to retrieve
-	 * @return The list entry
-	 */
-	public StringCTokenTuple get(int index) {
-
-		int position = this.indices.get(index);
-
-		this.mappedBuffer.position(position);
-		CToken ctoken = CToken.read(this.mappedBuffer);
-		short numChars = this.mappedBuffer.getShort();
-		char stringChars[] = new char[numChars];
-		for (int i = 0; i < numChars; i++) {
-			stringChars[i] = this.mappedBuffer.getChar();
-		}
-		String string = new String(stringChars);
-
-		return new StringCTokenTuple(string, ctoken);
-
-	}
-
-
-	/**
-	 * Retrieves only the String portion of a list entry. Used in sorting
-	 * (where the CToken is not relevant)
-	 *
-	 * @param position The file position of the list entry
-	 * @return The entry's String component
-	 */
-	private String getString(int position) {
-
-		this.mappedBuffer.position((int) (position + CToken.SIZE));
-		short numChars = this.mappedBuffer.getShort();
-		char stringChars[] = new char[numChars];
-		for (int i = 0; i < numChars; i++) {
-			stringChars[i] = this.mappedBuffer.getChar();
-		}
-
-		return new String(stringChars);
-
-	}
-
-	/**
-	 * Sorts the list
-	 * 
-	 * @throws IOException 
-	 */
-	public void sort() throws IOException {
-
-		this.outputStream.flush();
-		this.outputStream.close();
-		this.mappedBuffer = this.file.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, this.file.length());
-		Collections.sort(this.indices, this.comparator);
-
-	}
-
-
-	/**
-	 * Returns the number of entries in the list
-	 *
-	 * @return The number of entries in the list
-	 */
-	public int size() {
-
-		return this.indices.size();
-
-	}
-
-	/**
-	 * @throws IOException 
-	 */
-	public VirtualTupleList() throws IOException {
-
-		File tempFile;
-
-		tempFile = File.createTempFile("_tok", null);
-		tempFile.deleteOnExit();
-		this.file = new RandomAccessFile(tempFile, "rw");
-		this.outputStream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(tempFile)));
-
-	}
-
+  
+  /**
+   * A RandomAccessFile used to create the memory mapped buffer during sorting
+   */
+  private final RandomAccessFile file;
+  
+  /**
+   * A memory mapped buffer used to retrieve list entries. Created when the
+   * buffer is sorted
+   */
+  private MappedByteBuffer mappedBuffer = null;
+  
+  /**
+   * An OutputStream to the temporary file used to store entries in the list
+   */
+  private DataOutputStream outputStream;
+  
+  /**
+   * An index of entry positions within the temporary file
+   */
+  private List<Integer> indices = new ArrayList<Integer>();
+  
+  /**
+   * A Comparator for indices within the list
+   */
+  private final Comparator<Integer> comparator = new VirtualListComparator();
+  
+  /**
+   * A Comparator class for indices within the list
+   */
+  private class VirtualListComparator implements Comparator<Integer> {
+    public int compare(Integer o1, Integer o2) {
+      String first = getString(o1);
+      String second = getString(o2);
+      return first.compareTo(second);
+    }
+  }
+  
+  /**
+   * Adds a StringCTokenTuple to the list. Passed in as the Tuple's
+   * constituent parts to avoid creating an object that we immediately
+   * serialise and throw away
+   *
+   * @param string The string
+   * @param ctoken The CToken
+   * @throws IOException 
+   */
+  public void add(String string, CToken ctoken) throws IOException {
+    int position = outputStream.size();
+    
+    CToken.write(outputStream, ctoken);
+    outputStream.writeShort(string.length());
+    outputStream.writeChars(string);
+    
+    indices.add(position);
+  }
+  
+  /**
+   * Retrieves an entry from the list. Only valid after the list has been
+   * sorted
+   *
+   * @param index The index of the entry to retrieve
+   * @return The list entry
+   */
+  public StringCTokenTuple get(int index) {
+    int position = indices.get(index);
+    
+    mappedBuffer.position(position);
+    CToken ctoken = CToken.read(mappedBuffer);
+    short numChars = mappedBuffer.getShort();
+    char stringChars[] = new char[numChars];
+    for (int i = 0; i < numChars; i++) {
+      stringChars[i] = mappedBuffer.getChar();
+    }
+    String string = new String(stringChars);
+    
+    return new StringCTokenTuple(string, ctoken);
+  }
+  
+  /**
+   * Retrieves only the String portion of a list entry. Used in sorting
+   * (where the CToken is not relevant)
+   *
+   * @param position The file position of the list entry
+   * @return The entry's String component
+   */
+  private String getString(int position) {
+    mappedBuffer.position((int) (position + CToken.SIZE));
+    short numChars = mappedBuffer.getShort();
+    char stringChars[] = new char[numChars];
+    for (int i = 0; i < numChars; i++) {
+      stringChars[i] = mappedBuffer.getChar();
+    }
+    
+    return new String(stringChars);
+  }
+  
+  /**
+   * Sorts the list
+   * 
+   * @throws IOException 
+   */
+  public void sort() throws IOException {
+    outputStream.flush();
+    outputStream.close();
+    mappedBuffer = file.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, file.length());
+    Collections.sort(indices, comparator);
+  }
+  
+  /**
+   * Returns the number of entries in the list
+   *
+   * @return The number of entries in the list
+   */
+  public int size() {
+    return indices.size();
+  }
+  
+  /**
+   * @throws IOException 
+   */
+  public VirtualTupleList() throws IOException {
+    File tempFile;
+    
+    tempFile = File.createTempFile("_tok", null);
+    tempFile.deleteOnExit();
+    this.file = new RandomAccessFile(tempFile, "rw");
+    this.outputStream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(tempFile)));
+  }
 }
