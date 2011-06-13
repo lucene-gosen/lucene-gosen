@@ -129,8 +129,8 @@ public class Dictionary {
    * @return The connection cost
    */
   public int getCost(Node lNode2, Node lNode, Node rNode) {
-    final int position = connectionSize3 * (connectionSize2 * lNode2.ctoken.rcAttr2 + lNode.ctoken.rcAttr1) + rNode.ctoken.lcAttr;
-    return connectionCostBuffer.get(position) + rNode.ctoken.cost;
+    final int position = connectionSize3 * (connectionSize2 * lNode2.rcAttr2 + lNode.rcAttr1) + rNode.lcAttr;
+    return connectionCostBuffer.get(position) + rNode.dictionaryCost;
   }
   
   /**
@@ -150,14 +150,15 @@ public class Dictionary {
       int k = trieSearchResults[i] & 0xff;
       int p = trieSearchResults[i] >> 8;
     
-    tokenBuffer.position((int) ((p + 3) * CToken.SIZE));
-    for (int j = 0; j < k; j++) {
-      results[size++] = CToken.read(tokenBuffer);
-    }
+      tokenBuffer.position((int) ((p + 3) * CToken.SIZE));
+    
+      for (int j = 0; j < k; j++) {
+        results[size++].read(tokenBuffer);
+      }
     }
     
     // Null terminate
-    results[size] = null;
+    results[size].terminator = true;
     
     return results;
   }
@@ -185,9 +186,12 @@ public class Dictionary {
     
     // Map token file
     this.tokenBuffer = SenFactory.getTokenBuffer();
-    this.bosToken = CToken.read(this.tokenBuffer);
-    this.eosToken = CToken.read(this.tokenBuffer);
-    this.unknownToken = CToken.read(this.tokenBuffer);
+    this.bosToken = new CToken();
+    this.bosToken.read(this.tokenBuffer);
+    this.eosToken = new CToken();
+    this.eosToken.read(this.tokenBuffer);
+    this.unknownToken = new CToken();
+    this.unknownToken.read(this.tokenBuffer);
     
     // Map double array trie dictionary
     this.trieBuffer = SenFactory.getTrieBuffer();
@@ -196,5 +200,9 @@ public class Dictionary {
     this.posIndex = SenFactory.getPOSIndex();
     this.conjTypeIndex = SenFactory.getConjTypeIndex();
     this.conjFormIndex = SenFactory.getConjFormIndex();
+    
+    for (int i = 0; i < results.length; i++) {
+      results[i] = new CToken();
+    }
   }
 }

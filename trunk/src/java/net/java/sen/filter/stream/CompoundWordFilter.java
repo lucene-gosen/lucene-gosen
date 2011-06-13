@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import net.java.sen.dictionary.Morpheme;
 import net.java.sen.dictionary.Sentence;
 import net.java.sen.dictionary.Token;
 import net.java.sen.filter.StreamFilter;
@@ -131,20 +132,22 @@ public class CompoundWordFilter implements StreamFilter {
           partOfSpeech.append("-").append(tmp);
         }
         
-        newToken.getMorpheme().setPartOfSpeech(new String(partOfSpeech));
-        newToken.getMorpheme().setConjugationalType(getField(termInfo, 6));
-        newToken.getMorpheme().setConjugationalForm(getField(termInfo, 7));
-        newToken.getMorpheme().setBasicForm(getField(termInfo, 8));
-        newToken.getMorpheme().setReadings(Arrays.asList(getField(termInfo, 9)));
-        newToken.getMorpheme().setPronunciations(Arrays.asList(getField(termInfo, 10)));
         newToken.setCost(token.getCost());
         
+        final String additionalInformation;
         if (getField(termInfo, 11).equals("-")) {
-          newToken.getMorpheme().setAdditionalInformation("p=" + token.getMorpheme().getPartOfSpeech());
+          additionalInformation = "p=" + token.getMorpheme().getPartOfSpeech();
         } else {
-          newToken.getMorpheme().setAdditionalInformation(getField(termInfo, 11));
+          additionalInformation = getField(termInfo, 11);
         }
-        
+        Morpheme newMorpheme = new Morpheme(partOfSpeech.toString(),
+            getField(termInfo, 6),
+            getField(termInfo, 7),
+            getField(termInfo, 8),
+            new String[] { getField(termInfo, 9) },
+            new String[] { getField(termInfo, 10) },
+            additionalInformation);
+        newToken.setMorpheme(newMorpheme);        
         newToken.setLength(surface.length());
         newToken.setStart(start);
         start += surface.length();

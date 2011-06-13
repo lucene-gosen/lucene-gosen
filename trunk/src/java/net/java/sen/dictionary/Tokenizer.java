@@ -101,16 +101,16 @@ public abstract class Tokenizer {
   public Node getUnknownNode(char[] surface, int start, int length, int span) {
     Node unknownNode = new Node();
     
-    unknownNode.ctoken = unknownCToken;
+    unknownNode.setCToken(unknownCToken);
     unknownNode.start = start;
     unknownNode.length = length;
     unknownNode.span = span;
-    unknownNode.morpheme = new Morpheme();
-    unknownNode.morpheme.setBasicForm("*");
-    unknownNode.morpheme.setPartOfSpeech(unknownPartOfSpeechDescription);
+    unknownNode.morpheme = unknownMorpheme;
     
     return unknownNode;
   }
+  
+  private final Morpheme unknownMorpheme;
   
   /**
    * Searches for possible morphemes from the given SentenceIterator. The
@@ -139,12 +139,14 @@ public abstract class Tokenizer {
     this.unknownPartOfSpeechDescription = unknownPartOfSpeechDescription;
     
     this.bosNode = new Node();
-    this.bosNode.ctoken = this.dictionary.getBOSToken();
+    this.bosNode.setCToken(this.dictionary.getBOSToken());
     
     this.eosNode = new Node();
-    this.eosNode.ctoken = this.dictionary.getEOSToken();
+    this.eosNode.setCToken(this.dictionary.getEOSToken());
     
     this.unknownCToken = this.dictionary.getUnknownToken();
     this.unknownCToken.cost = 30000;
+    
+    this.unknownMorpheme = new Morpheme(unknownPartOfSpeechDescription, null, null, "*", new String[0], new String[0], null);
   }
 }

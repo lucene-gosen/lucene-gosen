@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import net.java.sen.dictionary.Morpheme;
 import net.java.sen.dictionary.Sentence;
 import net.java.sen.dictionary.Token;
 import net.java.sen.filter.StreamFilter;
@@ -183,16 +184,25 @@ public class CompositeTokenFilter implements StreamFilter {
     token1.setSurface(token1.getSurface() + token2.getSurface());
     String basicForm1 = token1.getMorpheme().getBasicForm();
     String basicForm2 = token2.getMorpheme().getBasicForm();
+    
+    final String mergedBasicForm;
     if (basicForm1.equals("*") && basicForm2.equals("*")) {
-      token1.getMorpheme().setBasicForm("*");
+      mergedBasicForm = "*";
     } else {
-      token1.getMorpheme().setBasicForm(
+      mergedBasicForm = 
           (basicForm1.equals("*") ? token1.getSurface() : basicForm1) + 
-          (basicForm2.equals("*") ? token2.getSurface() : basicForm2));
+          (basicForm2.equals("*") ? token2.getSurface() : basicForm2);
     }
-    token1.getMorpheme().setPartOfSpeech(newPartOfSpeech);
-    token1.getMorpheme().setPronunciations(Arrays.asList(token1.getMorpheme().getPronunciations().get(0) + token2.getMorpheme().getPronunciations().get(0)));
-    token1.getMorpheme().setReadings(Arrays.asList(token1.getMorpheme().getReadings().get(0) + token2.getMorpheme().getReadings().get(0)));
+
+    Morpheme mergedMorpheme = new Morpheme(newPartOfSpeech, 
+                                           token1.getMorpheme().getConjugationalType(), 
+                                           token1.getMorpheme().getConjugationalForm(),
+                                           mergedBasicForm,
+                                           new String[] { token1.getMorpheme().getReadings().get(0) + token2.getMorpheme().getReadings().get(0) },
+                                           new String[] { token1.getMorpheme().getPronunciations().get(0) + token2.getMorpheme().getPronunciations().get(0) },
+                                           token1.getMorpheme().getAdditionalInformation());
+                                           
+    token1.setMorpheme(mergedMorpheme);
   }
   
   public void preProcess(Sentence sentence) {

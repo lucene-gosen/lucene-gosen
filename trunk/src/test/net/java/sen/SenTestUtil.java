@@ -21,6 +21,8 @@ package net.java.sen;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.apache.lucene.util.LuceneTestCase;
 
 import net.java.sen.ReadingProcessor;
@@ -33,7 +35,7 @@ import net.java.sen.dictionary.Viterbi;
 /**
  * Test utilities
  */
-public class SenTestUtil extends LuceneTestCase {
+public class SenTestUtil {
   /**
    * A StringTagger for testing
    */
@@ -165,7 +167,7 @@ public class SenTestUtil extends LuceneTestCase {
    * @param actualTokens The actual tokens
    */
   public static void compareTokens (Token[] expectedTokens, List<Token> actualTokens) {
-    assertEquals (expectedTokens.length, actualTokens.size());
+    Assert.assertEquals (expectedTokens.length, actualTokens.size());
     
     for (int i = 0; i < expectedTokens.length; i++) {  
       if (!expectedTokens[i].equals(actualTokens.get(i))) {
@@ -179,7 +181,7 @@ public class SenTestUtil extends LuceneTestCase {
         error += String.format ("length: %1$20s : %2$20s\n", expectedTokens[i].getLength(), actualTokens.get(i).getLength());
         error += String.format ("morpheme: %1$20s : %2$20s\n", expectedMorpheme, actualMorpheme);
         
-        fail("Tokens don't match\n" + error);
+        Assert.fail("Tokens don't match\n" + error);
       }
     }
   }
@@ -191,7 +193,7 @@ public class SenTestUtil extends LuceneTestCase {
    * @param actualReadings The actual tokens
    */
   public static void compareReadings (Reading[] expectedReadings, List<Reading> actualReadings) {
-    assertEquals (expectedReadings.length, actualReadings.size());
+    Assert.assertEquals (expectedReadings.length, actualReadings.size());
     
     for (int i = 0; i < expectedReadings.length; i++) {
       if (!expectedReadings[i].equals(actualReadings.get(i))) {
@@ -200,7 +202,7 @@ public class SenTestUtil extends LuceneTestCase {
         error += String.format ("length: %1$20d : %2$20d\n", expectedReadings[i].length, actualReadings.get(i).length);
         error += String.format ("text:   %1$20s : %2$20s\n", expectedReadings[i].text, actualReadings.get(i).text);
         
-        fail("Readings don't match\n" + error);
+        Assert.fail("Readings don't match\n" + error);
       }
     }
   }
@@ -212,10 +214,10 @@ public class SenTestUtil extends LuceneTestCase {
    * @param actual The actual array
    */
   public static void assertEqualsShortArray (short[] expected, short[] actual) {
-    assertEquals ("Array lengths not equal", expected.length, actual.length);
+    Assert.assertEquals ("Array lengths not equal", expected.length, actual.length);
     
     for (int i = 0; i < expected.length; i++) {
-      assertEquals ("Arrays not equal at index " + i, expected[i], actual[i]);
+      Assert.assertEquals ("Arrays not equal at index " + i, expected[i], actual[i]);
     }
   }
 }
