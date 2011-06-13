@@ -116,7 +116,8 @@ public class VirtualTupleList {
     int position = indices.get(index);
     
     mappedBuffer.position(position);
-    CToken ctoken = CToken.read(mappedBuffer);
+    CToken ctoken = new CToken();
+    ctoken.read(mappedBuffer);
     short numChars = mappedBuffer.getShort();
     char stringChars[] = new char[numChars];
     for (int i = 0; i < numChars; i++) {

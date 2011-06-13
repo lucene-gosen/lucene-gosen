@@ -2,7 +2,11 @@ lucene-gosen Change Log
 
 ========== trunk / YYYY-MM-DD ===================================
 
-(No changes)
+New Features & Improvements
+
+* http://code.google.com/p/lucene-gosen/issues/detail?id=9
+  Reduced heap usage and object creation for better performance.
+  (rmuir)
 
 ========== 1.1.0 / 2011-06-12 ===================================
 

@@ -23,6 +23,7 @@ package net.java.sen.dictionary;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -181,16 +182,6 @@ public class Morpheme {
   }
   
   /**
-   * Sets the conjugation type of the morpheme
-   * 
-   * @param conjugationalType The conjugation type
-   */
-  public void setConjugationalType(String conjugationalType) {
-    load(LoadState.BASIC);
-    this.conjugationalType = conjugationalType;
-  }
-  
-  /**
    * Gets the conjugation form of the morpheme
    * 
    * @return The conjugation form
@@ -198,16 +189,6 @@ public class Morpheme {
   public String getConjugationalForm() {
     load(LoadState.BASIC);
     return conjugationalForm;
-  }
-  
-  /**
-   * Sets the conjugation form of the morpheme
-   * 
-   * @param conjugationalForm The conjugation form
-   */
-  public void setConjugationalForm(String conjugationalForm) {
-    load(LoadState.BASIC);
-    this.conjugationalForm = conjugationalForm;
   }
   
   /**
@@ -221,16 +202,6 @@ public class Morpheme {
   }
   
   /**
-   * Sets the unconjugated form of the morpheme
-   * 
-   * @param basicString The unconjugated form 
-   */
-  public void setBasicForm(String basicString) {
-    load(LoadState.BASIC);
-    this.basicForm = basicString;
-  }
-  
-  /**
    * Gets the readings of the morpheme
    * 
    * @return The readings
@@ -238,16 +209,6 @@ public class Morpheme {
   public List<String> getReadings() {
     load(LoadState.FULL);
     return readings;
-  }
-  
-  /**
-   * Sets the readings of the morpheme
-   * 
-   * @param readings The readings
-   */
-  public void setReadings(List<String> readings) {
-    load(LoadState.FULL);
-    this.readings = new ArrayList<String>(readings);
   }
   
   /**
@@ -261,16 +222,6 @@ public class Morpheme {
   }
   
   /**
-   * Sets the pronunciation of the morpheme
-
-   * @param pronunciations the pronunciations
-   */
-  public void setPronunciations(List<String> pronunciations) {
-    load(LoadState.FULL);
-    this.pronunciations = new ArrayList<String>(pronunciations);
-  }
-  
-  /**
    * Gets the part-of-speech in Chasen format
    * 
    * @return The part-of-speech in Chasen format
@@ -278,16 +229,6 @@ public class Morpheme {
   public String getPartOfSpeech() {
     load(LoadState.BASIC);
     return partOfSpeech;
-  }
-  
-  /**
-   * Sets the part-of-speech
-   * 
-   * @param partOfSpeech The part-of-speech
-   */
-  public void setPartOfSpeech(String partOfSpeech) {
-    load(LoadState.BASIC);
-    this.partOfSpeech = partOfSpeech;
   }
   
   /**
@@ -447,8 +388,8 @@ public class Morpheme {
    * to any Dictionary
    */
   public Morpheme() {
-    this.readings = new ArrayList<String>();
-    this.pronunciations = new ArrayList<String>();
+    this.readings = Collections.emptyList();
+    this.pronunciations = Collections.emptyList();
     this.loaded = LoadState.FULL;
   }
 }

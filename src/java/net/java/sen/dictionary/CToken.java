@@ -57,23 +57,22 @@ final public class CToken implements Cloneable {
    */
   public int partOfSpeechIndex = 0;
   
+  public boolean terminator;
+
   /**
    * Read a CToken from a ByteBuffer
    *
    * @param buffer The ByteBuffer to read from
    * @return The CToken
    */
-  public static CToken read(ByteBuffer buffer) {
-    CToken token = new CToken();
-    
-    token.rcAttr2 = buffer.getShort();
-    token.rcAttr1 = buffer.getShort();
-    token.lcAttr = buffer.getShort();
-    token.length = buffer.getShort();
-    token.cost = buffer.getShort();
-    token.partOfSpeechIndex = buffer.getInt();
-    
-    return token;
+  public void read(ByteBuffer buffer) {  
+    rcAttr2 = buffer.getShort();
+    rcAttr1 = buffer.getShort();
+    lcAttr = buffer.getShort();
+    length = buffer.getShort();
+    cost = buffer.getShort();
+    partOfSpeechIndex = buffer.getInt();
+    terminator = false;
   }
   
   /**
@@ -93,7 +92,7 @@ final public class CToken implements Cloneable {
   }
   
   @Override
-  protected CToken clone() {
+  public CToken clone() {
     // Class contains only shorts and ints - a shallow copy is sufficient
     try {
       return (CToken) super.clone();
