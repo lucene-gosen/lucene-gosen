@@ -23,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import net.java.sen.compiler.IpadicPreprocessor;
+import net.java.sen.compiler.MeCabDicPreprocessor;
 
 /**
  * Preprocesses an input dictionary into the intermediate CSV format used by the
@@ -38,15 +39,21 @@ public class DictionaryPreprocessor {
    * @throws IOException 
    */
   public static void main(String[] args) throws FileNotFoundException, IOException {
-    if (args.length != 3) {
-      System.out.println("Syntax: java DictionaryPreprocessor <input charset> <dictionary directory> <output directory>");
+    if (args.length != 4) {
+      System.out.println("Syntax: java DictionaryPreprocessor <input charset> <dictionary directory> <output directory> <dictionary type>");
       System.exit(1);
     }
     
     String inputCharset = args[0];
     String inputDirectory = args[1];
     String outputDirectory = args[2];
+    String type = args[3];
     
-    new IpadicPreprocessor(inputCharset, inputDirectory).build(outputDirectory);
+    
+    if(!"naist-mecab".equals(type)){
+      new IpadicPreprocessor(inputCharset, inputDirectory).build(outputDirectory);
+    }else{
+      new MeCabDicPreprocessor(inputCharset, inputDirectory).build(outputDirectory);
+    }
   }
 }
