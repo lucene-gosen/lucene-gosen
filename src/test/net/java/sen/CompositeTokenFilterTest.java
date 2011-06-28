@@ -88,4 +88,28 @@ public class CompositeTokenFilterTest extends LuceneTestCase {
     
     compareTokens (testTokens, tokens);
   }
+  
+  /**
+   * UnkownPOS composite
+   * 
+   * @throws IOException 
+   */
+  @Test
+  public void testUnkownWordCompositeFilter() throws IOException {
+    String testString = "ニンテンドーDSi";
+    
+    Token[] testTokens = new Token[] {
+        new Token ("ニンテンドーDSi", 93001, 0, 9, new Morpheme ("未知語", null, null, "*", new String[]{}, new String[]{}, null))
+    };
+    
+    
+    StringTagger tagger = getStringTagger();
+    CompositeTokenFilter filter = new CompositeTokenFilter();
+    filter.readRules (new BufferedReader (new StringReader ("未知語 未知語")));
+    tagger.addFilter (filter);
+    
+    List<Token> tokens = tagger.analyze(testString);
+    
+    compareTokens (testTokens, tokens);
+  }
 }
