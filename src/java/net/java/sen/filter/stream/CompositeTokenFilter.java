@@ -191,8 +191,44 @@ public class CompositeTokenFilter implements StreamFilter {
           (basicForm2.equals("*") ? token2.getSurface() : basicForm2));
     }
     token1.getMorpheme().setPartOfSpeech(newPartOfSpeech);
-    token1.getMorpheme().setPronunciations(Arrays.asList(token1.getMorpheme().getPronunciations().get(0) + token2.getMorpheme().getPronunciations().get(0)));
-    token1.getMorpheme().setReadings(Arrays.asList(token1.getMorpheme().getReadings().get(0) + token2.getMorpheme().getReadings().get(0)));
+    token1.getMorpheme().setPronunciations(Arrays.asList(getPronunciations(token1, token2)));
+    token1.getMorpheme().setReadings(Arrays.asList(getReadings(token1, token2)));
+  }
+  
+  private String[] getReadings(Token token1, Token token2) {
+    StringBuilder readings = null;
+    
+    if (token1.getMorpheme().getReadings().size() > 0) {
+      if (readings == null) {
+        readings = new StringBuilder();
+      }
+      readings.append(token1.getMorpheme().getReadings().get(0));
+    }
+    if (token2.getMorpheme().getReadings().size() > 0) {
+      if (readings == null) {
+        readings = new StringBuilder();
+      }
+      readings.append(token2.getMorpheme().getReadings().get(0));
+    }
+    return readings == null ? new String[0] : new String[] {readings.toString()};
+  }
+
+  private String[] getPronunciations(Token token1, Token token2) {
+    StringBuilder pronunciations = null;
+    
+    if (token1.getMorpheme().getReadings().size() > 0) {
+      if (pronunciations == null) {
+        pronunciations = new StringBuilder();
+      }
+      pronunciations.append(token1.getMorpheme().getReadings().get(0));
+    }
+    if (token2.getMorpheme().getReadings().size() > 0) {
+      if (pronunciations == null) {
+        pronunciations = new StringBuilder();
+      }
+      pronunciations.append(token2.getMorpheme().getReadings().get(0));
+    }
+    return pronunciations == null ? new String[0] : new String[] {pronunciations.toString()};
   }
   
   public void preProcess(Sentence sentence) {
