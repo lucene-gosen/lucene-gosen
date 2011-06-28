@@ -1,6 +1,16 @@
 lucene-gosen Change Log
 
-========== trunk / YYYY-MM-DD ===================================
+========== 1.1.1 / YYYY-MM-DD ===================================
+
+Bug Fixes
+
+* http://code.google.com/p/lucene-gosen/issues/detail?id=11
+  CompositeTokneFilter can throw IndexOutOfBoundsException when rule
+  include unknownPOS and unknown word continue.
+  unknown word reading and pronunciations is null.
+  (johtani)
+
+========== 1.1.0 / 2011-06-12 ===================================
 
 Important Notice
 
