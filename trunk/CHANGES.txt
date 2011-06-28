@@ -10,6 +10,14 @@ New Features & Improvements
 
 * add new dictype "naist-mecab". The NAIST-JDic for Mecab can be used.  (johtani)
 
+Bug Fixes
+
+* http://code.google.com/p/lucene-gosen/issues/detail?id=11
+  CompositeTokneFilter can throw IndexOutOfBoundsException when rule
+  include unknownPOS and unknown word continue.
+  unknown word reading and pronunciations is null.
+  (johtani)
+
 ========== 1.1.0 / 2011-06-12 ===================================
 
 Important Notice
@@ -27,12 +35,6 @@ Bug Fixes
 * http://code.google.com/p/lucene-gosen/issues/detail?id=7
   The compiled jar file didn't include resources (such as stopwords and
   stoptags) needed by JapaneseAnalyzer.  (rmuir)
-
-* http://code.google.com/p/lucene-gosen/issues/detail?id=11
-  CompositeTokneFilter can throw IndexOutOfBoundsException when rule 
-  include unknownPOS and unknown word continue.
-  unknown word reading and pronunciations is null. 
-  (johtani)
 
 API Changes
 
