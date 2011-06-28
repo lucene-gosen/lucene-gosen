@@ -28,6 +28,12 @@ Bug Fixes
   The compiled jar file didn't include resources (such as stopwords and
   stoptags) needed by JapaneseAnalyzer.  (rmuir)
 
+* http://code.google.com/p/lucene-gosen/issues/detail?id=11
+  CompositeTokneFilter can throw IndexOutOfBoundsException when rule 
+  include unknownPOS and unknown word continue.
+  unknown word reading and pronunciations is null. 
+  (johtani)
+
 API Changes
 
 Javadoc Fixes
