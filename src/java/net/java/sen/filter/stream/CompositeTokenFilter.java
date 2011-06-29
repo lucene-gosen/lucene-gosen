@@ -227,17 +227,17 @@ public class CompositeTokenFilter implements StreamFilter {
   private String[] getPronunciations(Token token1, Token token2) {
     StringBuilder pronunciations = null;
     
-    if (token1.getMorpheme().getReadings().size() > 0) {
+    if (token1.getMorpheme().getPronunciations().size() > 0) {
       if (pronunciations == null) {
         pronunciations = new StringBuilder();
       }
-      pronunciations.append(token1.getMorpheme().getReadings().get(0));
+      pronunciations.append(token1.getMorpheme().getPronunciations().get(0));
     }
-    if (token2.getMorpheme().getReadings().size() > 0) {
+    if (token2.getMorpheme().getPronunciations().size() > 0) {
       if (pronunciations == null) {
         pronunciations = new StringBuilder();
       }
-      pronunciations.append(token2.getMorpheme().getReadings().get(0));
+      pronunciations.append(token2.getMorpheme().getPronunciations().get(0));
     }
     return pronunciations == null ? new String[0] : new String[] {pronunciations.toString()};
   }
