@@ -4,8 +4,6 @@ lucene-gosen Change Log
 
 Important Notice
 
-* The first stable one is released.
-
 New Features & Improvements
 
 Bug Fixes
