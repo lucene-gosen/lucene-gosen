@@ -67,7 +67,6 @@
   <target name="clean" description="delete all dictionaries.">
     <delete dir="ipadic"/>
     <delete dir="naist-chasen"/>
-    <delete dir="naist-mecab"/>
   </target>
 
   <!-- Deletes compiled dictionary -->
@@ -90,7 +89,6 @@
       <arg line="X-EUC-JISX0213" />
       <arg line="${dic.dir}" />
       <arg line="." />
-      <arg line="${dictype}"/>
     </java>
   </target>
 

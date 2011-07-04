@@ -8,8 +8,6 @@ New Features & Improvements
   Reduced heap usage and object creation for better performance.
   (rmuir)
 
-* add new dictype "naist-mecab". The NAIST-JDic for Mecab can be used.  (johtani)
-
 Bug Fixes
 
 * http://code.google.com/p/lucene-gosen/issues/detail?id=11
