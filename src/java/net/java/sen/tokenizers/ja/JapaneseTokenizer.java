@@ -114,9 +114,9 @@ public class JapaneseTokenizer extends Tokenizer {
     
     int skipped = iterator.skippedCharCount();
     CToken t[] = getDictionary().commonPrefixSearch(iterator);
-    for (int i = 0; t[i].terminator == false; i++) {
+    for (int i = 0; t[i] != null; i++) {
       Node newNode = new Node();
-      newNode.setCToken(t[i]);
+      newNode.ctoken = t[i];
       newNode.length = t[i].length;
       newNode.start = iterator.origin();
       newNode.span = t[i].length + skipped; 

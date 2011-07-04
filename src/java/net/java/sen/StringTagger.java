@@ -61,8 +61,8 @@ public class StringTagger {
    * @param sentence The input sentence
    */
   private void filterPreProcess(Sentence sentence) {
-    for (int i = 0; i < filterList.size(); i++) {
-      filterList.get(i).preProcess(sentence);
+    for (StreamFilter filter : filterList) {
+      filter.preProcess(sentence);
     }
   }
   
@@ -105,23 +105,15 @@ public class StringTagger {
    * @return An array of {@link Token}s representing the most likely morphemes
    * @throws IOException 
    */
-  public List<Token> analyze(String surface, List<Token> reuse) throws IOException {
+  public List<Token> analyze(String surface) throws IOException {
     Sentence sentence = new Sentence(surface.toCharArray());
     filterPreProcess(sentence);
     
-    List<Token> tokens = viterbi.getBestTokens(sentence, reuse);
+    List<Token> tokens = viterbi.getBestTokens(sentence);
     
     tokens = filterPostProcess(tokens);
     
     return tokens;
-  }
-  
-  /**
-   * @deprecated use {@link #analyze(String, List)} instead.
-   */
-  @Deprecated
-  public List<Token> analyze(String surface) throws IOException {
-    return analyze(surface, new ArrayList<Token>());
   }
   
   /**
@@ -131,23 +123,15 @@ public class StringTagger {
    * @return An array of {@link Token}s representing the most likely morphemes
    * @throws IOException 
    */
-  public List<Token> analyze(char[] surface, List<Token> reuse) throws IOException {
+  public List<Token> analyze(char[] surface) throws IOException {
     Sentence sentence = new Sentence(surface);
     filterPreProcess(sentence);
     
-    List<Token> tokens = viterbi.getBestTokens(sentence, reuse);
+    List<Token> tokens = viterbi.getBestTokens(sentence);
     
     tokens = filterPostProcess(tokens);
     
     return tokens;
-  }
-  
-  /**
-   * @deprecated use {@link #analyze(char[], List)} instead.
-   */
-  @Deprecated
-  public List<Token> analyze(char[] surface) throws IOException {
-    return analyze(surface, new ArrayList<Token>());
   }
   
   /**

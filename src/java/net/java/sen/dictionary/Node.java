@@ -26,20 +26,11 @@ package net.java.sen.dictionary;
  */
 final public class Node implements Cloneable {
   
-  /** Used in Viterbi path cost calculation */
-  public short rcAttr2;
-  /** Used in Viterbi path cost calculation */
-  public short rcAttr1;
-  /** Used in Viterbi path cost calculation */
-  public short lcAttr;
-  public short dictionaryCost;
-  
-  public void setCToken(CToken ctoken) {
-    this.rcAttr2 = ctoken.rcAttr2;
-    this.rcAttr1 = ctoken.rcAttr1;
-    this.lcAttr = ctoken.lcAttr;
-    this.dictionaryCost = ctoken.cost;
-  }
+  /**
+   * The <code>CToken</code> the <code>Dictionary</code> returned for the
+   * <code>Morpheme</code> within this <code>Node</code>
+   */
+  public CToken ctoken;
   
   /**
    * The previous node on the best path through the <code>Node</code> lattice

@@ -67,7 +67,7 @@ public class Viterbi {
   final private void calculateConnectionCosts(int position, int limit, Node rNode) {
     if (position != limit) {
       for (Node lNode = endNodeList[position]; lNode != null; lNode = lNode.lnext) {
-        if (lNode.rcAttr2 != 0) {
+        if (lNode.ctoken.rcAttr2 != 0) {
           for (Node rNode2 = rNode; rNode2 != null; rNode2 = rNode2.rnext) {
             rNode2 = rNode2.clone();
             rNode2.cost = lNode.cost + tokenizer.getDictionary().getCost(lNode.prev, lNode, rNode2);
@@ -141,9 +141,8 @@ public class Viterbi {
     
     // Synthesize Node
     Node unknownNode = tokenizer.getUnknownNode(surface, iterator.origin(), constraint.length, constraint.length + iterator.skippedCharCount());
-    Morpheme unknownMorpheme = new Morpheme(unknownNode.morpheme.getPartOfSpeech(), null, null, "*", 
-        new String[] { constraint.text }, new String[0], unknownNode.morpheme.getAdditionalInformation());
-    unknownNode.morpheme = unknownMorpheme;
+    unknownNode.morpheme.setReadings(Arrays.asList(constraint.text));
+    
     return unknownNode;
   }
   
@@ -177,7 +176,7 @@ public class Viterbi {
    * @return The most likely list of morphemes
    * @throws IOException
    */
-  public List<Token> getBestTokens(Sentence sentence, List<Token> reuse) throws IOException {
+  public List<Token> getBestTokens(Sentence sentence) throws IOException {
     SentenceIterator iterator = sentence.iterator();
     int length = iterator.length();
     char[] surface = sentence.getCharacters();
@@ -224,8 +223,7 @@ public class Viterbi {
     
     // Convert to Token list
     String sentenceString = new String(sentence.getCharacters());
-    List<Token> tokenList = reuse;
-    tokenList.clear();
+    List<Token> tokenList = new ArrayList<Token>();
     node = bosNode.next;
     while ((node != null) && (node.next != null)) {
       Token token = new Token(sentenceString, node);
@@ -234,12 +232,6 @@ public class Viterbi {
     }
     
     return tokenList;
-  }
-  
-  /** @deprecated use {@link #getBestTokens(Sentence, List)} instead */
-  @Deprecated
-  public List<Token> getBestTokens(Sentence sentence) throws IOException {
-    return getBestTokens(sentence, new ArrayList<Token>());
   }
   
   /**

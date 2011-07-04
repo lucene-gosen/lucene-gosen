@@ -63,7 +63,7 @@ public class Token {
   /**
    * The morpheme data represented by this Token
    */
-  private Morpheme morpheme;
+  private Morpheme morpheme = new Morpheme();
   
   /**
    * Returns whether or not this Token begins a new sentence.
@@ -170,15 +170,6 @@ public class Token {
   }
   
   /**
-   * Sets the morpheme data for this Token
-   *
-   * @param morpheme new Morpheme for this Token
-   */
-  public void setMorpheme(Morpheme morpheme) {
-    this.morpheme = morpheme;
-  }
-  
-  /**
    * Gets the end of the character range of this Token within the underlying
    * sentence
    *
@@ -258,8 +249,5 @@ public class Token {
    * Creates a blank Token
    */
   public Token() {
-    // TODO currently only used by CompoundWordFilter, maybe it
-    // should explicitly create its own morpheme (cleaner)
-    this.morpheme = new Morpheme();
   }
 }
