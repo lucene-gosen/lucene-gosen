@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<project default="jar" basedir=".">
+
+  <!-- set default dictionary type -->
+  <!-- to change the dictionary type to naist-chasen, ant -Ddictype=naist-chasen -->
+  <property name="dictype" value="ipadic"/>
+
+  <property name="version" value="1.2-dev"/>
+
+  <property name="src.dir" location="src/java"/>
+  <property name="cdic.dir" location="src/compiled-dictionaries"/>
+  <property name="test.dir" location="src/test"/>
+  <property name="dist.dir" location="dist"/>
+  <property name="bin.dir" location="build"/>
+  <property name="dic.dir" location="dictionary"/>
+  <property name="javadoc.dir" location="docs/api"/>
+  <property name="prettify.dir" location="prettify"/>
+
+  <property name="tests.seed" value="random" />
+  <property name="tests.iter" value="1" />
+  <property name="tests.iter.min" value="${tests.iter}" />
+  <property name="testmethod" value=""/>
+
+  <path id="classpath">
+    <fileset dir="lib">
+      <include name="*.jar" />
+    </fileset>
+  </path>
+
+  <path id="testclasspath">
+    <path refid="classpath"/>
+    <pathelement location="${bin.dir}/classes/java" />
+    <pathelement location="${bin.dir}/classes/test" />
+    <pathelement location="${cdic.dir}/${dictype}"/>
+  </path>
+
+  <!-- Create build directories -->
+  <target name="prepare-directories">
+    <mkdir dir="${bin.dir}/classes/java"/>
+    <mkdir dir="${bin.dir}/classes/test"/>
+    <mkdir dir="${javadoc.dir}"/>
+    <mkdir dir="${dist.dir}"/>
+  </target>
+
+  <!-- Build javadocs -->
+  <target name="javadoc" description="generate Javadocs">
+    <property name="javadoc.link.java" value="http://java.sun.com/javase/ja/6/docs/ja/api/"/>
+    <property name="javadoc.link.lucene" value="https://hudson.apache.org/hudson/job/Lucene-3.x/javadoc/all/"/>
+    <property name="javadoc.link.solr" value="https://hudson.apache.org/hudson/job/Solr-3.x/javadoc/"/>
+    <copy todir="${javadoc.dir}/prettify">
+      <fileset dir="${prettify.dir}"/>
+    </copy>
+    <javadoc sourcepath="${src.dir}"
+             destdir="${javadoc.dir}"
+             classpathref="classpath"
+             author="true"
+             version="true"
+             use="true"
+             windowtitle="lucene-gosen-${version} API"
+             encoding="UTF-8"
+             doctitle="lucene-gosen-${version}"
+             source="1.5"
+             stylesheetfile="${javadoc.dir}/prettify/stylesheet+prettify.css">
+      <link href="${javadoc.link.java}"/>
+      <link href="${javadoc.link.lucene}"/>
+      <link href="${javadoc.link.solr}"/>
+      <header><![CDATA[
+<script src="{@docRoot}/prettify/prettify.js" type="text/javascript"></script>
+<script language="JavaScript">window.onload=function(){windowTitle();prettyPrint();}</script>
+      ]]></header>
+      <fileset dir="${src.dir}">
+        <include name="**/*.java"/>
+      </fileset>
+    </javadoc>
+  </target>
+
+  <!-- Compile source -->
+  <target name="compile" depends="prepare-directories"
+  	      description="compile Java source files">
+    <javac srcdir="${src.dir}"
+           destdir="${bin.dir}/classes/java"
+           classpathref="classpath"
+           includes="**/*.java"
+           debug="true"
+           encoding="utf-8"
+           source="1.5"
+           target="1.5">
+      <compilerarg line="-Xlint -Xlint:-serial"/>
+    </javac>
+    <!-- Copy the resources folder (if existent) -->
+    <copy todir="${bin.dir}/classes/java" includeEmptyDirs="false">
+      <globmapper from="resources/*" to="*" handledirsep="yes"/>
+      <fileset dir="src" includes="resources/**"/>
+    </copy>
+  </target>
+
+  <!-- Compile source -->
+  <target name="compile-tests" depends="compile">
+    <javac srcdir="${test.dir}"
+           destdir="${bin.dir}/classes/test"
+           classpathref="testclasspath"
+           includes="**/*.java"
+           debug="true"
+           encoding="utf-8"
+           source="1.5"
+           target="1.5">
+      <compilerarg line="-Xlint -Xlint:-serial"/>
+    </javac>
+  </target>
+
+  <!-- run tests -->
+  <target name="test" depends="compile-tests, build-dic"
+  	      description="execute JUnit tests">
+    <sequential>
+      <junit printsummary="no" haltonfailure="no" maxmemory="512M" forkmode="perBatch"
+             errorProperty="tests.failed" failureProperty="tests.failed">
+        <formatter type="brief" usefile="no"/>
+        <classpath refid="testclasspath"/>
+        <assertions>
+          <enable/>
+        </assertions>
+        <!-- if set, just executes a single test method -->
+        <sysproperty key="testmethod" value="${testmethod}"/>
+        <!-- set the test seed -->
+        <sysproperty key="tests.seed" value="${tests.seed}"/>
+        <!-- set the number of times tests should run -->
+        <sysproperty key="tests.iter" value="${tests.iter}"/>
+        <!-- set the minimum number of times tests should run unless failure -->
+        <sysproperty key="tests.iter.min" value="${tests.iter.min}"/>
+        <batchtest fork="yes" unless="testcase">
+          <fileset dir="src/test" includes="**/Test*.java,**/*Test.java"/>
+        </batchtest>
+        <batchtest fork="yes" if="testcase">
+          <fileset dir="src/test" includes="**/${testcase}.java"/>
+        </batchtest>
+      </junit>
+      <fail if="tests.failed">Tests failed!</fail>
+    </sequential>
+  </target>
+
+  <!-- Create a library jar for the specified dictionary type -->
+  <target name="jar" depends="compile, build-dic">
+    <jar jarfile="${dist.dir}/lucene-gosen-${version}-${dictype}.jar">
+      <fileset dir="${bin.dir}/classes/java"/>
+      <fileset dir="${cdic.dir}/${dictype}"/>
+    </jar>
+  </target>
+
+  <target name="dist" description="make packages for distribution">
+    <antcall target="jar">
+      <param name="dictype" value="ipadic"/>
+    </antcall>
+    <antcall target="jar">
+      <param name="dictype" value="naist-chasen"/>
+    </antcall>
+  </target>
+
+  <!-- build a dictionary and copy the compiled files to src -->
+  <target name="build-dic" depends="compile"
+  	      description="build a dictionary. The dictionary type can be set via -Ddictype=[ipadic | naist-chasen].">
+    <sequential>
+      <subant target="compile" inheritall="false" failonerror="true">
+        <fileset dir="${dic.dir}" includes="build.xml" />
+      </subant>
+      <delete dir="${cdic.dir}/${dictype}"/>
+      <mkdir dir="${cdic.dir}/${dictype}/net/java/sen"/>
+      <copy todir="${cdic.dir}/${dictype}/net/java/sen">
+        <fileset dir="${dic.dir}/${dictype}" includes="*.sen"/>
+      </copy>
+    </sequential>
+  </target>
+
+  <!-- Clean project -->
+  <target name="clean">
+    <delete dir="${bin.dir}"/>
+    <delete dir="${javadoc.dir}"/>
+    <delete dir="${cdic.dir}"/>
+    <delete dir="${dist.dir}"/>
+  </target>
+
+</project>

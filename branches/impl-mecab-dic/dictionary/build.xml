@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<!--
+  Usage:
+
+  To use a web proxy to download the dictionary data, do the following:
+
+  $ ant -Dproxy.host=proxy.hoehoe.jp -Dproxy.port=8080
+
+-->
+<project name="dictionary" default="compile" basedir=".">
+
+	<!-- set default dictionary type -->
+	<!-- to change the dictionary type to naist-chasen, ant -Ddictype=naist-chasen -->
+  <property name="dictype" value="ipadic"/>
+  <property file="${dictype}.properties"/>
+
+  <!-- Configures a web proxy if the property "proxy.host" is defined -->
+  <property name="proxy.port" value="80" />
+  <target name="prepare-proxy" if="proxy.host">
+    <setproxy proxyhost="${proxy.host}" proxyport="${proxy.port}" />
+  </target>
+
+  <!-- Checks the current build status -->
+  <!-- Sets the property "dics.unpacked" if the dictionary is already unpacked -->
+  <!-- Sets the property "ipadic.archive.present" if the ipadic archive is already present -->
+  <!-- Sets the property "dics.preprocessed" if the dictionary is already preprocessed -->
+  <!-- Sets the property "dics.complete" if the dictionary is already compiled -->
+  <target name="check-build-status">
+    <available file="${dictype}/${dic.archive}" property="dic.archive.present"/>
+    <condition property="dics.unpacked">
+      <and>
+        <available file="${dictype}/${dic.unpacked.file}"/>
+      </and>
+    </condition>
+    <condition property="dics.preprocessed">
+      <and>
+        <available file="${dictype}/dictionary.csv"/>
+        <available file="${dictype}/connection.csv"/>
+      </and>
+    </condition>
+    <condition property="dics.complete">
+      <and>
+        <available file="${dictype}/trie.sen"/>
+        <available file="${dictype}/connectionCost.sen"/>
+        <available file="${dictype}/partOfSpeech.sen"/>
+        <available file="${dictype}/posIndex.sen"/>
+        <available file="${dictype}/token.sen"/>
+        <available file="${dictype}/header.sen"/>
+      </and>
+    </condition>
+  </target>
+
+  <!-- Downloads the ipadic dictionary -->
+  <target name="download" depends="prepare-proxy,check-build-status" unless="dic.archive.present">
+  	<mkdir dir="${dictype}"/>
+    <get src="${dic.home}/${dic.archive}" dest="${dictype}/${dic.archive}" />
+  </target>
+
+  <!-- Unpacks the dictionary -->
+  <target name="unpack" depends="download,check-build-status" unless="dics.unpacked">
+    <gunzip src="${dictype}/${dic.archive}"/>
+    <untar src="${dictype}/${dic.dir}.tar" dest="${dictype}" />
+    <delete file="${dictype}/${dic.dir}.tar"/>
+  </target>
+
+  <!-- Deletes dictionary and compiled files -->
+  <target name="clean" description="delete all dictionaries.">
+    <delete dir="ipadic"/>
+    <delete dir="naist-chasen"/>
+    <delete dir="naist-mecab"/>
+  </target>
+
+  <!-- Deletes compiled dictionary -->
+  <target name="clean-sen" description="delete compiled *.sen files. you may want to do this before compiling custom dictionaries.">
+    <delete>
+      <fileset dir="${dictype}" includes="*.sen"/>
+    </delete>
+  </target>
+
+  <!-- Preprocesses the dictionary for compilation -->
+  <target name="preprocess" depends="unpack" unless="dics.preprocessed">
+    <java classname="net.java.sen.tools.DictionaryPreprocessor"
+          fork="true" dir="${dictype}">
+      <classpath>
+        <pathelement location="."/>
+        <pathelement location="../build/classes/java"/>
+        <pathelement location="../lib/jisx0213-1.0.jar"/>
+        <pathelement path="${java.class.path}"/>
+      </classpath>
+      <arg line="X-EUC-JISX0213" />
+      <arg line="${dic.dir}" />
+      <arg line="." />
+      <arg line="${dictype}"/>
+    </java>
+  </target>
+
+  <target name="reset-custom-dics" unless="custom.dics">
+    <property name="custom.dics" value=""/>
+  </target>
+
+  <!-- Default task - compiles the ipadic dictionary -->
+	<!-- If you have a custom dictionary to be compiled, specify it
+	     by -Dcustom.dics=/abs/path/to/dic1.csv
+	     If you have two or more custom dictionaries, specify
+	     -Dcustom.dics="/abs/path/to/dic1.csv /abs/path/to/dic2.csv ..." -->
+  <target name="compile" depends="preprocess,reset-custom-dics" unless="dics.complete"
+          description="compile dictionaries">
+    <java classname="net.java.sen.tools.DictionaryCompiler"
+          fork="true" dir="${dictype}">
+      <classpath>
+        <pathelement location="."/>
+        <pathelement location="../build/classes/java"/>
+        <pathelement path="${java.class.path}"/>
+      </classpath>
+      <arg line="${custom.dics}"/>
+    </java>
+  </target>
+
+  <!-- Downloads and compiles the ipadic dictionary from scratch -->
+  <target name="all" depends="clean,unpack,compile"/>
+
+</project>

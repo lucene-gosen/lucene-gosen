@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry kind="src" path="src/resources"/>
+	<classpathentry kind="src" path="src/test"/>
+	<classpathentry kind="src" path="src/compiled-dictionaries/ipadic"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/jisx0213-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.7.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-core-3.2.0.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-test-framework-3.2.0.jar"/>
+	<classpathentry kind="lib" path="lib/apache-solr-core-3.2.0.jar"/>
+	<classpathentry kind="lib" path="lib/apache-solr-solrj-3.2.0.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
