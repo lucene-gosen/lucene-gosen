@@ -16,7 +16,7 @@ package org.apache.lucene.analysis.ja.tokenAttributes;
  * limitations under the License.
  */
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import net.java.sen.dictionary.Morpheme;
@@ -49,13 +49,15 @@ public class PronunciationsAttributeImpl extends AttributeImpl implements Pronun
   
   @Override
   public void reflectWith(AttributeReflector reflector) {
-    List<String> pronunciations = getPronunciations();
+    final List<String> pronunciations = getPronunciations();
     List<String> enPronunciations = null;
     if (pronunciations != null) {
-      enPronunciations = new ArrayList<String>(pronunciations.size());
+      final String[] p = new String[pronunciations.size()];
+      int i = 0;
       for (String kana : pronunciations) {
-        enPronunciations.add(ToStringUtil.getRomanization(kana));
+        p[i++] = ToStringUtil.getRomanization(kana);
       }
+      enPronunciations = Arrays.asList(p);
     }
     reflector.reflect(PartOfSpeechAttribute.class, "pronunciations", pronunciations);
     reflector.reflect(PartOfSpeechAttribute.class, "pronunciations (en)", enPronunciations);
