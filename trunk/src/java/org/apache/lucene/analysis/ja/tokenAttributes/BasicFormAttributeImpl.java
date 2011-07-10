@@ -29,7 +29,6 @@ public class BasicFormAttributeImpl extends AttributeImpl implements BasicFormAt
     return morpheme == null ? null : morpheme.getBasicForm();
   }
   
-  @Override
   public void setMorpheme(Morpheme morpheme) {
     this.morpheme = morpheme;
   }
