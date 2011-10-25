@@ -23,8 +23,6 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.apache.lucene.util.LuceneTestCase;
-
 import net.java.sen.ReadingProcessor;
 import net.java.sen.SenFactory;
 import net.java.sen.StringTagger;
@@ -52,13 +50,19 @@ public class SenTestUtil {
   private static ReadingProcessor readingProcessor = null;
   
   /**
+   * IPADIC dictionary directory path
+   */
+  public static final String IPADIC_DIR = "./dictionary/ipadic";
+  
+  /**
    * Returns a StringTagger for testing
    *
+   * @param dictionaryDir dictionary's directory
    * @return The StringTagger
    */
   public static StringTagger getStringTagger() {
     if (stringTagger == null) {
-      stringTagger = SenFactory.getStringTagger();
+      stringTagger = SenFactory.getStringTagger(IPADIC_DIR);
     }
     
     stringTagger.removeFilters();
@@ -73,7 +77,7 @@ public class SenTestUtil {
    */
   public static Viterbi getViterbi() {
     if (viterbi == null) {
-      viterbi = SenFactory.getViterbi();
+      viterbi = SenFactory.getViterbi(IPADIC_DIR);
     }
     
     return viterbi;
@@ -86,7 +90,7 @@ public class SenTestUtil {
    */
   public static ReadingProcessor getReadingProcessor() {
     if (readingProcessor == null) {
-      readingProcessor = SenFactory.getReadingProcessor();
+      readingProcessor = SenFactory.getReadingProcessor(IPADIC_DIR);
     }
     
     readingProcessor.clearFilters();

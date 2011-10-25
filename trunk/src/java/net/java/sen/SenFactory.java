@@ -21,11 +21,13 @@
 package net.java.sen;
 
 import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import net.java.sen.dictionary.Dictionary;
 import net.java.sen.dictionary.Tokenizer;
@@ -41,15 +43,23 @@ import net.java.sen.tokenizers.ja.JapaneseTokenizer;
  * not be accessed simultaneously by multiple threads
  */
 public class SenFactory {
-  private static SenFactory instance = null;
+  
+  private static final Map<String,SenFactory> map = new ConcurrentHashMap<String,SenFactory>();
+  
+  private static final String EMPTY_DICTIONARYDIR_KEY = "NO_DICTIONARY_INSTANCE"; 
   
   /**
    * Get the singleton factory instance
+   * @param dictionaryDir a directory of dictinaries
    */
-  public synchronized static SenFactory getInstance() {
+  public synchronized static SenFactory getInstance(String dictionaryDir) {
+    
+    String key = (dictionaryDir == null || dictionaryDir.trim().length() == 0) ? EMPTY_DICTIONARYDIR_KEY : dictionaryDir; 
+    SenFactory instance = map.get(key);
     if (instance == null) {
       try {
-        instance = new SenFactory();
+        instance = new SenFactory(dictionaryDir);
+        map.put(key, instance);
       } catch (IOException ex) {
         throw new RuntimeException(ex);
       }
@@ -58,17 +68,18 @@ public class SenFactory {
     return instance;
   }
   
-  private SenFactory() throws IOException {
+  private SenFactory(String dictionaryDir) throws IOException {
+    DataInputStream in = null;
     // read main data files
-    DataInputStream in = new DataInputStream(SenFactory.class.getResourceAsStream("header.sen"));
-    costs = loadBuffer("connectionCost.sen", in.readInt()).asReadOnlyBuffer();
-    pos = loadBuffer("partOfSpeech.sen", in.readInt()).asReadOnlyBuffer();
-    tokens = loadBuffer("token.sen", in.readInt()).asReadOnlyBuffer();
-    trie = loadBuffer("trie.sen", in.readInt()).asReadOnlyBuffer();
+    in = new DataInputStream(getInputStream("header.sen", dictionaryDir));
+    costs = loadBuffer("connectionCost.sen", in.readInt(), dictionaryDir).asReadOnlyBuffer();
+    pos = loadBuffer("partOfSpeech.sen", in.readInt(), dictionaryDir).asReadOnlyBuffer();
+    tokens = loadBuffer("token.sen", in.readInt(), dictionaryDir).asReadOnlyBuffer();
+    trie = loadBuffer("trie.sen", in.readInt(), dictionaryDir).asReadOnlyBuffer();
     in.close();
     
     // read index files
-    in = new DataInputStream(SenFactory.class.getResourceAsStream("posIndex.sen"));
+    in = new DataInputStream(getInputStream("posIndex.sen", dictionaryDir));
     posIndex = new String[in.readChar()];
     for (int i = 0; i < posIndex.length; i++) {
       posIndex[i] = in.readUTF();
@@ -86,41 +97,27 @@ public class SenFactory {
     in.close();
   }
   
+  private static InputStream getInputStream(String name, String dictionaryDir) throws IOException{
+    InputStream in = null;
+    if(dictionaryDir == null || dictionaryDir.trim().length() == 0){
+      in = SenFactory.class.getResourceAsStream(name);
+    }else{
+      in = new FileInputStream(new File(dictionaryDir, name));
+    }
+    if(in == null){
+      throw new RuntimeException("Not found resource["+name+"]. dictionaryDir=["+dictionaryDir+"]");
+    }
+    return in;
+  }
+
   private final String[] posIndex, conjTypeIndex, conjFormIndex;
   private final ByteBuffer costs, pos, tokens, trie;
   
-  public static ShortBuffer getConnectionCostBuffer() {
-    return getInstance().costs.asShortBuffer();
-  }
-  
-  public static ByteBuffer getPOSBuffer() {
-    return getInstance().pos.duplicate();
-  }
-  
-  public static ByteBuffer getTokenBuffer() {
-    return getInstance().tokens.duplicate();
-  }
-  
-  public static IntBuffer getTrieBuffer() {
-    return getInstance().trie.asIntBuffer();
-  }
-  
-  public static String[] getPOSIndex() {
-    return getInstance().posIndex;
-  }
-  
-  public static String[] getConjTypeIndex() {
-    return getInstance().conjTypeIndex;
-  }
-  
-  public static String[] getConjFormIndex() {
-    return getInstance().conjFormIndex;
-  }
   
   public static final String unknownPOS = "未知語";
   
-  private static ByteBuffer loadBuffer(String resource, int size) throws IOException {
-    InputStream in = SenFactory.class.getResourceAsStream(resource);
+  private static ByteBuffer loadBuffer(String resource, int size, String dictionaryDir) throws IOException {
+    InputStream in = getInputStream(resource, dictionaryDir);
     ByteBuffer buffer = ByteBuffer.allocateDirect(size);
     buffer.limit(size);
     
@@ -145,34 +142,48 @@ public class SenFactory {
    * @param configurationFilename The dictionary configuration filename
    * @return The constructed Tokenizer
    */
-  private static Tokenizer getTokenizer() {
-    return new JapaneseTokenizer(new Dictionary(), unknownPOS);
+  private static Tokenizer getTokenizer(String dictionaryDir) {
+    SenFactory localInstance = SenFactory.getInstance(dictionaryDir);
+    
+    return new JapaneseTokenizer(
+        new Dictionary(localInstance.costs.asShortBuffer(),
+          localInstance.pos.duplicate(),
+          localInstance.tokens.duplicate(),
+          localInstance.trie.asIntBuffer(),
+          localInstance.posIndex,
+          localInstance.conjTypeIndex,
+          localInstance.conjFormIndex), unknownPOS);
   }
   
   /**
    * Creates a Viterbi from the given configuration
    *
+   * @param dictionaryDir a directory of dictionary
    * @return A Viterbi
    */
-  public static Viterbi getViterbi() {
-    return new Viterbi(getTokenizer());
+  static Viterbi getViterbi(String dictionaryDir) {
+    // for test only
+    return new Viterbi(getTokenizer(dictionaryDir));
   }
   
   /**
    * Creates a StringTagger from the given configuration
    *
+   * @param dictionaryDir a directory of dictionary
    * @return A StringTagger
    */
-  public static StringTagger getStringTagger() {
-    return new StringTagger(getTokenizer());
+  public static StringTagger getStringTagger(String dictionaryDir) {
+    return new StringTagger(getTokenizer(dictionaryDir));
   }
   
   /**
    * Creates a ReadingProcessor from the given configuration
    *
+   * @param dictionaryDir a directory of dictionary
    * @return A ReadingProcessor
    */
-  public static ReadingProcessor getReadingProcessor() {
-    return new ReadingProcessor(getTokenizer());
+  static ReadingProcessor getReadingProcessor(String dictionaryDir) {
+    //for test only
+    return new ReadingProcessor(getTokenizer(dictionaryDir));
   }
 }

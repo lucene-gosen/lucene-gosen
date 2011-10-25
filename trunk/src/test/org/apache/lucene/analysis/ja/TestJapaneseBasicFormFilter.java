@@ -3,6 +3,8 @@ package org.apache.lucene.analysis.ja;
 import java.io.IOException;
 import java.io.Reader;
 
+import net.java.sen.SenTestUtil;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.BaseTokenStreamTestCase;
 import org.apache.lucene.analysis.ReusableAnalyzerBase;
@@ -29,7 +31,7 @@ public class TestJapaneseBasicFormFilter extends BaseTokenStreamTestCase {
   private Analyzer analyzer = new ReusableAnalyzerBase() {
     @Override
     protected TokenStreamComponents createComponents(String field, Reader reader) {
-      Tokenizer tokenizer = new JapaneseTokenizer(reader);
+      Tokenizer tokenizer = new JapaneseTokenizer(reader, null, SenTestUtil.IPADIC_DIR);
       TokenStream stream = new JapaneseBasicFormFilter(tokenizer);
       return new TokenStreamComponents(tokenizer, stream);
     }

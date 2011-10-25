@@ -22,7 +22,6 @@ package net.java.sen;
 import java.io.IOException;
 import java.util.List;
 
-import net.java.sen.StringTagger;
 import net.java.sen.dictionary.Morpheme;
 import net.java.sen.dictionary.Token;
 
@@ -207,4 +206,91 @@ public class BasicDecompositionTest extends LuceneTestCase {
     
     compareTokens (testTokens, tokens);
   }
+  
+  /**
+   * Tests string decomposition
+   * 
+   * @throws IOException 
+   */
+  @Test
+  public void testDifferentDictionary01() throws IOException {
+    String testString = "これは本ではない";
+    String ipadicDir = SenTestUtil.IPADIC_DIR;
+    String naistChasenDir = "./dictionary/naist-chasen";
+
+    Token[] expectedIpadicTokens = new Token[] {
+        new Token ("これ", 1848, 0, 2, new Morpheme ("名詞-代名詞-一般", "*", "*", "*", new String[]{"コレ"}, new String[]{"コレ"}, null)),
+        new Token ("は", 2445, 2, 1, new Morpheme ("助詞-係助詞", "*", "*", "*", new String[]{"ハ"}, new String[]{"ワ"}, null)),
+        new Token ("本", 5181, 3, 1, new Morpheme ("名詞-一般", "*", "*", "*", new String[]{"ホン", "モト"}, new String[]{"ホン", "モト"}, null)),
+        new Token ("で", 6466, 4, 1, new Morpheme ("助動詞", "特殊・ダ", "連用形", "だ", new String[]{"デ"}, new String[]{"デ"}, null)),
+        new Token ("は", 6978, 5, 1, new Morpheme ("助詞-係助詞", "*", "*", "*", new String[]{"ハ"}, new String[]{"ワ"}, null)),
+        new Token ("ない", 7098, 6, 2, new Morpheme ("助動詞", "特殊・ナイ", "基本形", "*", new String[]{"ナイ"}, new String[]{"ナイ"}, null))
+    };
+
+
+    Token[] expectedNaistChasenTokens = new Token[] {
+        new Token ("これ", 1847, 0, 2, new Morpheme ("名詞-代名詞-一般", "*", "*", "*", new String[]{"コレ"}, new String[]{"コレ"}, null)),
+        new Token ("は", 2440, 2, 1, new Morpheme ("助詞-係助詞", "*", "*", "*", new String[]{"ハ"}, new String[]{"ワ"}, null)),
+        new Token ("本", 5174, 3, 1, new Morpheme ("名詞-一般", "*", "*", "*", new String[]{"ホン", "ボン", "モト"}, new String[]{"ホン", "ボン", "モト"}, null)),
+        new Token ("で", 6459, 4, 1, new Morpheme ("助動詞", "特殊・ダ", "連用形", "だ", new String[]{"デ"}, new String[]{"デ"}, null)),
+        new Token ("は", 6970, 5, 1, new Morpheme ("助詞-係助詞", "*", "*", "*", new String[]{"ハ"}, new String[]{"ワ"}, null)),
+        new Token ("ない", 7090, 6, 2, new Morpheme ("助動詞", "特殊・ナイ", "基本形", "*", new String[]{"ナイ"}, new String[]{"ナイ"}, null))
+    };
+
+    StringTagger ipadicTagger = SenFactory.getStringTagger(ipadicDir);
+    StringTagger naistChasenTagger = SenFactory.getStringTagger(naistChasenDir);
+
+    assertNotSame(ipadicTagger, naistChasenTagger);
+
+    List<Token> ipadicActualTokens = ipadicTagger.analyze(testString);
+    compareTokens (expectedIpadicTokens, ipadicActualTokens);
+
+    List<Token> naistChasenActualTokens = naistChasenTagger.analyze(testString);
+    compareTokens (expectedNaistChasenTokens, naistChasenActualTokens);
+  }
+
+  /**
+   * Tests string decomposition.<br>
+   * empty dictionaryDir case.
+   *
+   * @throws IOException
+   */
+  @Test
+  public void testDifferentDictionary02() throws IOException {
+    try{
+      SenFactory.getStringTagger(null);
+      fail("Error! getStringTagger was created.");
+    }catch(RuntimeException t){
+      assertTrue("Expected RuntimeException. Actual throwable ["+t.getClass().getName()+"]",t instanceof RuntimeException);
+      assertEquals("Exception message not expected.", "Not found resource[header.sen]. dictionaryDir=[null]", t.getMessage());
+    }catch(Throwable t){
+      fail("Not expected exception. "+t.getClass().getName());
+    }
+
+    try{
+      SenFactory.getStringTagger("");
+      fail("Error! getStringTagger was created.");
+    }catch(RuntimeException t){
+      assertTrue("Expected RuntimeException. Actual throwable ["+t.getClass().getName()+"]",t instanceof RuntimeException);
+      assertEquals("Exception message not expected.", "Not found resource[header.sen]. dictionaryDir=[]", t.getMessage());
+    }catch(Throwable t){
+      fail("Not expected exception. "+t.getClass().getName());
+    }
+
+  }
+
+  /**
+   * Tests same SenFactory instance.
+   *
+   * @throws IOException
+   */
+  @Test
+  public void testSenFactoryInstance01() throws IOException {
+
+    SenFactory instance = SenFactory.getInstance(IPADIC_DIR);
+    SenFactory instance2 = SenFactory.getInstance(IPADIC_DIR);
+
+    assertSame(instance, instance2);
+  }
+
 }
