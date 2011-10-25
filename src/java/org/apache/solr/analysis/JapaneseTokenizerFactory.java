@@ -17,6 +17,7 @@ package org.apache.solr.analysis;
  */
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -27,6 +28,7 @@ import net.java.sen.filter.stream.CompositeTokenFilter;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.ja.JapaneseTokenizer;
 import org.apache.solr.common.ResourceLoader;
+import org.apache.solr.core.SolrResourceLoader;
 import org.apache.solr.util.plugin.ResourceLoaderAware;
 
 /**
@@ -34,13 +36,14 @@ import org.apache.solr.util.plugin.ResourceLoaderAware;
  * <pre class="prettyprint" >
  * &lt;fieldType name="text_ja" class="solr.TextField"&gt;
  *   &lt;analyzer&gt;
- *     &lt;tokenizer class="solr.JapaneseTokenizerFactory" compositePOS="compositePOS.txt"/&gt;
+ *     &lt;tokenizer class="solr.JapaneseTokenizerFactory" compositePOS="compositePOS.txt" dictionaryDir="/opt/dictionary" /&gt;
  *   &lt;/analyzer&gt;
  * &lt;/fieldType&gt;</pre>
  */
 public class JapaneseTokenizerFactory extends BaseTokenizerFactory implements ResourceLoaderAware {
   
   private CompositeTokenFilter compositeTokenFilter;
+  private String dictionaryDir;
 
   public void init(Map<String,String> args) {
     super.init(args);
@@ -67,9 +70,28 @@ public class JapaneseTokenizerFactory extends BaseTokenizerFactory implements Re
         }
       }
     }
+    String dirVal = args.get("dictionaryDir");
+    if (dirVal != null) {
+      // no-dic jar 
+      SolrResourceLoader solrLoader = SolrResourceLoader.class.cast(loader);
+      File d0 = new File(dirVal);
+      File d = d0;
+      if (!d.isAbsolute())
+        d = new File(solrLoader.getConfigDir() + dirVal);
+      if (d.isDirectory() && d.canRead()) {
+        // relative path (from solr/conf)
+        dictionaryDir = d.getAbsolutePath();
+      } else if (d != d0 && d0.isDirectory() && d0.canRead()) {
+        // relative path (from user.dir java properties)
+        dictionaryDir = d0.getAbsolutePath();
+      } else {
+        // absolute path
+        dictionaryDir = dirVal;
+      }
+    }
   }
 
   public Tokenizer create(Reader reader) {
-    return new JapaneseTokenizer(reader, compositeTokenFilter);
+    return new JapaneseTokenizer(reader, compositeTokenFilter, dictionaryDir);
   }
 }

@@ -21,6 +21,8 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.Arrays;
 
+import net.java.sen.SenTestUtil;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.BaseTokenStreamTestCase;
 import org.apache.lucene.analysis.ReusableAnalyzerBase;
@@ -35,7 +37,7 @@ public class TestJapaneseTokenizer extends BaseTokenStreamTestCase {
   private Analyzer analyzer = new ReusableAnalyzerBase() {
     @Override
     protected TokenStreamComponents createComponents(String field, Reader reader) {
-      Tokenizer tokenizer = new JapaneseTokenizer(reader);
+      Tokenizer tokenizer = new JapaneseTokenizer(reader, null, SenTestUtil.IPADIC_DIR);
       return new TokenStreamComponents(tokenizer, tokenizer);
     }
   };

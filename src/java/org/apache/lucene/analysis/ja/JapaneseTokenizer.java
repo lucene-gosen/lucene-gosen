@@ -73,12 +73,16 @@ public final class JapaneseTokenizer extends Tokenizer {
   private int accumulatedCost = 0;
 
   public JapaneseTokenizer(Reader in) {
-    this(in, null);
+    this(in, null, null);
   }
 
   public JapaneseTokenizer(Reader in, StreamFilter filter) {
+    this(in, null, null);
+  }
+  
+  public JapaneseTokenizer(Reader in, StreamFilter filter, String dictionaryDir) {
     super(in);
-    StringTagger stringTagger = SenFactory.getStringTagger();
+    StringTagger stringTagger = SenFactory.getStringTagger(dictionaryDir);
     if(filter != null)
       stringTagger.addFilter(filter);
     tagger = new StreamTagger2(stringTagger, in);

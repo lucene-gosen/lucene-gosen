@@ -18,6 +18,8 @@ package org.apache.lucene.analysis.ja;
 
 import java.io.IOException;
 
+import net.java.sen.SenTestUtil;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.BaseTokenStreamTestCase;
 
@@ -28,7 +30,7 @@ public class TestJapaneseAnalyzer extends BaseTokenStreamTestCase {
   /** This test fails with NPE when the 
    * stopwords file is missing in classpath */
   public void testResourcesAvailable() {
-    new JapaneseAnalyzer(TEST_VERSION_CURRENT);
+    new JapaneseAnalyzer(TEST_VERSION_CURRENT, SenTestUtil.IPADIC_DIR);
   }
   
   /**
@@ -37,7 +39,7 @@ public class TestJapaneseAnalyzer extends BaseTokenStreamTestCase {
    * and offsets are correct.
    */
   public void testBasics() throws IOException {
-    assertAnalyzesTo(new JapaneseAnalyzer(TEST_VERSION_CURRENT), "多くの学生が試験に落ちた。",
+    assertAnalyzesTo(new JapaneseAnalyzer(TEST_VERSION_CURRENT, SenTestUtil.IPADIC_DIR), "多くの学生が試験に落ちた。",
       new String[] { "多く", "学生", "試験", "落ちる" },
       new int[] { 0, 3, 6,  9 },
       new int[] { 2, 5, 8, 11 },
@@ -50,7 +52,7 @@ public class TestJapaneseAnalyzer extends BaseTokenStreamTestCase {
    * (results could be completely bogus, but makes sure we don't crash on some input)
    */
   public void testReliability() throws IOException {
-    Analyzer analyzer = new JapaneseAnalyzer(TEST_VERSION_CURRENT);
+    Analyzer analyzer = new JapaneseAnalyzer(TEST_VERSION_CURRENT, SenTestUtil.IPADIC_DIR);
     checkRandomData(random, analyzer, 10000);
   }
 }

@@ -26,7 +26,6 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
-import net.java.sen.SenFactory;
 import net.java.sen.trie.CharIterator;
 import net.java.sen.trie.TrieSearcher;
 
@@ -166,9 +165,10 @@ public class Dictionary {
   /**
    * @throws IOException
    */
-  public Dictionary() {
+  public Dictionary(ShortBuffer connectionCostBuffer, ByteBuffer partOfSpeechInfoBuffer, ByteBuffer tokenBuffer, IntBuffer trieBuffer, String[] posIndex,
+      String[] conjTypeIndex, String[] conjFormIndex) {
     // Map connection cost file
-    ShortBuffer buffer = SenFactory.getConnectionCostBuffer();
+    ShortBuffer buffer = connectionCostBuffer;
     
     connectionSize1 = buffer.get();
     connectionSize2 = buffer.get();
@@ -182,10 +182,10 @@ public class Dictionary {
     this.connectionCostBuffer = buffer.slice();
     
     // Map position infomation file.
-    this.partOfSpeechInfoBuffer = SenFactory.getPOSBuffer();
+    this.partOfSpeechInfoBuffer = partOfSpeechInfoBuffer;
     
     // Map token file
-    this.tokenBuffer = SenFactory.getTokenBuffer();
+    this.tokenBuffer = tokenBuffer;
     this.bosToken = new CToken();
     this.bosToken.read(this.tokenBuffer);
     this.eosToken = new CToken();
@@ -194,12 +194,12 @@ public class Dictionary {
     this.unknownToken.read(this.tokenBuffer);
     
     // Map double array trie dictionary
-    this.trieBuffer = SenFactory.getTrieBuffer();
+    this.trieBuffer = trieBuffer;
     
     // indexes (unique POS values, etc)
-    this.posIndex = SenFactory.getPOSIndex();
-    this.conjTypeIndex = SenFactory.getConjTypeIndex();
-    this.conjFormIndex = SenFactory.getConjFormIndex();
+    this.posIndex = posIndex;
+    this.conjTypeIndex = conjTypeIndex;
+    this.conjFormIndex = conjFormIndex;
     
     for (int i = 0; i < results.length; i++) {
       results[i] = new CToken();
