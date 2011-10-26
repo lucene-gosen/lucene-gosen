@@ -181,7 +181,7 @@
   <target name="build-dic-naist-chasen" depends="compile"
           description="build a naist-chasen dictionary for unit test">
     <antcall target="build-dic">
-      <param name="" value="naist-chasen"/>
+      <param name="dictype" value="naist-chasen"/>
     </antcall>
   </target>
   <!-- build a ipadic dictionary for unit test -->
