@@ -1,19 +1,5 @@
 lucene-gosen Change Log
 
-========== trunk / YYYY-MM-DD ===================================
-
-Important Notice
-
-New Features & Improvements
-
-Bug Fixes
-
-API Changes
-
-Javadoc Fixes
-
-Others
-
 ========== 1.2.0 / 2011-10-31 ===================================
 
 New Features & Improvements
