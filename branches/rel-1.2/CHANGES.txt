@@ -1,6 +1,6 @@
 lucene-gosen Change Log
 
-========== trunk / YYYY-MM-DD ===================================
+========== 1.2.1 / YYYY-MM-DD ===================================
 
 Important Notice
 
