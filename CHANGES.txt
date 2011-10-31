@@ -2,6 +2,20 @@ lucene-gosen Change Log
 
 ========== trunk / YYYY-MM-DD ===================================
 
+Important Notice
+
+New Features & Improvements
+
+Bug Fixes
+
+API Changes
+
+Javadoc Fixes
+
+Others
+
+========== 1.2.0 / 2011-10-31 ===================================
+
 New Features & Improvements
 
 * http://code.google.com/p/lucene-gosen/issues/detail?id=9
@@ -11,6 +25,8 @@ New Features & Improvements
 * http://code.google.com/p/lucene-gosen/issues/detail?id=16
   Separate compiled dictionary from jar file, and use multiple dictionaries at the same time.
   (johtani)
+
+========== 1.1.1 / 2011-07-04 ===================================
 
 Bug Fixes
 
