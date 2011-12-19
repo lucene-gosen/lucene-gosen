@@ -23,7 +23,6 @@ package net.java.sen.dictionary;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -63,25 +62,9 @@ public class Viterbi {
    * @param position The shared starting position of the linked list of Nodes 
    * @param limit One greater than the last index of the sentence
    * @param rNode The head of the linked list of Nodes
+   * @param sentence The original sentence
    */
-  final private void calculateConnectionCosts(int position, int limit, Node rNode) {
-    if (position != limit) {
-      for (Node lNode = endNodeList[position]; lNode != null; lNode = lNode.lnext) {
-        if (lNode.rcAttr2 != 0) {
-          for (Node rNode2 = rNode; rNode2 != null; rNode2 = rNode2.rnext) {
-            rNode2 = rNode2.clone();
-            rNode2.cost = lNode.cost + tokenizer.getDictionary().getCost(lNode.prev, lNode, rNode2);
-            rNode2.prev = lNode;
-            
-            int y = position + rNode2.span;
-            
-            rNode2.lnext = endNodeList[y];
-            endNodeList[y] = rNode2;
-          }
-        }
-      }
-    }
-    
+  final private void calculateConnectionCosts(int position, int limit, Node rNode, Sentence sentence)throws IOException  {
     for (; rNode != null; rNode = rNode.rnext) {
       int bestCost = Integer.MAX_VALUE;
       Node bestNode = null;
@@ -100,6 +83,38 @@ public class Viterbi {
       
       rNode.lnext = endNodeList[x];
       endNodeList[x] = rNode;
+      
+      if (rNode.rcAttr2 != 0) {
+        SentenceIterator it = sentence.iterator();
+        int pos2 = rNode.span + position;
+        if(pos2 == limit){
+          continue;
+        }
+        //winding to pos2
+        int pos3 = 0;
+        for(int i=0;i<=pos2;i++){
+          if(it.hasNextOrigin()){
+            pos3 = it.nextOrigin();
+          }
+        }
+        // safety check
+        if(pos2 != pos3){
+          continue;
+        }
+        Node rNode2 = lookup(it, sentence.getCharacters(), sentence.getReadingConstraint(pos2));
+        for (; rNode2 != null; rNode2 = rNode2.rnext) {
+          rNode2 = rNode2.clone();
+          rNode2.cost = rNode.cost + tokenizer.getDictionary().getCost(rNode.prev, rNode, rNode2);
+          rNode2.prev = rNode;
+          
+          int y = pos2 + rNode2.span;
+          
+          rNode2.lnext = endNodeList[y];
+          endNodeList[y] = rNode2;
+        }
+      }
+      
+
     }
   }
   
@@ -197,7 +212,7 @@ public class Viterbi {
       if (endNodeList[base] != null) {
         Node rNode = lookup(iterator, surface, sentence.getReadingConstraint(position));
         if (rNode != null) {
-          calculateConnectionCosts(base, length, rNode);
+          calculateConnectionCosts(base, length, rNode, sentence);
         }
       }
     }
@@ -207,7 +222,7 @@ public class Viterbi {
     // will connect to the beginning-of-string node.
     for (int position = length; position >= 0; position--) {
       if (endNodeList[position] != null) {
-        calculateConnectionCosts(position, length, eosNode);
+        calculateConnectionCosts(position, length, eosNode, sentence);
         // Once we have connected the end-of-string node, leave the loop. 
         break;
       }
