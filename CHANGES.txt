@@ -8,6 +8,9 @@ Important Notice
 
 New Features & Improvements
 
+* Add proxy.user and proxy.password properties to build.xml for dictionary download.
+  (johtani)
+
 Bug Fixes
 
 * http://code.google.com/p/lucene-gosen/issues/detail?id=19
