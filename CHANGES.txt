@@ -1,18 +1,16 @@
 lucene-gosen Change Log
 
-========== 1.2.1 / YYYY-MM-DD ===================================
+========== 1.2.1 / 2011-12-20 ===================================
 
 Important Notice
 
-New Features & Improvements
+* The serious bug fix is included. 
 
 Bug Fixes
 
-API Changes
-
-Javadoc Fixes
-
-Others
+* http://code.google.com/p/lucene-gosen/issues/detail?id=19
+  Memory usage increases by a specific character string. 
+  (johtani)
 
 ========== 1.2.0 / 2011-10-31 ===================================
 
