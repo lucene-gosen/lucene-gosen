@@ -14,6 +14,18 @@ Javadoc Fixes
 
 Others
 
+========== 1.2.1 / 2011-12-20 ===================================
+
+Important Notice
+
+* The serious bug fix is included. 
+
+Bug Fixes
+
+* http://code.google.com/p/lucene-gosen/issues/detail?id=19
+  Memory usage increases by a specific character string. 
+  (johtani)
+
 ========== 1.2.0 / 2011-10-31 ===================================
 
 New Features & Improvements
