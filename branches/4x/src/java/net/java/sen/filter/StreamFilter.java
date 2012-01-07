@@ -24,7 +24,6 @@ import java.util.List;
 import net.java.sen.dictionary.Sentence;
 import net.java.sen.dictionary.Token;
 
-
 /**
  * Represents a Node filter capable of both pre- and post-processing. Filters
  * are applied as follows:
@@ -39,22 +38,18 @@ import net.java.sen.dictionary.Token;
  * </ul>
  */
 public interface StreamFilter {
-
-	/**
-	 * Pre-processes a sentence
-	 *
-	 * @param sentence The sentence be pre-processed
-	 */
-	public void preProcess(Sentence sentence);
-
-
-	/**
-	 * Post-processes analysed tokens
-	 * 
-	 * @param tokens The analysed tokens
-	 * @return The post-processed tokens
-	 */
-	public List<Token> postProcess(List<Token> tokens);
-
-
+  /**
+   * Pre-processes a sentence
+   *
+   * @param sentence The sentence be pre-processed
+   */
+  public void preProcess(Sentence sentence);
+  
+  /**
+   * Post-processes analysed tokens
+   * 
+   * @param tokens The analysed tokens
+   * @return The post-processed tokens
+   */
+  public List<Token> postProcess(List<Token> tokens);
 }

@@ -19,7 +19,6 @@
 
 package net.java.sen.dictionary;
 
-
 /**
  * A single token from an analysed sentence
  * 
@@ -33,264 +32,234 @@ package net.java.sen.dictionary;
  *  and this restriction is relaxed
  */
 public class Token {
-
-	/**
-	 * The character range of this Token within the underlying sentence
-	 */
-	private String surface = null;
-
-	/**
-	 * The Viterbi cost of this Token
-	 */
-	private int cost = -1;
-
-	/**
-	 * The start of the character range of this Token within the underlying
-	 * sentence
-	 */
-	private int start = -1;
-
-	/**
-	 * The length of the character range of this Token within the underlying
-	 * sentence
-	 */
-	private int length = -1;
-
-	/**
-	 * True if this token is the first in a new sentence
-	 */
-	private boolean sentenceStart;
-
-	/**
-	 * The morpheme data represented by this Token
-	 */
-	private Morpheme morpheme = new Morpheme();
-
-	/**
-	 * Returns whether or not this Token begins a new sentence.
-	 */
-	public boolean isSentenceStart() {
-	  return sentenceStart;
-	}
-	
-	/**
-	 * Sets whether or not this token begins a new sentence.
-	 */
-	public void setSentenceStart(boolean sentenceStart) {
-	  this.sentenceStart = sentenceStart;
-	}
-
-	/**
-	 * Gets the start of the character range of this Token within the
-	 * underlying sentence
-	 *
-	 * @return The start of the character range of this Token within the
-	 *         underlying sentence
-	 */
-	public int getStart() {
-
-		return this.start;
-
-	}
-
-
-	/**
-	 * Sets the start of the character range of this Token within the
-	 * underlying sentence
-	 * 
-	 * @param start The start of the character range of this Token within the
-	 *              underlying sentence
-	 */
-	public void setStart(int start) {
-
-		this.start = start;
-
-	}
-
-
-	/**
-	 * Gets the length of the character range of this Token within the
-	 * underlying sentence
-	 * 
-	 * @return The length of the character range of this Token within the
-	 *         underlying sentence
-	 */
-	public int getLength() {
-		return this.length;
-	}
-
-
-	/**
-	 * Sets the length of the character range of this Token within the
-	 * underlying sentence
-	 * 
-	 * @param length The length of the character range of this Token within the
-	 *               underlying sentence
-	 */
-	public void setLength(int length) {
-		this.length = length;
-	}
-
-
-	/**
-	 * Gets the character range of this Token within the underlying sentence
-	 *
-	 * @return The character range of this Token within the underlying sentence
-	 */
-	public String getSurface() {
-
-		return this.surface;
-
-	}
-
-
-	/**
-	 * Sets the character range of this Token within the underlying sentence
-	 * 
-	 * @param surface The character range of this Token within the underlying
-	 *                sentence 
-	 */
-	public void setSurface(String surface) {
-
-		this.surface = surface;
-
-	}
-
-
-	/**
-	 * Gets the Viterbi cost of this Token
-	 *
-	 * @return The Viterbi cost of this Token
-	 */
-	public int getCost() {
-
-		return this.cost;
-
-	}
-
-
-	/**
-	 * Sets the Viterbi cost of this Token
-	 * 
-	 * @param cost The Viterbi cost of this Token
-	 */
-	public void setCost(int cost) {
-
-		this.cost = cost;
-
-	}
-
-
-	/**
-	 * Gets the morpheme data for this Token
-	 *
-	 * @return The morpheme data for this Token
-	 */
-	public Morpheme getMorpheme() {
-
-		return this.morpheme;
-
-	}
-
-
-	/**
-	 * Gets the end of the character range of this Token within the underlying
-	 * sentence
-	 *
-	 * @return The end of the character range of this Token within the underlying
-	 * sentence
-	 */
-	public int end() {
-		return getStart() + getLength();
-	}
-
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object object) {
-
-		if (object instanceof Token) {
-
-			Token token = ((Token) object);
-
-			if (
-					   ((this.surface == token.surface) || (this.surface != null && this.surface.equals(token.surface)))
-					&& (this.cost == token.cost)
-					&& (this.start == token.start)
-					&& (this.length == token.length)
-					&& ((this.morpheme == token.morpheme) || (this.morpheme != null && this.morpheme.equals(token.morpheme)))
-			   )
-			{
-				return true;
-			}
-
-		}
-
-		return false;
-
-	}
-
-
-	/**
-	 * Returns the character range of this Token within the underlying sentence
-	 * 
-	 * @return The character range of this Token within the underlying sentence
-	 */
-	@Override
-	public String toString() {
-
-		return getSurface();
-
-	}
-
-
-	/**
-	 * Creates a Token from a Node
-	 * 
-	 * @param surface The underlying sentence string 
-	 * @param node The Node to create from
-	 */
-	public Token(String surface, Node node) {
-
-		this.morpheme = node.morpheme;
-		this.cost = node.cost;
-		this.surface = surface.substring(node.start, node.start + node.length);
-		this.start = node.start;
-		this.length = node.length;
-
-	}
-
-
-	/**
-	 * Creates a Token with explicit parameters
-	 * 
-	 * @param surface The character range within the underlying sentence
-	 * @param cost The Viterbi cost
-	 * @param start The start of the character range within the underlying
-	 *              sentence
-	 * @param length The length of the character range within the underlying
-	 *               sentence
-	 * @param morpheme The morpheme data
-	 */
-	public Token(String surface, int cost, int start, int length, Morpheme morpheme) {
-
-		this.surface = surface;
-		this.cost = cost;
-		this.start = start;
-		this.length = length;
-		this.morpheme = morpheme;
-
-	}
-
-
-	/**
-	 * Creates a blank Token
-	 */
-	public Token() {
-
-	}
-
-
+  
+  /**
+   * The character range of this Token within the underlying sentence
+   */
+  private String surface = null;
+  
+  /**
+   * The Viterbi cost of this Token
+   */
+  private int cost = -1;
+  
+  /**
+   * The start of the character range of this Token within the underlying
+   * sentence
+   */
+  private int start = -1;
+  
+  /**
+   * The length of the character range of this Token within the underlying
+   * sentence
+   */
+  private int length = -1;
+  
+  /**
+   * True if this token is the first in a new sentence
+   */
+  private boolean sentenceStart;
+  
+  /**
+   * The morpheme data represented by this Token
+   */
+  private Morpheme morpheme;
+  
+  /**
+   * Returns whether or not this Token begins a new sentence.
+   */
+  public boolean isSentenceStart() {
+    return sentenceStart;
+  }
+  
+  /**
+   * Sets whether or not this token begins a new sentence.
+   */
+  public void setSentenceStart(boolean sentenceStart) {
+    this.sentenceStart = sentenceStart;
+  }
+  
+  /**
+   * Gets the start of the character range of this Token within the
+   * underlying sentence
+   *
+   * @return The start of the character range of this Token within the
+   *         underlying sentence
+   */
+  public int getStart() {
+    return start;
+  }
+  
+  /**
+   * Sets the start of the character range of this Token within the
+   * underlying sentence
+   * 
+   * @param start The start of the character range of this Token within the
+   *              underlying sentence
+   */
+  public void setStart(int start) {
+    this.start = start;
+  }
+  
+  /**
+   * Gets the length of the character range of this Token within the
+   * underlying sentence
+   * 
+   * @return The length of the character range of this Token within the
+   *         underlying sentence
+   */
+  public int getLength() {
+    return length;
+  }
+  
+  /**
+   * Sets the length of the character range of this Token within the
+   * underlying sentence
+   * 
+   * @param length The length of the character range of this Token within the
+   *               underlying sentence
+   */
+  public void setLength(int length) {
+    this.length = length;
+  }
+  
+  /**
+   * Gets the character range of this Token within the underlying sentence
+   *
+   * @return The character range of this Token within the underlying sentence
+   */
+  public String getSurface() {
+    return surface;
+  }
+  
+  /**
+   * Sets the character range of this Token within the underlying sentence
+   * 
+   * @param surface The character range of this Token within the underlying
+   *                sentence 
+   */
+  public void setSurface(String surface) {
+    this.surface = surface;
+  }
+  
+  /**
+   * Gets the Viterbi cost of this Token
+   *
+   * @return The Viterbi cost of this Token
+   */
+  public int getCost() {
+    return cost;
+  }
+  
+  /**
+   * Sets the Viterbi cost of this Token
+   * 
+   * @param cost The Viterbi cost of this Token
+   */
+  public void setCost(int cost) {
+    this.cost = cost;
+  }
+  
+  /**
+   * Gets the morpheme data for this Token
+   *
+   * @return The morpheme data for this Token
+   */
+  public Morpheme getMorpheme() {
+    return morpheme;
+  }
+  
+  /**
+   * Sets the morpheme data for this Token
+   *
+   * @param morpheme new Morpheme for this Token
+   */
+  public void setMorpheme(Morpheme morpheme) {
+    this.morpheme = morpheme;
+  }
+  
+  /**
+   * Gets the end of the character range of this Token within the underlying
+   * sentence
+   *
+   * @return The end of the character range of this Token within the underlying
+   * sentence
+   */
+  public int end() {
+    return getStart() + getLength();
+  }
+  
+  @Override
+  public boolean equals(Object object) {
+    if (object instanceof Token) {
+      
+      Token token = ((Token) object);
+      
+      if (
+          ((this.surface == token.surface) || (this.surface != null && this.surface.equals(token.surface)))
+          && (this.cost == token.cost)
+          && (this.start == token.start)
+          && (this.length == token.length)
+          && ((this.morpheme == token.morpheme) || (this.morpheme != null && this.morpheme.equals(token.morpheme)))
+      )
+      {
+        return true;
+      }
+      
+    }
+    
+    return false;
+  }
+  
+  /**
+   * Returns the character range of this Token within the underlying sentence
+   * 
+   * @return The character range of this Token within the underlying sentence
+   */
+  @Override
+  public String toString() {
+    return getSurface();
+  }
+  
+  /**
+   * Creates a Token from a Node
+   * 
+   * @param surface The underlying sentence string 
+   * @param node The Node to create from
+   */
+  public Token(String surface, Node node) {
+    this.morpheme = node.morpheme;
+    this.cost = node.cost;
+    this.surface = surface.substring(node.start, node.start + node.length);
+    this.start = node.start;
+    this.length = node.length;
+  }
+  
+  /**
+   * Creates a Token with explicit parameters
+   * 
+   * @param surface The character range within the underlying sentence
+   * @param cost The Viterbi cost
+   * @param start The start of the character range within the underlying
+   *              sentence
+   * @param length The length of the character range within the underlying
+   *               sentence
+   * @param morpheme The morpheme data
+   */
+  public Token(String surface, int cost, int start, int length, Morpheme morpheme) {
+    this.surface = surface;
+    this.cost = cost;
+    this.start = start;
+    this.length = length;
+    this.morpheme = morpheme;
+  }
+  
+  /**
+   * Creates a blank Token
+   */
+  public Token() {
+    // TODO currently only used by CompoundWordFilter, maybe it
+    // should explicitly create its own morpheme (cleaner)
+    this.morpheme = new Morpheme();
+  }
 }

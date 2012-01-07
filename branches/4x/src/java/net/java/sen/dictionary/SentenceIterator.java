@@ -21,7 +21,6 @@ package net.java.sen.dictionary;
 
 import net.java.sen.trie.CharIterator;
 
-
 /**
  * An iterator over a sequence of characters, consisting of subsequences that
  * may overlap, and that do not necessarily cover every character in the
@@ -34,67 +33,60 @@ import net.java.sen.trie.CharIterator;
  * to move to the first available origin.
  */
 public interface SentenceIterator extends CharIterator {
-
-	/**
-	 * Returns the length of the underlying character range being iterated
-	 * over, including any ignored characters
-	 *
-	 * @return The length of the sentence being iterated over
-	 */
-	public int length();
-
-
-	/**
-	 * Returns the current origin position. The origin is the position starting
-	 * from which characters are read. {link returnToOrigin returnToOrigin}
-	 * moves back to the current origin; {link nextOrigin nextOrigin} moves to
-	 * the next available origin, if any.
-	 *
-	 * @return The current origin position
-	 */
-	public int origin();
-
-
-	/**
-	 * Returns the character at the current character cursor position
-	 *
-	 * @return The character at the current character cursor position
-	 */
-	public char current();
-
-
-	/**
-	 * Reports whether the sentence has any more origins
-	 *
-	 * @return <code>true</code> if the sentence has more origins remaining
-	 */
-	public boolean hasNextOrigin();
-
-
-	/**
-	 * Moves the origin forward to the next available position. Subsequent
-	 * characters returned by {@link CharIterator#next next} will start at the
-	 * new origin position
-	 *
-	 * @return The new origin 
-	 */
-	public int nextOrigin();
-
-
-	/**
-	 * Returns to the current origin position. Subsequent characters returned
-	 * by {@link CharIterator#next next} will start at the origin position
-	 *
-	 */
-	public void rewindToOrigin();
-
-
-	/**
-	 * Returns the number of characters skipped between the previous and
-	 * current character spans
-	 *
-	 * @return The number of characters skipped
-	 */
-	public int skippedCharCount();
-
+  
+  /**
+   * Returns the length of the underlying character range being iterated
+   * over, including any ignored characters
+   *
+   * @return The length of the sentence being iterated over
+   */
+  public int length();
+  
+  /**
+   * Returns the current origin position. The origin is the position starting
+   * from which characters are read. {link returnToOrigin returnToOrigin}
+   * moves back to the current origin; {link nextOrigin nextOrigin} moves to
+   * the next available origin, if any.
+   *
+   * @return The current origin position
+   */
+  public int origin();
+  
+  /**
+   * Returns the character at the current character cursor position
+   *
+   * @return The character at the current character cursor position
+   */
+  public char current();
+  
+  /**
+   * Reports whether the sentence has any more origins
+   *
+   * @return <code>true</code> if the sentence has more origins remaining
+   */
+  public boolean hasNextOrigin();
+  
+  /**
+   * Moves the origin forward to the next available position. Subsequent
+   * characters returned by {@link CharIterator#next next} will start at the
+   * new origin position
+   *
+   * @return The new origin 
+   */
+  public int nextOrigin();
+  
+  /**
+   * Returns to the current origin position. Subsequent characters returned
+   * by {@link CharIterator#next next} will start at the origin position
+   *
+   */
+  public void rewindToOrigin();
+  
+  /**
+   * Returns the number of characters skipped between the previous and
+   * current character spans
+   *
+   * @return The number of characters skipped
+   */
+  public int skippedCharCount();
 }

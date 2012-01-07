@@ -25,7 +25,6 @@ public class SentenceStartAttributeImpl extends AttributeImpl implements Sentenc
     return sentenceStart;
   }
 
-  @Override
   public void setSentenceStart(boolean sentenceStart) {
     this.sentenceStart = sentenceStart;
   }

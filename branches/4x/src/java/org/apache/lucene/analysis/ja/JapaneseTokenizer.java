@@ -35,7 +35,6 @@ import org.apache.lucene.analysis.ja.tokenAttributes.ReadingsAttribute;
 import org.apache.lucene.analysis.ja.tokenAttributes.SentenceStartAttribute;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
-import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
 
 /**
  * This is a Japanese tokenizer which uses "Sen" morphological
@@ -48,21 +47,14 @@ import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
  *   <li>{@link PartOfSpeechAttribute}
  *   <li>{@link PronunciationsAttribute}
  *   <li>{@link ReadingsAttribute}
- *   <li>{@link TypeAttribute}
  *   <li>{@link CostAttribute}
  *   <li>{@link SentenceStartAttribute}
  * </ul>
- * <p>
- * TypeAttribute is set to the POS for simplicity, so you can use 
- * TypeAsPayloadTokenFilterFactory if you desire to index the POS 
- * into the payload
  */
 public final class JapaneseTokenizer extends Tokenizer {
   private final StreamTagger2 tagger;
   private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
   private final OffsetAttribute offsetAtt = addAttribute(OffsetAttribute.class);
-  // we set the type attribute to be the POS for simplicity (e.g. payloads searching)
-  private final TypeAttribute typeAtt = addAttribute(TypeAttribute.class);
   
   // morphological attributes
   private final BasicFormAttribute basicFormAtt = addAttribute(BasicFormAttribute.class);
@@ -81,12 +73,16 @@ public final class JapaneseTokenizer extends Tokenizer {
   private int accumulatedCost = 0;
 
   public JapaneseTokenizer(Reader in) {
-    this(in, null);
+    this(in, null, null);
   }
 
   public JapaneseTokenizer(Reader in, StreamFilter filter) {
+    this(in, null, null);
+  }
+  
+  public JapaneseTokenizer(Reader in, StreamFilter filter, String dictionaryDir) {
     super(in);
-    StringTagger stringTagger = SenFactory.getStringTagger();
+    StringTagger stringTagger = SenFactory.getStringTagger(dictionaryDir);
     if(filter != null)
       stringTagger.addFilter(filter);
     tagger = new StreamTagger2(stringTagger, in);
@@ -112,14 +108,12 @@ public final class JapaneseTokenizer extends Tokenizer {
       
       costAtt.setCost(cost - accumulatedCost);
       accumulatedCost = cost;
-      basicFormAtt.setBasicForm(m.getBasicForm());
-      conjugationAtt.setConjugationalForm(m.getConjugationalForm());
-      conjugationAtt.setConjugationalType(m.getConjugationalType());
-      partOfSpeechAtt.setPartOfSpeech(m.getPartOfSpeech());
-      pronunciationsAtt.setPronunciations(m.getPronunciations());
-      readingsAtt.setReadings(m.getReadings());
+      basicFormAtt.setMorpheme(m);
+      conjugationAtt.setMorpheme(m);
+      partOfSpeechAtt.setMorpheme(m);
+      pronunciationsAtt.setMorpheme(m);
+      readingsAtt.setMorpheme(m);
       offsetAtt.setOffset(correctOffset(token.getStart()), correctOffset(token.end()));
-      typeAtt.setType(m.getPartOfSpeech());
       return true;
     }
   }

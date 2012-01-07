@@ -23,25 +23,22 @@ import java.util.List;
 
 import net.java.sen.dictionary.Token;
 
-
 /**
  * An interface to filters used during reading processing
  */
-public interface ReadingFilter {
-
-	/**
-	 * Filters readings
-	 *
-	 * @param tokens The tokens to which the readings are applied
-	 * @param readingNode The head of a list of <code>ReadingNode</code>s
-	 */
-	public void filterReadings(List<Token> tokens, ReadingNode readingNode);
-
-	/**
-	 * Resets any sentence specific state held by the filter. The implementing
-	 * filter decides exactly what state is affected, and may choose, for
-	 * instance, to exclude state relating to global or persistant settings
-	 */
-	public void reset();
-
+public interface ReadingFilter {  
+  /**
+   * Filters readings
+   *
+   * @param tokens The tokens to which the readings are applied
+   * @param readingNode The head of a list of <code>ReadingNode</code>s
+   */
+  public void filterReadings(List<Token> tokens, ReadingNode readingNode);
+  
+  /**
+   * Resets any sentence specific state held by the filter. The implementing
+   * filter decides exactly what state is affected, and may choose, for
+   * instance, to exclude state relating to global or persistant settings
+   */
+  public void reset();
 }

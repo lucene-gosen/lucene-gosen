@@ -3,9 +3,10 @@ package org.apache.lucene.analysis.ja;
 import java.io.IOException;
 import java.io.Reader;
 
+import net.java.sen.SenTestUtil;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.BaseTokenStreamTestCase;
-import org.apache.lucene.analysis.util.ReusableAnalyzerBase;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
 
@@ -26,10 +27,10 @@ import org.apache.lucene.analysis.Tokenizer;
  */
 
 public class TestJapaneseBasicFormFilter extends BaseTokenStreamTestCase {
-  private Analyzer analyzer = new ReusableAnalyzerBase() {
+  private Analyzer analyzer = new Analyzer() {
     @Override
     protected TokenStreamComponents createComponents(String field, Reader reader) {
-      Tokenizer tokenizer = new JapaneseTokenizer(reader);
+      Tokenizer tokenizer = new JapaneseTokenizer(reader, null, SenTestUtil.IPADIC_DIR);
       TokenStream stream = new JapaneseBasicFormFilter(tokenizer);
       return new TokenStreamComponents(tokenizer, stream);
     }
@@ -39,5 +40,9 @@ public class TestJapaneseBasicFormFilter extends BaseTokenStreamTestCase {
     assertAnalyzesTo(analyzer, "それはまだ実験段階にあります。",
         new String[] { "それ", "は", "まだ", "実験", "段階", "に", "ある", "ます", "。" }
     );
+  }
+  
+  public void testRandomStrings() throws IOException {
+    checkRandomData(random, analyzer, 10000);
   }
 }

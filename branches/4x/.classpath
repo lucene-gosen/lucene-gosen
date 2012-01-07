@@ -3,8 +3,8 @@
 	<classpathentry kind="src" path="src/java"/>
 	<classpathentry kind="src" path="src/resources"/>
 	<classpathentry kind="src" path="src/test"/>
+	<classpathentry kind="src" path="src/compiled-dictionaries/ipadic"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/jisx0213-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/junit-4.7.jar"/>
 	<classpathentry kind="lib" path="lib/apache-solr-core-4.0-SNAPSHOT.jar"/>
@@ -12,5 +12,7 @@
 	<classpathentry kind="lib" path="lib/lucene-analyzers-common-4.0-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="lib/lucene-core-4.0-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="lib/lucene-test-framework-4.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-jdk14-1.6.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

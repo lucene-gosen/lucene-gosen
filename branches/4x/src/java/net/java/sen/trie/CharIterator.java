@@ -21,28 +21,23 @@ package net.java.sen.trie;
 
 import java.util.NoSuchElementException;
 
-
 /**
  * An iterator interface for <code>char</code>s
  */
 public interface CharIterator {
-
-	/**
-	 * Reports whether more characters are available
-	 *
-	 * @return <code>true</code> if more characters are available, otherwise
-	 *         <code>false</code>
-	 */
-	public boolean hasNext();
-
-
-	/**
-	 * Returns the next available character
-	 *
-	 * @return The next available character
-	 * @throws NoSuchElementException - if no more elements are available
-	 */
-	public char next() throws NoSuchElementException;
-
-
+  /**
+   * Reports whether more characters are available
+   *
+   * @return <code>true</code> if more characters are available, otherwise
+   *         <code>false</code>
+   */
+  public boolean hasNext();
+  
+  /**
+   * Returns the next available character
+   *
+   * @return The next available character
+   * @throws NoSuchElementException - if no more elements are available
+   */
+  public char next() throws NoSuchElementException;
 }

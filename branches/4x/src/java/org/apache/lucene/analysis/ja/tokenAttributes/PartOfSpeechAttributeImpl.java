@@ -16,34 +16,37 @@ package org.apache.lucene.analysis.ja.tokenAttributes;
  * limitations under the License.
  */
 
+import net.java.sen.dictionary.Morpheme;
+
 import org.apache.lucene.analysis.ja.ToStringUtil;
 import org.apache.lucene.util.AttributeImpl;
 import org.apache.lucene.util.AttributeReflector;
 
 public class PartOfSpeechAttributeImpl extends AttributeImpl implements PartOfSpeechAttribute, Cloneable {
-  private String partOfSpeech = null;
+  private Morpheme morpheme;
   
   public String getPartOfSpeech() {
-    return partOfSpeech;
+    return morpheme == null ? null : morpheme.getPartOfSpeech();
   }
   
-  public void setPartOfSpeech(String partOfSpeech) {
-    this.partOfSpeech = partOfSpeech;
+  public void setMorpheme(Morpheme morpheme) {
+    this.morpheme = morpheme;
   }
 
   @Override
   public void clear() {
-    partOfSpeech = null;
+    morpheme = null;
   }
 
   @Override
   public void copyTo(AttributeImpl target) {
     PartOfSpeechAttribute t = (PartOfSpeechAttribute) target;
-    t.setPartOfSpeech(partOfSpeech);
+    t.setMorpheme(morpheme);
   }
   
   @Override
   public void reflectWith(AttributeReflector reflector) {
+    String partOfSpeech = getPartOfSpeech();
     String en = partOfSpeech == null ? null : ToStringUtil.getPOSTranslation(partOfSpeech);
     reflector.reflect(PartOfSpeechAttribute.class, "partOfSpeech", partOfSpeech);
     reflector.reflect(PartOfSpeechAttribute.class, "partOfSpeech (en)", en);

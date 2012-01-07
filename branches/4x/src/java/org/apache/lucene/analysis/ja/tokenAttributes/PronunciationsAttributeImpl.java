@@ -16,43 +16,48 @@ package org.apache.lucene.analysis.ja.tokenAttributes;
  * limitations under the License.
  */
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import net.java.sen.dictionary.Morpheme;
 
 import org.apache.lucene.analysis.ja.ToStringUtil;
 import org.apache.lucene.util.AttributeImpl;
 import org.apache.lucene.util.AttributeReflector;
 
 public class PronunciationsAttributeImpl extends AttributeImpl implements PronunciationsAttribute, Cloneable {
-  private List<String> pronunciations = null;
+  private Morpheme morpheme;
   
   public List<String> getPronunciations() {
-    return pronunciations;
+    return morpheme == null ? null : morpheme.getPronunciations();
   }
   
-  public void setPronunciations(List<String> pronunciations) {
-    this.pronunciations = pronunciations;
+  public void setMorpheme(Morpheme morpheme) {
+    this.morpheme = morpheme;
   }
 
   @Override
   public void clear() {
-    pronunciations = null;
+    morpheme = null;
   }
 
   @Override
   public void copyTo(AttributeImpl target) {
     PronunciationsAttribute t = (PronunciationsAttribute) target;
-    t.setPronunciations(pronunciations);
+    t.setMorpheme(morpheme);
   }
   
   @Override
   public void reflectWith(AttributeReflector reflector) {
+    final List<String> pronunciations = getPronunciations();
     List<String> enPronunciations = null;
     if (pronunciations != null) {
-      enPronunciations = new ArrayList<String>(pronunciations.size());
+      final String[] p = new String[pronunciations.size()];
+      int i = 0;
       for (String kana : pronunciations) {
-        enPronunciations.add(ToStringUtil.getRomanization(kana));
+        p[i++] = ToStringUtil.getRomanization(kana);
       }
+      enPronunciations = Arrays.asList(p);
     }
     reflector.reflect(PartOfSpeechAttribute.class, "pronunciations", pronunciations);
     reflector.reflect(PartOfSpeechAttribute.class, "pronunciations (en)", enPronunciations);

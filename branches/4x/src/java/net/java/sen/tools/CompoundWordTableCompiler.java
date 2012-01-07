@@ -30,7 +30,6 @@ import java.util.HashMap;
 
 import net.java.sen.util.CSVParser;
 
-
 /**
  * Compiles a table for the CompoundWordFilter
  */
@@ -55,7 +54,6 @@ public class CompoundWordTableCompiler {
 	 * Size of part-of-speech data within the dictionary CSV
 	 */
 	private static final int PART_OF_SPEECH_SIZE = 7;
-
 
 	/**
 	 * Builds a compound word table
@@ -107,9 +105,7 @@ public class CompoundWordTableCompiler {
 		ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(tableFilename));
 		os.writeObject(compoundTable);
 		os.close();
-
 	}
-
 
 	/**
 	 * Main method
@@ -117,24 +113,16 @@ public class CompoundWordTableCompiler {
 	 * @param args Ignored 
 	 */
 	public static void main(String args[]) {
-
 		try {
-
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					new FileInputStream(COMPOUND_CSV_FILENAME),
 					"UTF-8"
 			));
 
 			buildTable(reader, PART_OF_SPEECH_START, PART_OF_SPEECH_SIZE, COMPOUND_TABLE_FILENAME);
-
 		} catch (Exception e) {
-
 			e.printStackTrace();
 			System.exit(1);
-
 		}
-
 	}
-
-
 }
