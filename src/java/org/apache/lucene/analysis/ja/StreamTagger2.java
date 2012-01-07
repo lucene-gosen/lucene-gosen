@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 import java.text.BreakIterator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -46,7 +47,7 @@ public final class StreamTagger2 {
   private Reader input;
   private final BreakIterator breaker = BreakIterator.getSentenceInstance(Locale.JAPANESE); /* tokenizes a char[] of text */
   private final CharArrayIterator iterator = new CharArrayIterator();
-  private List<Token> tokens;
+  private List<Token> tokens = new ArrayList<Token>();
   private int index = 0;
 
   /**
@@ -74,7 +75,7 @@ public final class StreamTagger2 {
     iterator.setText(buffer, 0, 0);
     breaker.setText(iterator);
     length = usableLength = offset = index = 0;
-    tokens = null;
+    tokens.clear();
   }
 
   public void reset(Reader input) throws IOException {
@@ -174,7 +175,7 @@ public final class StreamTagger2 {
         return false; // BreakIterator exhausted
 
       String text = new String(buffer, start, end - start);
-      tokens = tagger.analyze(text);
+      tokens = tagger.analyze(text, tokens);
 
       if (tokens != null && !tokens.isEmpty()) {
         for (int i = 0; i < tokens.size(); i++) {

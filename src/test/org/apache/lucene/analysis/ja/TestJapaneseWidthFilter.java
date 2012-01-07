@@ -24,13 +24,12 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.BaseTokenStreamTestCase;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.core.WhitespaceTokenizer;
-import org.apache.lucene.analysis.util.ReusableAnalyzerBase;
 
 /**
  * Tests for {@link JapaneseWidthFilter}
  */
 public class TestJapaneseWidthFilter extends BaseTokenStreamTestCase {
-  private Analyzer analyzer = new ReusableAnalyzerBase() {
+  private Analyzer analyzer = new Analyzer() {
     @Override
     protected TokenStreamComponents createComponents(String fieldName, Reader reader) {
       Tokenizer source = new WhitespaceTokenizer(TEST_VERSION_CURRENT, reader);
@@ -58,5 +57,9 @@ public class TestJapaneseWidthFilter extends BaseTokenStreamTestCase {
       new String[] { "ヴィッツ" });
     assertAnalyzesTo(analyzer, "ﾊﾟﾅｿﾆｯｸ",
       new String[] { "パナソニック" });
+  }
+  
+  public void testRandomData() throws IOException {
+    checkRandomData(random, analyzer, 10000);
   }
 }

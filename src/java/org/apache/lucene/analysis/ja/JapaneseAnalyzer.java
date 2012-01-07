@@ -37,6 +37,7 @@ import org.apache.lucene.util.Version;
 public class JapaneseAnalyzer extends StopwordAnalyzerBase {
   private final Set<String> stoptags;
   private final Set<?> stemExclusionSet;
+  private final String dictionaryDir;
 
   public static Set<?> getDefaultStopSet(){
     return DefaultSetHolder.DEFAULT_STOP_SET;
@@ -75,7 +76,15 @@ public class JapaneseAnalyzer extends StopwordAnalyzerBase {
    * Create a JapaneseAnalyzer with the default stopwords and stoptags and no stemExclusionSet
    */
   public JapaneseAnalyzer(Version version) {
-    this(version, DefaultSetHolder.DEFAULT_STOP_SET, DefaultSetHolder.DEFAULT_STOP_TAGS, CharArraySet.EMPTY_SET);
+    this(version, DefaultSetHolder.DEFAULT_STOP_SET, DefaultSetHolder.DEFAULT_STOP_TAGS, CharArraySet.EMPTY_SET, null);
+  }
+  
+  /**
+   * Create a JapaneseAnalyzer with the default stopwords and stoptags and no stemExclusionSet<br>
+   * and argument of dictionaryDir.
+   */
+  public JapaneseAnalyzer(Version version, String dictionaryDir) {
+    this(version, DefaultSetHolder.DEFAULT_STOP_SET, DefaultSetHolder.DEFAULT_STOP_TAGS, CharArraySet.EMPTY_SET, dictionaryDir);
   }
   
   /**
@@ -86,11 +95,13 @@ public class JapaneseAnalyzer extends StopwordAnalyzerBase {
    * @param stoptags a stoptags set: words containing these parts of speech will be removed from the stream.
    * @param stemExclusionSet a stemming exclusion set: these words are ignored by 
    *        {@link JapaneseBasicFormFilter} and {@link JapaneseKatakanaStemFilter}
+   * @param dictionaryDir a directory of dictionary
    */
-  public JapaneseAnalyzer(Version version, Set<?> stopwords, Set<String> stoptags, Set<?> stemExclusionSet) {
+  public JapaneseAnalyzer(Version version, Set<?> stopwords, Set<String> stoptags, Set<?> stemExclusionSet, String dictionaryDir) {
     super(version, stopwords);
     this.stoptags = stoptags;
     this.stemExclusionSet = stemExclusionSet;
+    this.dictionaryDir = dictionaryDir;
   }
 
   /**
@@ -108,7 +119,7 @@ public class JapaneseAnalyzer extends StopwordAnalyzerBase {
    */
   @Override
   protected TokenStreamComponents createComponents(String field, Reader reader) {
-    Tokenizer tokenizer = new JapaneseTokenizer(reader);
+    Tokenizer tokenizer = new JapaneseTokenizer(reader, null, dictionaryDir);
     TokenStream stream = new JapaneseWidthFilter(tokenizer);
     stream = new JapanesePunctuationFilter(true, stream);
     stream = new JapanesePartOfSpeechStopFilter(true, stream, stoptags);

@@ -29,12 +29,12 @@
 
         <!-- morphological tokenizer: sets the SURFACE form as the token, but also sets these attributes:
              BasicFormAttribute, ConjugationAttribute, PartOfSpeechAttribute, PronunciationsAttribute,
-             ReadingsAttribute, and TypeAttribute.
-
-             TypeAttribute is set to the POS for simplicity, so you can use TypeAsPayloadTokenFilterFactory
-             if you desire to index the POS into the payload
+             ReadingsAttribute, and SentenceStartAttribute.
+             Option setting
+             compositePOS : merge multiple similar tokens by a part-of-speech based configrations
+             dictionaryDir : specified a dictionary directory. you can use multiple dictionary for each tokenizer.
         -->
-        <tokenizer class="solr.JapaneseTokenizerFactory"/>
+        <tokenizer class="solr.JapaneseTokenizerFactory" compositePOS="compositePOS.txt" dictionaryDir="dictionary/naist-chasen"/>
 
         <!-- normalizes CJK width differences:
              1. Folds fullwidth ASCII variants into the equivalent basic latin
@@ -47,7 +47,7 @@
 
         <!-- the punctuation filter removes all-punctuation tokens base on Unicode properties.
              punctuation tokens are tagged as "unknown", and its better to do this than to remove
-             tokens with an unknown pos (as they might be valuable!). Because this punctuation 
+             tokens with an unknown pos (as they might be valuable!). Because this punctuation
              usually signifies a phrase or sentence boundary, enablePositionIncrements can be
              used to prevent phrase queries from matching across natural phrase/sentence boundaries -->
         <filter class="solr.JapanesePunctuationFilterFactory" enablePositionIncrements="true"/>
@@ -55,11 +55,11 @@
         <!-- this is a part-of-speech based stopfilter, it removes any tokens that have a certain
              of speech. you can set enablePositionIncrements for tighter phrase queries -->
         <filter class="solr.JapanesePartOfSpeechStopFilterFactory" tags="stoptags_ja.txt" enablePositionIncrements="true"/>
-        
+
         <!-- a standard stopfilter, to specify specific stopwords. -->
         <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords_ja.txt" enablePositionIncrements="true"/>
 
-        <!-- alternatively, instead of using a part-of-speech based stopfilter, you can use a 
+        <!-- alternatively, instead of using a part-of-speech based stopfilter, you can use a
              part-of-speech based keepfilter: specifying only the parts of speech you wish to index.
              anything else will be removed. HOWEVER: this could be a little dangerous, because if
              we upgrade ipadic they might add some new tags (the tags are fairly specific), and suddenly

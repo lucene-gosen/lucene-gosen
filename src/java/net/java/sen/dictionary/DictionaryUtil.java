@@ -24,7 +24,7 @@ import java.nio.ByteBuffer;
  * encoding methods for packing the POS file (mostly from Lucene) 
  */
 public class DictionaryUtil {
- 
+  
   /** Reads an int stored in variable-length format.  Reads between one and
    * five bytes.  Smaller values take fewer bytes.  Negative numbers are not
    * supported.
@@ -41,7 +41,7 @@ public class DictionaryUtil {
       i |= (b & 0x7F) << shift;
     }
     return i;
-    */
+     */
     byte b = bb.get();
     int i = b & 0x7F;
     if ((b & 0x80) == 0) return i;

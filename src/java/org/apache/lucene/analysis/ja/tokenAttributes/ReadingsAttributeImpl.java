@@ -16,9 +16,12 @@ package org.apache.lucene.analysis.ja.tokenAttributes;
  * limitations under the License.
  */
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.lucene.analysis.ja.ToStringUtil;
 import org.apache.lucene.util.AttributeImpl;
+import org.apache.lucene.util.AttributeReflector;
 
 import net.java.sen.dictionary.Morpheme;
 
@@ -26,24 +29,38 @@ import net.java.sen.dictionary.Morpheme;
  * Attribute for {@link Morpheme#getReadings()}.
  */
 public class ReadingsAttributeImpl extends AttributeImpl implements ReadingsAttribute, Cloneable {
-  private List<String> readings = null;
+  private Morpheme morpheme;
 
   public List<String> getReadings() {
-    return readings;
+    return morpheme == null ? null : morpheme.getReadings();
   }
   
-  public void setReadings(List<String> readings) {
-    this.readings = readings;
+  public void setMorpheme(Morpheme morpheme) {
+    this.morpheme = morpheme;
   }
 
   @Override
   public void clear() {
-    readings = null;
+    morpheme = null;
   }
 
   @Override
   public void copyTo(AttributeImpl target) {
     ReadingsAttribute t = (ReadingsAttribute) target;
-    t.setReadings(readings);
+    t.setMorpheme(morpheme);
+  }
+  
+  @Override
+  public void reflectWith(AttributeReflector reflector) {
+    List<String> readings = getReadings();
+    List<String> enReadings = null;
+    if (readings != null) {
+      enReadings = new ArrayList<String>(readings.size());
+      for (String kana : readings) {
+        enReadings.add(ToStringUtil.getRomanization(kana));
+      }
+    }
+    reflector.reflect(PartOfSpeechAttribute.class, "readings", readings);
+    reflector.reflect(PartOfSpeechAttribute.class, "readings (en)", enReadings);
   }
 }

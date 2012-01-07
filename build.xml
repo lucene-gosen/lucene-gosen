@@ -6,10 +6,9 @@
   <!-- to change the dictionary type to naist-chasen, ant -Ddictype=naist-chasen -->
   <property name="dictype" value="ipadic"/>
 
-  <property name="version" value="1.1-dev"/>
+  <property name="version" value="1.3-dev"/>
 
   <property name="src.dir" location="src/java"/>
-  <property name="res.dir" location="src/resources"/>
   <property name="cdic.dir" location="src/compiled-dictionaries"/>
   <property name="test.dir" location="src/test"/>
   <property name="dist.dir" location="dist"/>
@@ -33,8 +32,6 @@
     <path refid="classpath"/>
     <pathelement location="${bin.dir}/classes/java" />
     <pathelement location="${bin.dir}/classes/test" />
-    <pathelement location="${res.dir}"/>
-    <pathelement location="${cdic.dir}/${dictype}"/>
   </path>
 
   <!-- Create build directories -->
@@ -79,7 +76,7 @@
 
   <!-- Compile source -->
   <target name="compile" depends="prepare-directories"
-  	      description="compile Java source files">
+          description="compile Java source files">
     <javac srcdir="${src.dir}"
            destdir="${bin.dir}/classes/java"
            classpathref="classpath"
@@ -90,6 +87,11 @@
            target="1.6">
       <compilerarg line="-Xlint -Xlint:-serial"/>
     </javac>
+    <!-- Copy the resources folder (if existent) -->
+    <copy todir="${bin.dir}/classes/java" includeEmptyDirs="false">
+      <globmapper from="resources/*" to="*" handledirsep="yes"/>
+      <fileset dir="src" includes="resources/**"/>
+    </copy>
   </target>
 
   <!-- Compile source -->
@@ -107,8 +109,8 @@
   </target>
 
   <!-- run tests -->
-  <target name="test" depends="compile-tests, build-dic"
-  	      description="execute JUnit tests">
+  <target name="test" depends="compile-tests, build-dic-ipadic, build-dic-naist-chasen"
+          description="execute JUnit tests">
     <sequential>
       <junit printsummary="no" haltonfailure="no" maxmemory="512M" forkmode="perBatch"
              errorProperty="tests.failed" failureProperty="tests.failed">
@@ -137,14 +139,22 @@
   </target>
 
   <!-- Create a library jar for the specified dictionary type -->
-  <target name="jar" depends="compile, build-dic">
+  <target name="jar" depends="compile, build-dic"
+          description="create a jar file include the specified dictionary. The dictionary type can be set via -Ddictype=[ipadic | naist-chasen].">
     <jar jarfile="${dist.dir}/lucene-gosen-${version}-${dictype}.jar">
       <fileset dir="${bin.dir}/classes/java"/>
       <fileset dir="${cdic.dir}/${dictype}"/>
     </jar>
   </target>
+  <target name="nodic-jar" depends="compile"
+          description="create a jar file include only classes">
+    <jar jarfile="${dist.dir}/lucene-gosen-${version}.jar">
+      <fileset dir="${bin.dir}/classes/java"/>
+    </jar>
+  </target>
 
   <target name="dist" description="make packages for distribution">
+    <antcall target="nodic-jar"/>
     <antcall target="jar">
       <param name="dictype" value="ipadic"/>
     </antcall>
@@ -155,7 +165,7 @@
 
   <!-- build a dictionary and copy the compiled files to src -->
   <target name="build-dic" depends="compile"
-  	      description="build a dictionary. The dictionary type can be set via -Ddictype=[ipadic | naist-chasen].">
+          description="build a dictionary. The dictionary type can be set via -Ddictype=[ipadic | naist-chasen].">
     <sequential>
       <subant target="compile" inheritall="false" failonerror="true">
         <fileset dir="${dic.dir}" includes="build.xml" />
@@ -165,6 +175,32 @@
       <copy todir="${cdic.dir}/${dictype}/net/java/sen">
         <fileset dir="${dic.dir}/${dictype}" includes="*.sen"/>
       </copy>
+    </sequential>
+  </target>
+  <!-- build a naist-chasen dictionary for unit test -->
+  <target name="build-dic-naist-chasen" depends="compile"
+          description="build a naist-chasen dictionary for unit test">
+    <antcall target="build-dic">
+      <param name="dictype" value="naist-chasen"/>
+    </antcall>
+  </target>
+  <!-- build a ipadic dictionary for unit test -->
+  <target name="build-dic-ipadic" depends="compile"
+          description="build a ipadic dictionary for unit test">
+    <antcall target="build-dic">
+      <param name="dictype" value="ipadic"/>
+    </antcall>
+  </target>
+  <!-- re-build a dictionary with user custom dictionaries. without copy -->
+  <target name="rebuild-dic" depends="compile"
+          description="build dictionary with user custom dictionaries">
+    <sequential>
+      <subant target="clean-sen" inheritall="false" failonerror="true">
+        <fileset dir="${dic.dir}" includes="build.xml"/>
+      </subant>
+      <subant target="compile" inheritall="false" failonerror="true">
+        <fileset dir="${dic.dir}" includes="build.xml"/>
+      </subant>
     </sequential>
   </target>
 

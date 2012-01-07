@@ -17,7 +17,7 @@
   <!-- Configures a web proxy if the property "proxy.host" is defined -->
   <property name="proxy.port" value="80" />
   <target name="prepare-proxy" if="proxy.host">
-    <setproxy proxyhost="${proxy.host}" proxyport="${proxy.port}" />
+    <setproxy proxyhost="${proxy.host}" proxyport="${proxy.port}" proxyuser="${proxy.user}" proxypassword="${proxy.password}"/>
   </target>
 
   <!-- Checks the current build status -->

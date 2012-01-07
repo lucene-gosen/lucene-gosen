@@ -21,9 +21,10 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.Arrays;
 
+import net.java.sen.SenTestUtil;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.BaseTokenStreamTestCase;
-import org.apache.lucene.analysis.util.ReusableAnalyzerBase;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.util._TestUtil;
@@ -32,10 +33,10 @@ import org.apache.lucene.util._TestUtil;
  * Tests for {@link JapaneseTokenizer}
  */
 public class TestJapaneseTokenizer extends BaseTokenStreamTestCase {
-  private Analyzer analyzer = new ReusableAnalyzerBase() {
+  private Analyzer analyzer = new Analyzer() {
     @Override
     protected TokenStreamComponents createComponents(String field, Reader reader) {
-      Tokenizer tokenizer = new JapaneseTokenizer(reader);
+      Tokenizer tokenizer = new JapaneseTokenizer(reader, null, SenTestUtil.IPADIC_DIR);
       return new TokenStreamComponents(tokenizer, tokenizer);
     }
   };
@@ -79,6 +80,14 @@ public class TestJapaneseTokenizer extends BaseTokenStreamTestCase {
       new int[] { 2, 3, 4, 5, 6, 8 }
     );
   }
+
+  public void testDecomposition5() throws IOException {
+    assertAnalyzesTo(analyzer, "くよくよくよくよくよくよくよくよくよくよくよくよくよくよくよくよくよくよくよくよ",
+      new String[] { "くよくよ", "くよくよ", "くよくよ", "くよくよ", "くよくよ", "くよくよ", "くよくよ", "くよくよ", "くよくよ", "くよくよ" },
+      new int[] { 0, 4, 8, 12, 16, 20, 24, 28, 32, 36},
+      new int[] { 4, 8, 12, 16, 20, 24, 28, 32, 36, 40 }
+    );
+  }
   
   /** Tests that sentence offset is incorporated into the resulting offsets */
   public void testTwoSentences() throws IOException {
@@ -108,19 +117,13 @@ public class TestJapaneseTokenizer extends BaseTokenStreamTestCase {
    * (results could be completely bogus, but makes sure we don't crash on some input)
    */
   public void testReliability() throws IOException {
-    for (int i = 0; i < 1000; i++) {
-      String s = _TestUtil.randomUnicodeString(random, 100);
-      TokenStream ts = analyzer.reusableTokenStream("foo", new StringReader(s));
-      ts.reset();
-      while (ts.incrementToken()) {
-      }
-    }
+    checkRandomData(random, analyzer, 10000);
   }
   
   public void testLargeDocReliability() throws IOException {
     for (int i = 0; i < 100; i++) {
       String s = _TestUtil.randomUnicodeString(random, 10000);
-      TokenStream ts = analyzer.reusableTokenStream("foo", new StringReader(s));
+      TokenStream ts = analyzer.tokenStream("foo", new StringReader(s));
       ts.reset();
       while (ts.incrementToken()) {
       }
@@ -128,14 +131,14 @@ public class TestJapaneseTokenizer extends BaseTokenStreamTestCase {
   }
   
   public void testEnd() throws IOException {
-    assertTokenStreamContents(analyzer.reusableTokenStream("foo", new StringReader("これは本ではない")),
+    assertTokenStreamContents(analyzer.tokenStream("foo", new StringReader("これは本ではない")),
         new String[] { "これ", "は", "本", "で", "は", "ない" },
         new int[] { 0, 2, 3, 4, 5, 6 },
         new int[] { 2, 3, 4, 5, 6, 8 },
         new Integer(8)
     );
     
-    assertTokenStreamContents(analyzer.reusableTokenStream("foo", new StringReader("これは本ではない    ")),
+    assertTokenStreamContents(analyzer.tokenStream("foo", new StringReader("これは本ではない    ")),
         new String[] { "これ", "は", "本", "で", "は", "ない" },
         new int[] { 0, 2, 3, 4, 5, 6 },
         new int[] { 2, 3, 4, 5, 6, 8 },
