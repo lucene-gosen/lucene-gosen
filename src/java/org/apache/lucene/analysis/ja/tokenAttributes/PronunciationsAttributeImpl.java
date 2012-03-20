@@ -59,7 +59,7 @@ public class PronunciationsAttributeImpl extends AttributeImpl implements Pronun
       }
       enPronunciations = Arrays.asList(p);
     }
-    reflector.reflect(PartOfSpeechAttribute.class, "pronunciations", pronunciations);
-    reflector.reflect(PartOfSpeechAttribute.class, "pronunciations (en)", enPronunciations);
+    reflector.reflect(PronunciationsAttribute.class, "pronunciations", pronunciations);
+    reflector.reflect(PronunciationsAttribute.class, "pronunciations (en)", enPronunciations);
   }
 }
