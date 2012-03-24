@@ -17,40 +17,51 @@ package org.apache.lucene.analysis.ja;
  */
 
 import java.io.IOException;
+import java.util.List;
 
+import org.apache.lucene.analysis.KeywordMarkerFilter;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.ja.tokenAttributes.BasicFormAttribute;
-import org.apache.lucene.analysis.KeywordMarkerFilter;
+import org.apache.lucene.analysis.ja.tokenAttributes.ReadingsAttribute;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.KeywordAttribute;
 
 /**
- * Replaces term text with the {@link BasicFormAttribute}.
+ * Replaces term text with the {@link ReadingsAttribute}.
  * <p>
- * This acts as a lemmatizer for verbs and adjectives.
- * </p>
- * <p>
- * To prevent terms from being stemmed use an instance of
+ * To prevent terms from being replaced use an instance of
  * {@link KeywordMarkerFilter} or a custom {@link TokenFilter} that sets
  * the {@link KeywordAttribute} before this {@link TokenStream}.
  * </p>
  */
-public final class JapaneseBasicFormFilter extends TokenFilter {
+public final class JapaneseReadingsFormFilter extends TokenFilter {
+  
+  private boolean romanized;
   private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
-  private final BasicFormAttribute basicFormAtt = addAttribute(BasicFormAttribute.class);
+  private final ReadingsAttribute readingsAtt = addAttribute(ReadingsAttribute.class);
   private final KeywordAttribute keywordAtt = addAttribute(KeywordAttribute.class);
 
-  public JapaneseBasicFormFilter(TokenStream input) {
+  public JapaneseReadingsFormFilter(TokenStream input) {
+    this(input, false);
+  }
+
+  public JapaneseReadingsFormFilter(TokenStream input, boolean romanized) {
     super(input);
+    this.romanized = romanized;
   }
 
   @Override
   public boolean incrementToken() throws IOException {
     if (input.incrementToken()) {
       if (!keywordAtt.isKeyword()) {
-        String basicForm = basicFormAtt.getBasicForm();
-        if (basicForm != null && !basicForm.equals("*")) termAtt.setEmpty().append(basicFormAtt.getBasicForm());
+        List<String> readings = readingsAtt.getReadings();
+        if (readings != null){ 
+          StringBuilder sb = new StringBuilder();
+          for(String reading : readings){
+            sb.append(romanized ? ToStringUtil.getRomanization(reading) : reading);
+          }
+          termAtt.setEmpty().append(sb.toString());
+        }
       }
       return true;
     } else {

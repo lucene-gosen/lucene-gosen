@@ -11,11 +11,16 @@ New Features & Improvements
 * Add proxy.user and proxy.password properties to build.xml for dictionary download.
   (johtani)
 
+* Add JapaneseReadingsFormFilter and its factory classes. (koji)
+
 Bug Fixes
 
 * http://code.google.com/p/lucene-gosen/issues/detail?id=19
   Memory usage increases by a specific character string. 
   (johtani)
+
+* http://code.google.com/p/lucene-gosen/issues/detail?id=26
+  Fix wrong reflection. (koji)
 
 API Changes
 
