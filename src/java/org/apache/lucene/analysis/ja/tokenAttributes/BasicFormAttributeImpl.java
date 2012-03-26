@@ -18,7 +18,6 @@ package org.apache.lucene.analysis.ja.tokenAttributes;
 
 import net.java.sen.dictionary.Morpheme;
 
-import org.apache.lucene.analysis.ja.ToStringUtil;
 import org.apache.lucene.util.AttributeImpl;
 import org.apache.lucene.util.AttributeReflector;
 
