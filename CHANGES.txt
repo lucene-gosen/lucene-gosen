@@ -4,6 +4,8 @@ lucene-gosen Change Log
 
 Important Notice
 
+* The package and class name is changed.
+  http://code.google.com/p/lucene-gosen/issues/detail?id=27
 * The serious bug fix is included. 
 
 New Features & Improvements
