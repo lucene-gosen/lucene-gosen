@@ -17,6 +17,9 @@ Bug Fixes
   Memory usage increases by a specific character string. 
   (johtani)
 
+* http://code.google.com/p/lucene-gosen/issues/detail?id=26
+  Fix wrong reflection. (koji)
+
 API Changes
 
 Javadoc Fixes

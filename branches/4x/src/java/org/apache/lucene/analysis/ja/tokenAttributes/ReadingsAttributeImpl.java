@@ -60,7 +60,7 @@ public class ReadingsAttributeImpl extends AttributeImpl implements ReadingsAttr
         enReadings.add(ToStringUtil.getRomanization(kana));
       }
     }
-    reflector.reflect(PartOfSpeechAttribute.class, "readings", readings);
-    reflector.reflect(PartOfSpeechAttribute.class, "readings (en)", enReadings);
+    reflector.reflect(ReadingsAttribute.class, "readings", readings);
+    reflector.reflect(ReadingsAttribute.class, "readings (en)", enReadings);
   }
 }
