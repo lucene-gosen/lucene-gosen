@@ -1,5 +1,19 @@
 lucene-gosen Change Log
 
+========== 2.0.1 / YYYY-MM-DD ===================================
+
+Important Notice
+
+New Features & Improvements
+
+Bug Fixes
+
+API Changes
+
+Javadoc Fixes
+
+Others
+
 ========== 2.0.0 / 2012-04-02 ===================================
 
 Important Notice
