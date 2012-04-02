@@ -8,6 +8,6 @@ net.java.sen.tokenizers.ja
 net.java.sen.tools
 net.java.sen.trie
 net.java.sen.util
-org.apache.lucene.analysis.ja
-org.apache.lucene.analysis.ja.tokenAttributes
+org.apache.lucene.analysis.gosen
+org.apache.lucene.analysis.gosen.tokenAttributes
 org.apache.solr.analysis
