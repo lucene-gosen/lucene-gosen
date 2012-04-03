@@ -26,7 +26,7 @@ import org.apache.lucene.analysis.gosen.GosenPunctuationFilter;
  * <pre class="prettyprint" >
  * &lt;fieldType name="text_ja" class="solr.TextField"&gt;
  *   &lt;analyzer&gt;
- *     &lt;tokenizer class="solr.GosenJapaneseTokenizerFactory"/&gt;
+ *     &lt;tokenizer class="solr.GosenTokenizerFactory"/&gt;
  *     &lt;filter class="solr.GosenPunctuationFilterFactory" 
  *             enablePositionIncrements="true"/&gt;
  *   &lt;/analyzer&gt;

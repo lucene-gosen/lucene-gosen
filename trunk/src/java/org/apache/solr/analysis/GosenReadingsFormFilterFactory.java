@@ -26,7 +26,7 @@ import org.apache.lucene.analysis.gosen.GosenReadingsFormFilter;
  * <pre class="prettyprint" >
  * &lt;fieldType name="text_ja" class="solr.TextField"&gt;
  *   &lt;analyzer&gt;
- *     &lt;tokenizer class="solr.GosenJapaneseTokenizerFactory"/&gt;
+ *     &lt;tokenizer class="solr.GosenTokenizerFactory"/&gt;
  *     &lt;filter class="solr.GosenReadingsFormFilterFactory"/&gt;
  *   &lt;/analyzer&gt;
  * &lt;/fieldType&gt;</pre>
