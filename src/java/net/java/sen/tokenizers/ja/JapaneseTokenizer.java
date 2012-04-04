@@ -65,7 +65,7 @@ public class JapaneseTokenizer extends Tokenizer {
       return (c == ' ' || c == '\t' || c == '\r' || c == '\n') ? SPACE : Character.getType(Character.toLowerCase(c));
     } else if (c >= 0x3040 && c <= 0x309F) {
       return HIRAGANA;
-    } else if (c >= 0x30A0 && c <= 0x30FF && Character.getType(c) != Character.CONNECTOR_PUNCTUATION) {
+    } else if (c >= 0x30A0 && c <= 0x30FF && c != 0x30FB) {
       return KATAKANA;
     } else if (c >= 0x4E00 && c <= 0x9FFF) {
       return KANJI;
