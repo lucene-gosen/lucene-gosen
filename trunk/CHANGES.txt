@@ -8,6 +8,9 @@ New Features & Improvements
 
 Bug Fixes
 
+* http://code.google.com/p/lucene-gosen/issues/detail?id=28
+  Change KATAKANA check (0x30FB)
+
 API Changes
 
 Javadoc Fixes
