@@ -1,12 +1,15 @@
 lucene-gosen Change Log
 
-========== 2.0.1 / YYYY-MM-DD ===================================
+========== 2.0.1 / 2012-05-09 ===================================
 
 Important Notice
 
 New Features & Improvements
 
 Bug Fixes
+
+* http://code.google.com/p/lucene-gosen/issues/detail?id=28
+  Change KATAKANA check (0x30FB)
 
 API Changes
 
