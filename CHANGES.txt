@@ -17,6 +17,10 @@ Javadoc Fixes
 
 Others
 
+* http://code.google.com/p/lucene-gosen/issues/detail?id=29
+  Improve resource management, and refactor to import class 
+  Thanks haruyama (johtani)
+
 ========== 2.0.0 / 2012-04-02 ===================================
 
 Important Notice
