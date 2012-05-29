@@ -22,20 +22,27 @@
 package net.java.sen.util;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.ArrayList;
 
+import net.java.sen.util.IOUtils;
+
 /**
  * parse CSV file and extract token.
  */
-public class CSVParser {
+public class CSVParser implements Closeable {
   /**
    * The Reader from which lines of CSV data are read
    */
-  private final BufferedReader reader;
+  private BufferedReader reader = null;
+  
+  private InputStreamReader inputStreamReader = null;
+  
+  private StringReader stringReader = null;
   
   /**
    * The current line of CSV data
@@ -142,7 +149,8 @@ public class CSVParser {
    * @throws IOException 
    */
   public CSVParser(InputStream inputStream, String charset) throws IOException {
-    this.reader = new BufferedReader(new InputStreamReader(inputStream, charset));
+    this.inputStreamReader = new InputStreamReader(inputStream, charset);
+    this.reader = new BufferedReader(this.inputStreamReader);
   }
   
   
@@ -152,6 +160,11 @@ public class CSVParser {
    * @param string The string to read from
    */
   public CSVParser(String string) {
-    this.reader = new BufferedReader(new StringReader(string));
+    this.stringReader = new StringReader(string);
+    this.reader = new BufferedReader(this.stringReader);
+  }
+  
+  public void close () throws IOException {
+    IOUtils.close(reader, stringReader, inputStreamReader);
   }
 }
