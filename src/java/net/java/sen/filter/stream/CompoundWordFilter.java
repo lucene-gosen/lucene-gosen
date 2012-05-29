@@ -21,12 +21,14 @@
 package net.java.sen.filter.stream;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
+
+import net.java.sen.util.IOUtils;
 
 import net.java.sen.dictionary.Morpheme;
 import net.java.sen.dictionary.Sentence;
@@ -169,11 +171,20 @@ public class CompoundWordFilter implements StreamFilter {
    */
   @SuppressWarnings({"unchecked", "rawtypes"})
   public CompoundWordFilter(String compoundFile) {
+    FileInputStream fis = null;
+    ObjectInputStream is = null;
     try {
-      ObjectInputStream is = new ObjectInputStream(new FileInputStream(compoundFile));
+      fis = new FileInputStream(compoundFile);
+      is = new ObjectInputStream(fis);
       compoundTable = (HashMap) is.readObject();
     } catch (Exception e) {
       throw new RuntimeException(e);
+    } finally {
+      try {
+        IOUtils.close(is, fis);
+      } catch (IOException e){
+        throw new RuntimeException(e);
+      }
     }
   }
 }
