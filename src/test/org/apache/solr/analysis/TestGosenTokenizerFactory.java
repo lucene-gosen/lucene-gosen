@@ -21,7 +21,6 @@ import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.HashMap;
 import org.apache.lucene.util.LuceneTestCase;
-import org.apache.solr.common.ResourceLoader;
 import org.apache.solr.core.SolrResourceLoader;
 
 public class TestGosenTokenizerFactory extends LuceneTestCase {
