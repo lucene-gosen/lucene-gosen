@@ -23,7 +23,10 @@ import org.apache.lucene.util.AttributeImpl;
 import org.apache.lucene.util.AttributeReflector;
 
 public class ConjugationAttributeImpl extends AttributeImpl implements ConjugationAttribute, Cloneable {
-  private Morpheme morpheme;
+  
+  private static final long serialVersionUID = 1L;
+  
+  private transient Morpheme morpheme;
   
   public String getConjugationalForm() {
     return morpheme == null ? null : morpheme.getConjugationalForm();
