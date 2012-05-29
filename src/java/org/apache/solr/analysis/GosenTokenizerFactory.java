@@ -27,6 +27,7 @@ import net.java.sen.filter.stream.CompositeTokenFilter;
 
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.gosen.GosenTokenizer;
+import org.apache.lucene.util.IOUtils;
 import org.apache.solr.common.ResourceLoader;
 import org.apache.solr.core.SolrResourceLoader;
 import org.apache.solr.util.plugin.ResourceLoaderAware;
@@ -53,10 +54,12 @@ public class GosenTokenizerFactory extends BaseTokenizerFactory implements Resou
     String compositePosFile = args.get("compositePOS");
     if(compositePosFile != null){
       compositeTokenFilter = new CompositeTokenFilter();
+      InputStreamReader isr = null;
       BufferedReader reader = null;
       try{
-        reader = new BufferedReader( new InputStreamReader(
-            loader.openResource(compositePosFile), "UTF-8"));
+        isr = new InputStreamReader(
+            loader.openResource(compositePosFile), "UTF-8");
+        reader = new BufferedReader(isr);
         compositeTokenFilter.readRules(reader);
       }
       catch(IOException e){
@@ -64,9 +67,9 @@ public class GosenTokenizerFactory extends BaseTokenizerFactory implements Resou
       }
       finally {
         try {
-          if(reader != null)
-            reader.close();
-        } catch (IOException e) {
+          IOUtils.close(reader, isr);
+        } catch(IOException e) {
+          throw new RuntimeException(e);
         }
       }
     }
