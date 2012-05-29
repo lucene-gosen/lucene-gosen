@@ -22,7 +22,10 @@ import org.apache.lucene.util.AttributeImpl;
 import org.apache.lucene.util.AttributeReflector;
 
 public class BasicFormAttributeImpl extends AttributeImpl implements BasicFormAttribute, Cloneable {
-  private Morpheme morpheme;
+
+  private static final long serialVersionUID = 1L;
+  
+  private transient Morpheme morpheme;
   
   public String getBasicForm() {
     return morpheme == null ? null : morpheme.getBasicForm();

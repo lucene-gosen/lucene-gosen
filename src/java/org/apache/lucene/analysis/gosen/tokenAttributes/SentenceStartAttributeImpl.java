@@ -19,6 +19,9 @@ package org.apache.lucene.analysis.gosen.tokenAttributes;
 import org.apache.lucene.util.AttributeImpl;
 
 public class SentenceStartAttributeImpl extends AttributeImpl implements SentenceStartAttribute, Cloneable {
+  
+  private static final long serialVersionUID = 1L;
+  
   private boolean sentenceStart;
 
   public boolean getSentenceStart() {
