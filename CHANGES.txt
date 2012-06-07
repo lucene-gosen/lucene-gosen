@@ -1,6 +1,23 @@
 lucene-gosen Change Log
+========== 2.0.2 / YYYY-MM-DD ===================================
 
-========== trunk / YYYY-MM-DD ===================================
+Important Notice
+
+New Features & Improvements
+
+Bug Fixes
+
+API Changes
+
+Javadoc Fixes
+
+Others
+
+* http://code.google.com/p/lucene-gosen/issues/detail?id=29
+  Improve resource management, and refactor to import class 
+  Thanks haruyama (johtani)
+
+========== 2.0.1 / 2012-05-09 ===================================
 
 Important Notice
 
@@ -16,10 +33,6 @@ API Changes
 Javadoc Fixes
 
 Others
-
-* http://code.google.com/p/lucene-gosen/issues/detail?id=29
-  Improve resource management, and refactor to import class 
-  Thanks haruyama (johtani)
 
 ========== 2.0.0 / 2012-04-02 ===================================
 
