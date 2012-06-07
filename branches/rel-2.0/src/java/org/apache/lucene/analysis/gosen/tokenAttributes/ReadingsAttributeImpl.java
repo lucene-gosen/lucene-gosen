@@ -29,7 +29,10 @@ import net.java.sen.dictionary.Morpheme;
  * Attribute for {@link Morpheme#getReadings()}.
  */
 public class ReadingsAttributeImpl extends AttributeImpl implements ReadingsAttribute, Cloneable {
-  private Morpheme morpheme;
+  
+  private static final long serialVersionUID = 1L;
+  
+  private transient Morpheme morpheme;
 
   public List<String> getReadings() {
     return morpheme == null ? null : morpheme.getReadings();
