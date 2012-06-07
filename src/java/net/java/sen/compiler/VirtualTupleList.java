@@ -20,6 +20,7 @@
 package net.java.sen.compiler;
 
 import java.io.BufferedOutputStream;
+import java.io.Closeable;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,6 +32,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import net.java.sen.util.IOUtils;
 
 import net.java.sen.dictionary.CToken;
 
@@ -47,12 +50,16 @@ import net.java.sen.dictionary.CToken;
  *          valid to add new entries
  * <p>  - Call {@link #get} to retrieve entries from the sorted list
  */
-public class VirtualTupleList {
+public class VirtualTupleList implements Closeable {
   
   /**
    * A RandomAccessFile used to create the memory mapped buffer during sorting
    */
-  private final RandomAccessFile file;
+  private RandomAccessFile file = null;
+  
+  private BufferedOutputStream bos = null; 
+  
+  private FileOutputStream fos = null;
   
   /**
    * A memory mapped buffer used to retrieve list entries. Created when the
@@ -153,7 +160,6 @@ public class VirtualTupleList {
    */
   public void sort() throws IOException {
     outputStream.flush();
-    outputStream.close();
     mappedBuffer = file.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, file.length());
     Collections.sort(indices, comparator);
   }
@@ -176,6 +182,12 @@ public class VirtualTupleList {
     tempFile = File.createTempFile("_tok", null);
     tempFile.deleteOnExit();
     this.file = new RandomAccessFile(tempFile, "rw");
-    this.outputStream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(tempFile)));
+    this.fos = new FileOutputStream(tempFile);
+    this.bos = new BufferedOutputStream(fos);
+    this.outputStream = new DataOutputStream(bos);
+  }
+  
+  public void close() throws IOException {
+    IOUtils.close(file, fos, bos, outputStream);
   }
 }

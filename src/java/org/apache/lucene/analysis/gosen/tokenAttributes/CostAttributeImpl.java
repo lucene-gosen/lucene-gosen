@@ -19,6 +19,9 @@ package org.apache.lucene.analysis.gosen.tokenAttributes;
 import org.apache.lucene.util.AttributeImpl;
 
 public class CostAttributeImpl extends AttributeImpl implements CostAttribute, Cloneable {
+  
+  private static final long serialVersionUID = 1L;
+  
   private int cost;
 
   public int getCost() {

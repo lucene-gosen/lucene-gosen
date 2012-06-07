@@ -29,6 +29,8 @@ import java.nio.ByteBuffer;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import net.java.sen.util.IOUtils;
+
 import net.java.sen.dictionary.Dictionary;
 import net.java.sen.dictionary.Tokenizer;
 import net.java.sen.dictionary.Viterbi;
@@ -69,32 +71,43 @@ public class SenFactory {
   }
   
   private SenFactory(String dictionaryDir) throws IOException {
-    DataInputStream in = null;
+    InputStream in = null;
+    DataInputStream din = null;
     // read main data files
-    in = new DataInputStream(getInputStream("header.sen", dictionaryDir));
-    costs = loadBuffer("connectionCost.sen", in.readInt(), dictionaryDir).asReadOnlyBuffer();
-    pos = loadBuffer("partOfSpeech.sen", in.readInt(), dictionaryDir).asReadOnlyBuffer();
-    tokens = loadBuffer("token.sen", in.readInt(), dictionaryDir).asReadOnlyBuffer();
-    trie = loadBuffer("trie.sen", in.readInt(), dictionaryDir).asReadOnlyBuffer();
-    in.close();
+    try {
+      in = getInputStream("header.sen", dictionaryDir);
+      din = new DataInputStream(in);
+      costs = loadBuffer("connectionCost.sen", din.readInt(), dictionaryDir).asReadOnlyBuffer();
+      pos = loadBuffer("partOfSpeech.sen", din.readInt(), dictionaryDir).asReadOnlyBuffer();
+      tokens = loadBuffer("token.sen", din.readInt(), dictionaryDir).asReadOnlyBuffer();
+      trie = loadBuffer("trie.sen", din.readInt(), dictionaryDir).asReadOnlyBuffer();
+    } finally {
+      IOUtils.closeWhileHandlingException(din, in);
+    }
+
+      
     
     // read index files
-    in = new DataInputStream(getInputStream("posIndex.sen", dictionaryDir));
-    posIndex = new String[in.readChar()];
-    for (int i = 0; i < posIndex.length; i++) {
-      posIndex[i] = in.readUTF();
-    }
+    try {
+      in = getInputStream("posIndex.sen", dictionaryDir);
+      din = new DataInputStream(in);
+      posIndex = new String[din.readChar()];
+      for (int i = 0; i < posIndex.length; i++) {
+        posIndex[i] = din.readUTF();
+      }
     
-    conjTypeIndex = new String[in.readChar()];
-    for (int i = 0; i < conjTypeIndex.length; i++) {
-      conjTypeIndex[i] = in.readUTF();
-    }
+      conjTypeIndex = new String[din.readChar()];
+      for (int i = 0; i < conjTypeIndex.length; i++) {
+        conjTypeIndex[i] = din.readUTF();
+      }
     
-    conjFormIndex = new String[in.readChar()];
-    for (int i = 0; i < conjFormIndex.length; i++) {
-      conjFormIndex[i] = in.readUTF();
+      conjFormIndex = new String[din.readChar()];
+      for (int i = 0; i < conjFormIndex.length; i++) {
+        conjFormIndex[i] = din.readUTF();
+      }
+    } finally {
+      IOUtils.closeWhileHandlingException(din, in);
     }
-    in.close();
   }
   
   private static InputStream getInputStream(String name, String dictionaryDir) throws IOException{
@@ -117,7 +130,9 @@ public class SenFactory {
   public static final String unknownPOS = "未知語";
   
   private static ByteBuffer loadBuffer(String resource, int size, String dictionaryDir) throws IOException {
-    InputStream in = getInputStream(resource, dictionaryDir);
+    InputStream in = null;
+    try {
+      in = getInputStream(resource, dictionaryDir);
     ByteBuffer buffer = ByteBuffer.allocateDirect(size);
     buffer.limit(size);
     
@@ -131,9 +146,11 @@ public class SenFactory {
     }
     
     buffer.rewind();
-    in.close();
     
     return buffer;
+    } finally {
+      IOUtils.closeWhileHandlingException(in);
+    }
   }
   
   /**
