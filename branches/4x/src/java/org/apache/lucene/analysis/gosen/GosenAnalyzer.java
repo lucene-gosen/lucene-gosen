@@ -35,7 +35,7 @@ import org.apache.lucene.util.Version;
  */
 public class GosenAnalyzer extends StopwordAnalyzerBase {
   private final Set<String> stoptags;
-  private final Set<?> stemExclusionSet;
+  private final CharArraySet stemExclusionSet;
   private final String dictionaryDir;
 
   public static Set<?> getDefaultStopSet(){
@@ -51,7 +51,7 @@ public class GosenAnalyzer extends StopwordAnalyzerBase {
    * outer class accesses the static final set the first time.
    */
   private static class DefaultSetHolder {
-    static final Set<?> DEFAULT_STOP_SET;
+    static final CharArraySet DEFAULT_STOP_SET;
     static final Set<String> DEFAULT_STOP_TAGS;
 
     static {
@@ -96,7 +96,7 @@ public class GosenAnalyzer extends StopwordAnalyzerBase {
    *        {@link GosenBasicFormFilter} and {@link GosenKatakanaStemFilter}
    * @param dictionaryDir a directory of dictionary
    */
-  public GosenAnalyzer(Version version, Set<?> stopwords, Set<String> stoptags, Set<?> stemExclusionSet, String dictionaryDir) {
+  public GosenAnalyzer(Version version, CharArraySet stopwords, Set<String> stoptags, CharArraySet stemExclusionSet, String dictionaryDir) {
     super(version, stopwords);
     this.stoptags = stoptags;
     this.stemExclusionSet = stemExclusionSet;

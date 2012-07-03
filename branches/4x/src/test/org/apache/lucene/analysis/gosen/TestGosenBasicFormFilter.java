@@ -43,6 +43,6 @@ public class TestGosenBasicFormFilter extends BaseTokenStreamTestCase {
   }
   
   public void testRandomStrings() throws IOException {
-    checkRandomData(random, analyzer, 10000);
+    checkRandomData(random(), analyzer, 10000);
   }
 }

@@ -118,12 +118,12 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
    * (results could be completely bogus, but makes sure we don't crash on some input)
    */
   public void testReliability() throws IOException {
-    checkRandomData(random, analyzer, 10000);
+    checkRandomData(random(), analyzer, 10000);
   }
   
   public void testLargeDocReliability() throws IOException {
     for (int i = 0; i < 100; i++) {
-      String s = _TestUtil.randomUnicodeString(random, 10000);
+      String s = _TestUtil.randomUnicodeString(random(), 10000);
       TokenStream ts = analyzer.tokenStream("foo", new StringReader(s));
       ts.reset();
       while (ts.incrementToken()) {
