@@ -23,8 +23,9 @@ import java.util.Set;
 import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.gosen.GosenPartOfSpeechStopFilter;
-import org.apache.solr.common.ResourceLoader;
-import org.apache.solr.util.plugin.ResourceLoaderAware;
+import org.apache.lucene.analysis.util.ResourceLoader;
+import org.apache.lucene.analysis.util.ResourceLoaderAware;
+import org.apache.lucene.analysis.util.TokenFilterFactory;
 
 /** 
  * Factory for {@link GosenPartOfSpeechStopFilter}.
@@ -38,7 +39,7 @@ import org.apache.solr.util.plugin.ResourceLoaderAware;
  *   &lt;/analyzer&gt;
  * &lt;/fieldType&gt;</pre>
  */
-public class GosenPartOfSpeechStopFilterFactory extends BaseTokenFilterFactory implements ResourceLoaderAware {
+public class GosenPartOfSpeechStopFilterFactory extends TokenFilterFactory implements ResourceLoaderAware {
   private boolean enablePositionIncrements;
   private Set<String> stopTags;
 

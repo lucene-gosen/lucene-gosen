@@ -18,6 +18,7 @@ package org.apache.solr.analysis;
 
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.gosen.GosenKatakanaStemFilter;
+import org.apache.lucene.analysis.util.TokenFilterFactory;
 
 /** 
  * Factory for {@link GosenKatakanaStemFilter}.
@@ -29,7 +30,7 @@ import org.apache.lucene.analysis.gosen.GosenKatakanaStemFilter;
  *   &lt;/analyzer&gt;
  * &lt;/fieldType&gt;</pre>
  */
-public class GosenKatakanaStemFilterFactory extends BaseTokenFilterFactory {
+public class GosenKatakanaStemFilterFactory extends TokenFilterFactory {
 
   public TokenStream create(TokenStream stream) {
     return new GosenKatakanaStemFilter(stream);

@@ -60,6 +60,6 @@ public class TestGosenWidthFilter extends BaseTokenStreamTestCase {
   }
   
   public void testRandomData() throws IOException {
-    checkRandomData(random, analyzer, 10000);
+    checkRandomData(random(), analyzer, 10000);
   }
 }
