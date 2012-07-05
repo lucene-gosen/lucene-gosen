@@ -37,6 +37,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import net.java.sen.util.IOUtils;
+
 import net.java.sen.dictionary.CToken;
 import net.java.sen.dictionary.DictionaryUtil;
 import net.java.sen.trie.TrieBuilder;
@@ -210,285 +212,341 @@ public class DictionaryBuilder {
     
     CSVData key_b = new CSVData();
     CSVData pos_b = new CSVData();
-    
-    DataOutputStream outputStream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(partOfSpeechDataFilename)));
-    
-    List<String> posIndex = new ArrayList<String>();
-    List<String> conjTypeIndex = new ArrayList<String>();
-    List<String> conjFormIndex = new ArrayList<String>();
-    
-    for (String dictionaryCSVFilename : dictionaryCSVFilenames) {
-      CSVParser parser = new CSVParser(new FileInputStream(dictionaryCSVFilename), charset);
-      
-      while ((csvValues = parser.nextTokens()) != null) {
-        
-        if (csvValues.length < (partOfSpeechSize + partOfSpeechStart)) {
-          throw new RuntimeException("format error:" + parser.currentLine());
-        }
-        
-        key_b.clear();
-        pos_b.clear();
-        for (int i = partOfSpeechStart; i < (partOfSpeechStart + partOfSpeechSize); i++) {
-          key_b.append(csvValues[i]);
-          pos_b.append(csvValues[i]);
-        }
-        
-        for (int i = partOfSpeechStart + partOfSpeechSize; i < csvValues.length; i++) {
-          pos_b.append(csvValues[i]);
-        }
-        
-        CToken ctoken = new CToken();
-        
-        ctoken.rcAttr2 = (short) matrixBuilders[0].getDicId(key_b.toString());
-        ctoken.rcAttr1 = (short) matrixBuilders[1].getDicId(key_b.toString());
-        ctoken.lcAttr = (short) matrixBuilders[2].getDicId(key_b.toString());
-        ctoken.partOfSpeechIndex = outputStream.size();
-        ctoken.length = (short) csvValues[0].length();
-        ctoken.cost = (short) Integer.parseInt(csvValues[1]);
-        
-        dictionaryList.add(csvValues[0], ctoken);
-        
-        // Write to part of speech data file
-        
-        StringBuilder partOfSpeechBuilder = new StringBuilder();
-        for (int i = partOfSpeechStart; i < (partOfSpeechStart + 4); i++) {
-          if (!csvValues[i].equals("*")) {
-            partOfSpeechBuilder.append(csvValues[i]);
-            partOfSpeechBuilder.append("-");
-          }
-        }
-        String partOfSpeech = partOfSpeechBuilder.substring(0, partOfSpeechBuilder.length() - 1);
-        String conjugationalType = csvValues[partOfSpeechStart + 4];
-        String conjugationalForm = csvValues[partOfSpeechStart + 5];
-        String basicForm = csvValues[partOfSpeechStart + 6];
-        List<String> readings = splitCompoundField(csvValues[partOfSpeechStart + 7]);
-        List<String> pronunciations = splitCompoundField(csvValues[partOfSpeechStart + 8]);
-        
-        int index = posIndex.indexOf(partOfSpeech);
-        if (index < 0) {
-          index = posIndex.size();
-          posIndex.add(partOfSpeech);
-        }
-        
-        DictionaryUtil.writeVInt(outputStream, index);
-        
-        index = conjTypeIndex.indexOf(conjugationalType);
-        if (index < 0) {
-          index = conjTypeIndex.size();
-          conjTypeIndex.add(conjugationalType);
-        }
-        
-        DictionaryUtil.writeVInt(outputStream, index);
-        
-        index = conjFormIndex.indexOf(conjugationalForm);
-        if (index < 0) {
-          index = conjFormIndex.size();
-          conjFormIndex.add(conjugationalForm);
-        }
-        
-        DictionaryUtil.writeVInt(outputStream, index);
-        
-        if (basicForm.equals(csvValues[0])) {
-          DictionaryUtil.writeVInt(outputStream, 0);
-        } else {
-          DictionaryUtil.writeVInt(outputStream, basicForm.length());
-          outputStream.writeChars(basicForm);
-        }
-        
-        int encoding = 0; // by default we write a single-byte katakana encoding
-        
-        // but if we find any non-katakana in the readings or pronunciation, we use utf-16
-        for (String reading : readings) {
-          for (int i = 0; i < reading.length(); i++) {
-            char ch = reading.charAt(i);
-            if (ch < 0x30A0 || ch > 0x30FF) {
-              encoding = 1;
+
+    FileOutputStream fileOutputStream = null;
+    BufferedOutputStream bufferedOutputStream = null;
+    DataOutputStream outputStream = null;
+
+    try {
+      fileOutputStream = new FileOutputStream(partOfSpeechDataFilename);
+      bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+      outputStream = new DataOutputStream(bufferedOutputStream);
+
+      List<String> posIndex = new ArrayList<String>();
+      List<String> conjTypeIndex = new ArrayList<String>();
+      List<String> conjFormIndex = new ArrayList<String>();
+
+      for (String dictionaryCSVFilename : dictionaryCSVFilenames) {
+
+        FileInputStream fileInputStream = null;
+        CSVParser parser = null;
+        try {
+          fileInputStream = new FileInputStream(dictionaryCSVFilename);
+          parser = new CSVParser(fileInputStream, charset);
+
+          while ((csvValues = parser.nextTokens()) != null) {
+
+            if (csvValues.length < (partOfSpeechSize + partOfSpeechStart)) {
+              throw new RuntimeException("format error:" + parser.currentLine());
             }
-          }
-        }
-        
-        for (String pronunciation : pronunciations) {
-          for (int i = 0; i < pronunciation.length(); i++) {
-            char ch = pronunciation.charAt(i);
-            if (ch < 0x30A0 || ch > 0x30FF) {
-              encoding = 1;
+
+            key_b.clear();
+            pos_b.clear();
+            for (int i = partOfSpeechStart; i < (partOfSpeechStart + partOfSpeechSize); i++) {
+              key_b.append(csvValues[i]);
+              pos_b.append(csvValues[i]);
             }
-          }
-        }
-        
-        DictionaryUtil.writeVInt(outputStream, readings.size() << 1 | encoding);
-        
-        for (int i = 0; i < readings.size(); i++) {
-          String reading = readings.get(i);
-          String pronunciation = pronunciations.get(i);
-          if (pronunciation.equals(reading)) {
-            // if the pronunciation is the same as the associated reading, we write a 0 for the length
-            DictionaryUtil.writeVInt(outputStream, reading.length() << 1 | 0);
-            if (encoding == 0) {
-              DictionaryUtil.writeKatakana(outputStream, reading);
+
+            for (int i = partOfSpeechStart + partOfSpeechSize; i < csvValues.length; i++) {
+              pos_b.append(csvValues[i]);
+            }
+
+            CToken ctoken = new CToken();
+
+            ctoken.rcAttr2 = (short) matrixBuilders[0].getDicId(key_b
+                .toString());
+            ctoken.rcAttr1 = (short) matrixBuilders[1].getDicId(key_b
+                .toString());
+            ctoken.lcAttr = (short) matrixBuilders[2]
+                .getDicId(key_b.toString());
+            ctoken.partOfSpeechIndex = outputStream.size();
+            ctoken.length = (short) csvValues[0].length();
+            ctoken.cost = (short) Integer.parseInt(csvValues[1]);
+
+            dictionaryList.add(csvValues[0], ctoken);
+
+            // Write to part of speech data file
+
+            StringBuilder partOfSpeechBuilder = new StringBuilder();
+            for (int i = partOfSpeechStart; i < (partOfSpeechStart + 4); i++) {
+              if (!csvValues[i].equals("*")) {
+                partOfSpeechBuilder.append(csvValues[i]);
+                partOfSpeechBuilder.append("-");
+              }
+            }
+            String partOfSpeech = partOfSpeechBuilder.substring(0,
+                partOfSpeechBuilder.length() - 1);
+            String conjugationalType = csvValues[partOfSpeechStart + 4];
+            String conjugationalForm = csvValues[partOfSpeechStart + 5];
+            String basicForm = csvValues[partOfSpeechStart + 6];
+            List<String> readings = splitCompoundField(csvValues[partOfSpeechStart + 7]);
+            List<String> pronunciations = splitCompoundField(csvValues[partOfSpeechStart + 8]);
+
+            int index = posIndex.indexOf(partOfSpeech);
+            if (index < 0) {
+              index = posIndex.size();
+              posIndex.add(partOfSpeech);
+            }
+
+            DictionaryUtil.writeVInt(outputStream, index);
+
+            index = conjTypeIndex.indexOf(conjugationalType);
+            if (index < 0) {
+              index = conjTypeIndex.size();
+              conjTypeIndex.add(conjugationalType);
+            }
+
+            DictionaryUtil.writeVInt(outputStream, index);
+
+            index = conjFormIndex.indexOf(conjugationalForm);
+            if (index < 0) {
+              index = conjFormIndex.size();
+              conjFormIndex.add(conjugationalForm);
+            }
+
+            DictionaryUtil.writeVInt(outputStream, index);
+
+            if (basicForm.equals(csvValues[0])) {
+              DictionaryUtil.writeVInt(outputStream, 0);
             } else {
-              outputStream.writeChars(reading);
+              DictionaryUtil.writeVInt(outputStream, basicForm.length());
+              outputStream.writeChars(basicForm);
             }
-          } else {
-            DictionaryUtil.writeVInt(outputStream, reading.length() << 1 | 1);
-            if (encoding == 0) {
-              DictionaryUtil.writeKatakana(outputStream, reading);
-            } else {
-              outputStream.writeChars(reading);
+
+            int encoding = 0; // by default we write a single-byte katakana
+                              // encoding
+
+            // but if we find any non-katakana in the readings or pronunciation,
+            // we
+            // use utf-16
+            for (String reading : readings) {
+              for (int i = 0; i < reading.length(); i++) {
+                char ch = reading.charAt(i);
+                if (ch < 0x30A0 || ch > 0x30FF) {
+                  encoding = 1;
+                }
+              }
             }
-            DictionaryUtil.writeVInt(outputStream, pronunciation.length());
-            if (encoding == 0) {
-              DictionaryUtil.writeKatakana(outputStream, pronunciation);
-            } else {
-              outputStream.writeChars(pronunciation);
+
+            for (String pronunciation : pronunciations) {
+              for (int i = 0; i < pronunciation.length(); i++) {
+                char ch = pronunciation.charAt(i);
+                if (ch < 0x30A0 || ch > 0x30FF) {
+                  encoding = 1;
+                }
+              }
+            }
+
+            DictionaryUtil.writeVInt(outputStream, readings.size() << 1
+                | encoding);
+
+            for (int i = 0; i < readings.size(); i++) {
+              String reading = readings.get(i);
+              String pronunciation = pronunciations.get(i);
+              if (pronunciation.equals(reading)) {
+                // if the pronunciation is the same as the associated reading,
+                // we
+                // write a 0 for the length
+                DictionaryUtil.writeVInt(outputStream,
+                    reading.length() << 1 | 0);
+                if (encoding == 0) {
+                  DictionaryUtil.writeKatakana(outputStream, reading);
+                } else {
+                  outputStream.writeChars(reading);
+                }
+              } else {
+                DictionaryUtil.writeVInt(outputStream,
+                    reading.length() << 1 | 1);
+                if (encoding == 0) {
+                  DictionaryUtil.writeKatakana(outputStream, reading);
+                } else {
+                  outputStream.writeChars(reading);
+                }
+                DictionaryUtil.writeVInt(outputStream, pronunciation.length());
+                if (encoding == 0) {
+                  DictionaryUtil.writeKatakana(outputStream, pronunciation);
+                } else {
+                  outputStream.writeChars(pronunciation);
+                }
+              }
             }
           }
+        } finally {
+          IOUtils.closeWhileHandlingException(parser, fileInputStream);
         }
       }
-    }
-    
-    outputStream.close();
-    
-    // write all the unique parts of speech, conj types, and conj forms we found
-    DataOutputStream index = new DataOutputStream(new FileOutputStream(partOfSpeechIndexFilename));
-    index.writeChar(posIndex.size());
-    for (String pos : posIndex) {
-      index.writeUTF(pos);
-    }
-    
-    index.writeChar(conjTypeIndex.size());
-    for (String conjType : conjTypeIndex) {
-      index.writeUTF(conjType);
-    }
-    
-    index.writeChar(conjFormIndex.size());
-    for (String conjForm : conjFormIndex) {
-      index.writeUTF(conjForm);
-    }
-    
-    index.close();
-    
-    dictionaryList.sort();
-    
-    CToken bosCToken = new CToken();
-    bosCToken.rcAttr2 = (short) matrixBuilders[0].getDicId(bosPartOfSpeech);
-    bosCToken.rcAttr1 = (short) matrixBuilders[1].getDicId(bosPartOfSpeech);
-    bosCToken.lcAttr = (short) matrixBuilders[2].getDicId(bosPartOfSpeech);
-    standardCTokens[0] = bosCToken;
-    
-    CToken eosCToken = new CToken();
-    eosCToken.rcAttr2 = (short) matrixBuilders[0].getDicId(eosPartOfSpeech);
-    eosCToken.rcAttr1 = (short) matrixBuilders[1].getDicId(eosPartOfSpeech);
-    eosCToken.lcAttr = (short) matrixBuilders[2].getDicId(eosPartOfSpeech);
-    standardCTokens[1] = eosCToken;
-    
-    CToken unknownCToken = new CToken();
-    unknownCToken.rcAttr2 = (short) matrixBuilders[0].getDicId(unknownPartOfSpeech);
-    unknownCToken.rcAttr1 = (short) matrixBuilders[1].getDicId(unknownPartOfSpeech);
-    unknownCToken.lcAttr = (short) matrixBuilders[2].getDicId(unknownPartOfSpeech);
-    unknownCToken.partOfSpeechIndex = -1;
-    standardCTokens[2] = unknownCToken;
+
+      // write all the unique parts of speech, conj types, and conj forms we
+      // found
+      FileOutputStream fos = null;
+      DataOutputStream index = null;
+      try {
+        fos = new FileOutputStream(partOfSpeechIndexFilename);
+        index = new DataOutputStream(fos);
+        index.writeChar(posIndex.size());
+        for (String pos : posIndex) {
+          index.writeUTF(pos);
+        }
+
+        index.writeChar(conjTypeIndex.size());
+        for (String conjType : conjTypeIndex) {
+          index.writeUTF(conjType);
+        }
+
+        index.writeChar(conjFormIndex.size());
+        for (String conjForm : conjFormIndex) {
+          index.writeUTF(conjForm);
+        }
+
+        dictionaryList.sort();
+
+        CToken bosCToken = new CToken();
+        bosCToken.rcAttr2 = (short) matrixBuilders[0].getDicId(bosPartOfSpeech);
+        bosCToken.rcAttr1 = (short) matrixBuilders[1].getDicId(bosPartOfSpeech);
+        bosCToken.lcAttr = (short) matrixBuilders[2].getDicId(bosPartOfSpeech);
+        standardCTokens[0] = bosCToken;
+
+        CToken eosCToken = new CToken();
+        eosCToken.rcAttr2 = (short) matrixBuilders[0].getDicId(eosPartOfSpeech);
+        eosCToken.rcAttr1 = (short) matrixBuilders[1].getDicId(eosPartOfSpeech);
+        eosCToken.lcAttr = (short) matrixBuilders[2].getDicId(eosPartOfSpeech);
+        standardCTokens[1] = eosCToken;
+
+        CToken unknownCToken = new CToken();
+        unknownCToken.rcAttr2 = (short) matrixBuilders[0]
+            .getDicId(unknownPartOfSpeech);
+        unknownCToken.rcAttr1 = (short) matrixBuilders[1]
+            .getDicId(unknownPartOfSpeech);
+        unknownCToken.lcAttr = (short) matrixBuilders[2]
+            .getDicId(unknownPartOfSpeech);
+        unknownCToken.partOfSpeechIndex = -1;
+        standardCTokens[2] = unknownCToken;
+      } finally {
+        IOUtils.closeWhileHandlingException(index, fos);
       }
-  
+    } finally {
+      IOUtils.closeWhileHandlingException(outputStream, bufferedOutputStream,
+          fileOutputStream);
+    }
+  }
+
   /**
    * Creates the connection cost matrix file
    * 
-   * @param connectionCSVFilename The filename of the connection CSV data
-   * @param connectionCostDataFilename The filename for the connection cost matrix
-   * @param defaultCost The default connection cost
-   * @param charset The charset of the connection CSV data
+   * @param connectionCSVFilename
+   *          The filename of the connection CSV data
+   * @param connectionCostDataFilename
+   *          The filename for the connection cost matrix
+   * @param defaultCost
+   *          The default connection cost
+   * @param charset
+   *          The charset of the connection CSV data
    * @return An array of three <code>CostMatrixBuilder</code>s
-   * @throws IOException 
+   * @throws IOException
    */
-  private CostMatrixBuilder[] createConnectionCostFile(String connectionCSVFilename, String connectionCostDataFilename, short defaultCost, String charset) throws IOException {
+  private CostMatrixBuilder[] createConnectionCostFile(
+      String connectionCSVFilename, String connectionCostDataFilename,
+      short defaultCost, String charset) throws IOException {
     CostMatrixBuilder[] matrixBuilders = new CostMatrixBuilder[3];
-    
+
     matrixBuilders[0] = new CostMatrixBuilder();
     matrixBuilders[1] = new CostMatrixBuilder();
     matrixBuilders[2] = new CostMatrixBuilder();
     Vector<String> rule1 = new Vector<String>();
     Vector<String> rule2 = new Vector<String>();
     Vector<String> rule3 = new Vector<String>();
-    
-    // The approximate length of the file, plus a bit. If we're wrong it'll be expanded during processing
+
+    // The approximate length of the file, plus a bit. If we're wrong it'll be
+    // expanded during processing
     short[] scores = new short[30000];
-    
+
     // Read connection cost CSV data
-    CSVParser parser = new CSVParser(new FileInputStream(connectionCSVFilename), charset);
-    String t[];
-    int line = 0;
-    while ((t = parser.nextTokens()) != null) {
-      if (t.length < 4) {
-        throw new IOException("Connection cost CSV format error");
+    FileInputStream fis = null;
+    CSVParser parser = null;
+    FileChannel indexChannel = null;
+    RandomAccessFile file = null;
+
+    try {
+      fis = new FileInputStream(connectionCSVFilename);
+      parser = new CSVParser(fis, charset);
+
+      String t[];
+      int line = 0;
+      while ((t = parser.nextTokens()) != null) {
+        if (t.length < 4) {
+          throw new IOException("Connection cost CSV format error");
+        }
+        matrixBuilders[0].add(t[0]);
+        rule1.add(t[0]);
+
+        matrixBuilders[1].add(t[1]);
+        rule2.add(t[1]);
+
+        matrixBuilders[2].add(t[2]);
+        rule3.add(t[2]);
+
+        if (line == scores.length) {
+          scores = resize(scores);
+        }
+
+        scores[line++] = (short) Integer.parseInt(t[3]);
       }
-      matrixBuilders[0].add(t[0]);
-      rule1.add(t[0]);
       
-      matrixBuilders[1].add(t[1]);
-      rule2.add(t[1]);
+      // Compile CostMatrixBuilders
+      matrixBuilders[0].build();
+      matrixBuilders[1].build();
+      matrixBuilders[2].build();
       
-      matrixBuilders[2].add(t[2]);
-      rule3.add(t[2]);
+      int size1 = matrixBuilders[0].size();
+      int size2 = matrixBuilders[1].size();
+      int size3 = matrixBuilders[2].size();
+      int ruleSize = rule1.size();
       
-      if (line == scores.length) {
-        scores = resize(scores);
+      // Write connection cost data
+      MappedByteBuffer buffer = null;
+      ShortBuffer shortBuffer = null;
+      int matrixSizeBytes = (size1 * size2 * size3 * 2);
+      int headerSizeBytes = (3 * 2);
+
+      file = new RandomAccessFile(connectionCostDataFilename, "rw");
+      file.setLength(0);
+      file.writeShort(size1);
+      file.writeShort(size2);
+      file.writeShort(size3);
+      file.setLength(headerSizeBytes + matrixSizeBytes);
+      indexChannel = file.getChannel();
+      buffer = indexChannel.map(FileChannel.MapMode.READ_WRITE,
+          headerSizeBytes, matrixSizeBytes);
+      shortBuffer = buffer.asShortBuffer();
+
+      for (int i = 0; i < (size1 * size2 * size3); i++) {
+        shortBuffer.put(i, defaultCost);
       }
-      
-      scores[line++] = (short) Integer.parseInt(t[3]);
-    }
-    
-    // Compile CostMatrixBuilders
-    matrixBuilders[0].build();
-    matrixBuilders[1].build();
-    matrixBuilders[2].build();
-    
-    int size1 = matrixBuilders[0].size();
-    int size2 = matrixBuilders[1].size();
-    int size3 = matrixBuilders[2].size();
-    int ruleSize = rule1.size();
-    
-    // Write connection cost data
-    MappedByteBuffer buffer = null;
-    ShortBuffer shortBuffer = null;
-    int matrixSizeBytes = (size1 * size2 * size3 * 2);
-    int headerSizeBytes = (3 * 2);
-    
-    RandomAccessFile file = new RandomAccessFile(connectionCostDataFilename, "rw");
-    file.setLength(0);
-    file.writeShort(size1);
-    file.writeShort(size2);
-    file.writeShort(size3);
-    file.setLength(headerSizeBytes + matrixSizeBytes);
-    FileChannel indexChannel = file.getChannel();
-    buffer = indexChannel.map(FileChannel.MapMode.READ_WRITE, headerSizeBytes, matrixSizeBytes);
-    shortBuffer = buffer.asShortBuffer();
-    indexChannel.close();
-    
-    for (int i = 0; i < (size1 * size2 * size3); i++) {
-      shortBuffer.put(i, defaultCost);
-    }
-    
-    for (int i = 0; i < ruleSize; i++) {
-      Vector<Integer> r1 = matrixBuilders[0].getRuleIdList(rule1.get(i));
-      Vector<Integer> r2 = matrixBuilders[1].getRuleIdList(rule2.get(i));
-      Vector<Integer> r3 = matrixBuilders[2].getRuleIdList(rule3.get(i));
-      
-      for (Iterator<Integer> i1 = r1.iterator(); i1.hasNext();) {
-        int ii1 = i1.next();
-        for (Iterator<Integer> i2 = r2.iterator(); i2.hasNext();) {
-          int ii2 = i2.next();
-          for (Iterator<Integer> i3 = r3.iterator(); i3.hasNext();) {
-            int ii3 = i3.next();
-            int position = size3 * (size2 * ii1 + ii2) + ii3;
-            shortBuffer.put(position, scores[i]);
+
+      for (int i = 0; i < ruleSize; i++) {
+        Vector<Integer> r1 = matrixBuilders[0].getRuleIdList(rule1.get(i));
+        Vector<Integer> r2 = matrixBuilders[1].getRuleIdList(rule2.get(i));
+        Vector<Integer> r3 = matrixBuilders[2].getRuleIdList(rule3.get(i));
+
+        for (Iterator<Integer> i1 = r1.iterator(); i1.hasNext();) {
+          int ii1 = i1.next();
+          for (Iterator<Integer> i2 = r2.iterator(); i2.hasNext();) {
+            int ii2 = i2.next();
+            for (Iterator<Integer> i3 = r3.iterator(); i3.hasNext();) {
+              int ii3 = i3.next();
+              int position = size3 * (size2 * ii1 + ii2) + ii3;
+              shortBuffer.put(position, scores[i]);
+            }
           }
         }
       }
+      
+      buffer.force();
+      
+      return matrixBuilders;
+    } finally {
+      IOUtils.closeWhileHandlingException(parser, fis, indexChannel, file);
     }
-    
-    buffer.force();
-    
-    return matrixBuilders;
   }
   
   /**
@@ -513,39 +571,48 @@ public class DictionaryBuilder {
     int spos = 0;
     int bsize = 0;
     String prev = "";
-    
-    DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(tokenDataFilename)));
-    
-    // Write beginning-of-string, end-of-string, unknown-morpheme tokens
-    CToken.write(out, standardCTokens[0]);
-    CToken.write(out, standardCTokens[1]);
-    CToken.write(out, standardCTokens[2]);
-    
-    // Write token data
-    for (int i = 0; i < trieData.keys.length; i++) {
-      StringCTokenTuple tuple = tupleList.get(i); 
-      String k = tuple.key;
-      if (!prev.equals(k) && i != 0) {
-        trieData.keys[trieData.size] = tupleList.get(spos).key;
-        trieData.values[trieData.size] = bsize + (spos << 8);
-        trieData.size++;
-        bsize = 1;
-        spos = i;
-      } else {
-        bsize++;
+
+    FileOutputStream fos = null;
+    BufferedOutputStream bos = null;
+    DataOutputStream out = null;
+
+    try {
+      fos = new FileOutputStream(tokenDataFilename);
+      bos = new BufferedOutputStream(fos);
+      out = new DataOutputStream(bos);
+
+      // Write beginning-of-string, end-of-string, unknown-morpheme tokens
+      CToken.write(out, standardCTokens[0]);
+      CToken.write(out, standardCTokens[1]);
+      CToken.write(out, standardCTokens[2]);
+
+      // Write token data
+      for (int i = 0; i < trieData.keys.length; i++) {
+        StringCTokenTuple tuple = tupleList.get(i);
+        String k = tuple.key;
+        if (!prev.equals(k) && i != 0) {
+          trieData.keys[trieData.size] = tupleList.get(spos).key;
+          trieData.values[trieData.size] = bsize + (spos << 8);
+          trieData.size++;
+          bsize = 1;
+          spos = i;
+        } else {
+          bsize++;
+        }
+        prev = tuple.key;
+        CToken.write(out, tuple.value);
       }
-      prev = tuple.key;
-      CToken.write(out, tuple.value);
+      out.flush();
+
+      trieData.keys[trieData.size] = tupleList.get(spos).key;
+      trieData.values[trieData.size] = bsize + (spos << 8);
+      trieData.size++;
+
+      return trieData;
+    } finally {
+      IOUtils.closeWhileHandlingException(out, bos, fos);
     }
-    out.flush();
-    out.close();
     
-    trieData.keys[trieData.size] = tupleList.get(spos).key;
-    trieData.values[trieData.size] = bsize + (spos << 8);
-    trieData.size++;
-    
-    
-    return trieData;
   }
   
   /**
@@ -564,12 +631,19 @@ public class DictionaryBuilder {
    * Creates the header file containing resource lengths
    */
   private void createHeaderFile(String headerFilename) throws IOException {
-    DataOutputStream os = new DataOutputStream(new FileOutputStream(headerFilename));
-    os.writeInt((int) new File(CONNECTION_COST_DATA_FILENAME).length());
-    os.writeInt((int) new File(PART_OF_SPEECH_DATA_FILENAME).length());
-    os.writeInt((int) new File(TOKEN_DATA_FILENAME).length());
-    os.writeInt((int) new File(TRIE_DATA_FILENAME).length());
-    os.close();
+
+    FileOutputStream fos = null;
+    DataOutputStream os = null;
+    try {
+      fos = new FileOutputStream(headerFilename);
+      os = new DataOutputStream(fos);
+      os.writeInt((int) new File(CONNECTION_COST_DATA_FILENAME).length());
+      os.writeInt((int) new File(PART_OF_SPEECH_DATA_FILENAME).length());
+      os.writeInt((int) new File(TOKEN_DATA_FILENAME).length());
+      os.writeInt((int) new File(TRIE_DATA_FILENAME).length());
+    } finally {
+      IOUtils.closeWhileHandlingException(os, fos);
+    }
   }
   
   /**
@@ -595,41 +669,39 @@ public class DictionaryBuilder {
     );
     
     // Create part-of-speech data file (posInfo.sen)
-    VirtualTupleList dictionaryList = new VirtualTupleList();
-    CToken[] standardCTokens = new CToken[3];
-    
-    createPartOfSpeechDataFile(
-        dictionaryCSVFilenames,
-        PART_OF_SPEECH_DATA_FILENAME,
-        PART_OF_SPEECH_INDEX_FILENAME,
-        matrixBuilders,
-        PART_OF_SPEECH_START,
-        PART_OF_SPEECH_SIZE,
-        charset,
-        BOS_PART_OF_SPEECH,
-        EOS_PART_OF_SPEECH,
-        UNKNOWN_PART_OF_SPEECH,
-        dictionaryList,
-        standardCTokens
-    );
-    
-    // Free temporary object for GC
-    matrixBuilders = null;
-    
-    
-    // Create Token file (token.sen)
-    TrieData trieData = createTokenFile(
-        TOKEN_DATA_FILENAME,
-        standardCTokens,
-        dictionaryList
-    );
-    
-    // Free temporary object for GC
-    dictionaryList = null;
-    
-    
-    // Create Trie file (da.sen)
-    createTrieFile(TRIE_DATA_FILENAME, trieData);
-    createHeaderFile(HEADER_DATA_FILENAME);
+    VirtualTupleList dictionaryList = null;
+
+    try {
+      dictionaryList = new VirtualTupleList();
+      CToken[] standardCTokens = new CToken[3];
+
+      createPartOfSpeechDataFile(
+          dictionaryCSVFilenames,
+          PART_OF_SPEECH_DATA_FILENAME,
+          PART_OF_SPEECH_INDEX_FILENAME,
+          matrixBuilders,
+          PART_OF_SPEECH_START,
+          PART_OF_SPEECH_SIZE,
+          charset,
+          BOS_PART_OF_SPEECH,
+          EOS_PART_OF_SPEECH,
+          UNKNOWN_PART_OF_SPEECH,
+          dictionaryList,
+          standardCTokens
+      );
+
+      // Create Token file (token.sen)
+      TrieData trieData = createTokenFile(
+          TOKEN_DATA_FILENAME,
+          standardCTokens,
+          dictionaryList
+      );
+
+      // Create Trie file (da.sen)
+      createTrieFile(TRIE_DATA_FILENAME, trieData);
+      createHeaderFile(HEADER_DATA_FILENAME);
+    } finally {
+      IOUtils.closeWhileHandlingException(dictionaryList);
+    }
   }
 }

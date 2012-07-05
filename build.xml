@@ -17,7 +17,7 @@
   <property name="javadoc.dir" location="docs/api"/>
   <property name="prettify.dir" location="prettify"/>
 
-  <property name="tests.seed" value="random" />
+  <property name="tests.seed" value="" />
   <property name="tests.iter" value="1" />
   <property name="tests.iter.min" value="${tests.iter}" />
   <property name="testmethod" value=""/>

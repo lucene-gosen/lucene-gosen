@@ -26,7 +26,10 @@ import org.apache.lucene.util.AttributeImpl;
 import org.apache.lucene.util.AttributeReflector;
 
 public class PronunciationsAttributeImpl extends AttributeImpl implements PronunciationsAttribute, Cloneable {
-  private Morpheme morpheme;
+  
+  private static final long serialVersionUID = 1L;
+  
+  private transient Morpheme morpheme;
   
   public List<String> getPronunciations() {
     return morpheme == null ? null : morpheme.getPronunciations();

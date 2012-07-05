@@ -30,6 +30,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import net.java.sen.util.IOUtils;
+
 import net.java.sen.util.CSVParser;
 
 /**
@@ -200,28 +202,34 @@ class CostMatrixBuilder {
    * @return TODO how is this ID defined?
    */
   public int getDicId(String rule) throws IOException{
-    CSVParser parser = new CSVParser(rule);
-    String csv[] = parser.nextTokens();
+    CSVParser parser = null;
     
-    String lex = csv[csv.length - 1];
+    try {
+      parser = new CSVParser(rule);
+      String csv[] = parser.nextTokens();
     
-    if (lexicalized.contains(lex)) {
-      return getDicIdNoCache(csv);
+      String lex = csv[csv.length - 1];
+    
+      if (lexicalized.contains(lex)) {
+        return getDicIdNoCache(csv);
+      }
+      
+      // Remove end field
+      String partOfSpeech = rule.substring(0, rule.lastIndexOf(","));
+     
+      Integer r = dicIndex.get(partOfSpeech);
+      if ((r != null) && (r != 0)) {
+        // 0 if empty
+        return r - 1;
+      }
+      
+      int rg = getDicIdNoCache(csv);
+      
+      dicIndex.put(partOfSpeech, rg + 1);
+      return rg;
+    } finally {
+      IOUtils.closeWhileHandlingException(parser);
     }
-    
-    // Remove end field
-    String partOfSpeech = rule.substring(0, rule.lastIndexOf(","));
-    
-    Integer r = dicIndex.get(partOfSpeech);
-    if ((r != null) && (r != 0)) {
-      // 0 if empty
-      return r - 1;
-    }
-    
-    int rg = getDicIdNoCache(csv);
-    
-    dicIndex.put(partOfSpeech, rg + 1);
-    return rg;
   }
   
   /**
