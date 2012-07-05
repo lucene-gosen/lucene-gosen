@@ -28,6 +28,8 @@ import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 
+import net.java.sen.util.IOUtils;
+
 import net.java.sen.util.CSVParser;
 
 /**
@@ -75,36 +77,45 @@ public class CompoundWordTableCompiler {
 		HashMap<String, String> compoundTable = new HashMap<String, String>();
 		StringBuffer buffer = new StringBuffer();
 		while ((t = reader.readLine()) != null) {
+		  CSVParser parser = null;
+		  try {
+		     parser = new CSVParser(t);
+		     String csv[] = parser.nextTokens();
+		     if (csv.length < (partOfSpeechSize + partOfSpeechStart)) {
+		       throw new RuntimeException("format error:" + line);
+		     }
 
-			CSVParser parser = new CSVParser(t);
-			String csv[] = parser.nextTokens();
-			if (csv.length < (partOfSpeechSize + partOfSpeechStart)) {
-				throw new RuntimeException("format error:" + line);
-			}
+		     buffer.setLength(0);
+		     for (int i = partOfSpeechStart; i < (partOfSpeechStart + partOfSpeechSize - 1); i++) {
+		       buffer.append(csv[i]);
+		       buffer.append(',');
+		     }
 
-			buffer.setLength(0);
-			for (int i = partOfSpeechStart; i < (partOfSpeechStart + partOfSpeechSize - 1); i++) {
-				buffer.append(csv[i]);
-				buffer.append(',');
-			}
+		     buffer.append(csv[partOfSpeechStart + partOfSpeechSize - 1]);
+		     buffer.append(',');
 
-			buffer.append(csv[partOfSpeechStart + partOfSpeechSize - 1]);
-			buffer.append(',');
+		     for (int i = partOfSpeechStart + partOfSpeechSize; i < (csv.length - 2); i++) {
+		       buffer.append(csv[i]);
+		       buffer.append(',');
+		     }
+		     buffer.append(csv[csv.length - 2]);
 
-			for (int i = partOfSpeechStart + partOfSpeechSize; i < (csv.length - 2); i++) {
-				buffer.append(csv[i]);
-				buffer.append(',');
-			}
-			buffer.append(csv[csv.length - 2]);
-
-			compoundTable.put(buffer.toString(), csv[csv.length - 1]);
-
+		     compoundTable.put(buffer.toString(), csv[csv.length - 1]);
+		  } finally {
+		    IOUtils.closeWhileHandlingException(parser);
+		  }
 		}
 
-		reader.close();
-		ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(tableFilename));
-		os.writeObject(compoundTable);
-		os.close();
+		FileOutputStream fos = null;
+		ObjectOutputStream os = null;
+		
+		try {
+		  fos = new FileOutputStream(tableFilename);
+		  os = new ObjectOutputStream(fos);
+		  os.writeObject(compoundTable);
+		} finally {
+		  IOUtils.closeWhileHandlingException(os, fos);
+		}
 	}
 
 	/**
@@ -113,16 +124,27 @@ public class CompoundWordTableCompiler {
 	 * @param args Ignored 
 	 */
 	public static void main(String args[]) {
+
+	  FileInputStream fileInputStream = null;
+	  InputStreamReader inputStreamReader = null;
+	  BufferedReader reader = null;
+	  
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					new FileInputStream(COMPOUND_CSV_FILENAME),
-					"UTF-8"
-			));
+		  fileInputStream = new FileInputStream(COMPOUND_CSV_FILENAME);
+		  inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
+			reader = new BufferedReader(inputStreamReader);
 
 			buildTable(reader, PART_OF_SPEECH_START, PART_OF_SPEECH_SIZE, COMPOUND_TABLE_FILENAME);
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(1);
+      e.printStackTrace();
+      System.exit(1);
+		} finally {
+		  try {
+		    IOUtils.closeWhileHandlingException(reader, inputStreamReader, fileInputStream);
+		  } catch (IOException e) {
+	      e.printStackTrace();
+	      System.exit(1);
+		  }
 		}
 	}
 }

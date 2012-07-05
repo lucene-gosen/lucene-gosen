@@ -140,7 +140,7 @@ public final class StreamTagger2 {
     int leftover = length - usableLength;
     System.arraycopy(buffer, usableLength, buffer, 0, leftover);
     int requested = buffer.length - leftover;
-    int returned = input.read(buffer, leftover, requested);
+    int returned = read(input, buffer, leftover, requested);
     length = returned < 0 ? leftover : returned + leftover;
     if (returned < requested) /* reader has been emptied, process the rest */
       usableLength = length;
@@ -155,6 +155,22 @@ public final class StreamTagger2 {
 
     iterator.setText(buffer, 0, Math.max(0, usableLength));
     breaker.setText(iterator);
+  }
+  
+
+  private static int read(Reader input, char[] buffer, int offset, int length) throws IOException {
+    assert length >= 0 : "length must not be negative: " + length;
+ 
+    int remaining = length;
+    while ( remaining > 0 ) {
+      int location = length - remaining;
+      int count = input.read( buffer, offset + location, remaining );
+      if ( -1 == count ) { // EOF
+        break;
+      }
+      remaining -= count;
+    }
+    return length - remaining;
   }
 
   /*
