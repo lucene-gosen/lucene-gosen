@@ -120,7 +120,7 @@ public final class GosenTokenizer extends Tokenizer {
 
   @Override
   public void reset() throws IOException {
-    tagger.reset();
+    tagger.reset(input);
     accumulatedCost = 0;
   }
 
