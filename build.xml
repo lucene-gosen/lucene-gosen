@@ -25,10 +25,22 @@
   <path id="classpath">
     <fileset dir="lib">
       <include name="*.jar" />
+      <exclude name="junit-*.jar"/>
+      <exclude name="randomizedtesting-*.jar"/>
+      <exclude name="lucene-test-framework-*.jar"/>
+    </fileset>
+  </path>
+  
+  <path id="lucene-test-classpath">
+    <fileset dir="lib">
+      <include name="junit-*.jar"/>
+      <include name="randomizedtesting-*.jar"/>
+      <include name="lucene-test-framework-*.jar"/>
     </fileset>
   </path>
 
   <path id="testclasspath">
+    <path refid="lucene-test-classpath"/>
     <path refid="classpath"/>
     <pathelement location="${bin.dir}/classes/java" />
     <pathelement location="${bin.dir}/classes/test" />
