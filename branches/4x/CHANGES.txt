@@ -1,6 +1,41 @@
 lucene-gosen Change Log
 
-========== trunk / YYYY-MM-DD ===================================
+========== 4.0.0 / 2012-10-12 ===================================
+
+Important Notice
+
+* http://code.google.com/p/lucene-gosen/issues/detail?id=37
+  Change Lucene/Solr 4.0.0 library 
+
+New Features & Improvements
+
+Bug Fixes
+
+API Changes
+
+Javadoc Fixes
+
+Others
+
+========== 2.0.2 / 2012-07-07 ===================================
+
+Important Notice
+
+New Features & Improvements
+
+Bug Fixes
+
+API Changes
+
+Javadoc Fixes
+
+Others
+
+* http://code.google.com/p/lucene-gosen/issues/detail?id=29
+  Improve resource management, and refactor to import class 
+  Thanks haruyama (johtani)
+
+========== 2.0.1 / 2012-05-09 ===================================
 
 Important Notice
 
