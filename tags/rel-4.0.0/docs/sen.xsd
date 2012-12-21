@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+   <xsd:element name="sen" minOccurs="1" maxOccurs="1">
+
+     <xsd:complexType>
+       <xsd:sequence>
+
+          <xsd:element name="dictionary">
+             <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="connection-cost" type="xsd:string"/>
+                <xsd:element name="double-array-trie" type="xsd:string"/>
+                <xsd:element name="token" type="xsd:string"/>
+                <xsd:element name="pos-info" type="xsd:string"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="charset" type="xsd:string"/>
+          <xsd:element name="unknown-pos" type="xsd:string"/>
+        </xsd:sequence>
+     </xsd:complexType>
+   </xsd:element>
+</xsd:schema>
