@@ -18,6 +18,7 @@ package org.apache.solr.analysis;
 
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.gosen.GosenBasicFormFilter;
+import org.apache.lucene.analysis.util.TokenFilterFactory;
 
 /** 
  * Factory for {@link GosenBasicFormFilter}.
@@ -29,7 +30,7 @@ import org.apache.lucene.analysis.gosen.GosenBasicFormFilter;
  *   &lt;/analyzer&gt;
  * &lt;/fieldType&gt;</pre>
  */
-public class GosenBasicFormFilterFactory extends BaseTokenFilterFactory {
+public class GosenBasicFormFilterFactory extends TokenFilterFactory {
 
   public TokenStream create(TokenStream stream) {
     return new GosenBasicFormFilter(stream);

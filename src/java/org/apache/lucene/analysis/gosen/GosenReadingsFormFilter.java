@@ -19,7 +19,7 @@ package org.apache.lucene.analysis.gosen;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.lucene.analysis.KeywordMarkerFilter;
+import org.apache.lucene.analysis.miscellaneous.KeywordMarkerFilter;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.gosen.tokenAttributes.ReadingsAttribute;
