@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.gosen.GosenPunctuationFilter;
+import org.apache.lucene.analysis.util.TokenFilterFactory;
 
 /**
  * Factory for {@link GosenPunctuationFilter}.
@@ -32,7 +33,7 @@ import org.apache.lucene.analysis.gosen.GosenPunctuationFilter;
  *   &lt;/analyzer&gt;
  * &lt;/fieldType&gt;</pre>
  */
-public class GosenPunctuationFilterFactory extends BaseTokenFilterFactory {
+public class GosenPunctuationFilterFactory extends TokenFilterFactory {
   private boolean enablePositionIncrements;
 
   public void init(Map<String,String> args) {
