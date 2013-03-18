@@ -21,13 +21,13 @@ import java.io.Reader;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.lucene.analysis.CharArraySet;
-import org.apache.lucene.analysis.LowerCaseFilter;
-import org.apache.lucene.analysis.StopFilter;
-import org.apache.lucene.analysis.StopwordAnalyzerBase;
+import org.apache.lucene.analysis.core.LowerCaseFilter;
+import org.apache.lucene.analysis.core.StopFilter;
+import org.apache.lucene.analysis.miscellaneous.KeywordMarkerFilter;
+import org.apache.lucene.analysis.util.StopwordAnalyzerBase;
+import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
-import org.apache.lucene.analysis.KeywordMarkerFilter;
 import org.apache.lucene.util.Version;
 
 /**
@@ -35,7 +35,7 @@ import org.apache.lucene.util.Version;
  */
 public class GosenAnalyzer extends StopwordAnalyzerBase {
   private final Set<String> stoptags;
-  private final Set<?> stemExclusionSet;
+  private final CharArraySet stemExclusionSet;
   private final String dictionaryDir;
 
   public static Set<?> getDefaultStopSet(){
@@ -51,7 +51,7 @@ public class GosenAnalyzer extends StopwordAnalyzerBase {
    * outer class accesses the static final set the first time.
    */
   private static class DefaultSetHolder {
-    static final Set<?> DEFAULT_STOP_SET;
+    static final CharArraySet DEFAULT_STOP_SET;
     static final Set<String> DEFAULT_STOP_TAGS;
 
     static {
@@ -96,7 +96,7 @@ public class GosenAnalyzer extends StopwordAnalyzerBase {
    *        {@link GosenBasicFormFilter} and {@link GosenKatakanaStemFilter}
    * @param dictionaryDir a directory of dictionary
    */
-  public GosenAnalyzer(Version version, Set<?> stopwords, Set<String> stoptags, Set<?> stemExclusionSet, String dictionaryDir) {
+  public GosenAnalyzer(Version version, CharArraySet stopwords, Set<String> stoptags, CharArraySet stemExclusionSet, String dictionaryDir) {
     super(version, stopwords);
     this.stoptags = stoptags;
     this.stemExclusionSet = stemExclusionSet;

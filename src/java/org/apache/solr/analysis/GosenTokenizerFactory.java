@@ -27,10 +27,11 @@ import net.java.sen.filter.stream.CompositeTokenFilter;
 
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.gosen.GosenTokenizer;
+import org.apache.lucene.analysis.util.TokenizerFactory;
+import org.apache.lucene.analysis.util.ResourceLoader;
 import org.apache.lucene.util.IOUtils;
-import org.apache.solr.common.ResourceLoader;
 import org.apache.solr.core.SolrResourceLoader;
-import org.apache.solr.util.plugin.ResourceLoaderAware;
+import org.apache.lucene.analysis.util.ResourceLoaderAware;
 
 /**
  * Factory for {@link GosenTokenizer}.
@@ -41,7 +42,7 @@ import org.apache.solr.util.plugin.ResourceLoaderAware;
  *   &lt;/analyzer&gt;
  * &lt;/fieldType&gt;</pre>
  */
-public class GosenTokenizerFactory extends BaseTokenizerFactory implements ResourceLoaderAware {
+public class GosenTokenizerFactory extends TokenizerFactory implements ResourceLoaderAware {
   
   private CompositeTokenFilter compositeTokenFilter;
   private String dictionaryDir;
