@@ -1,6 +1,23 @@
 lucene-gosen Change Log
 
-========== 4.0.0 / 2013-01-23 ===================================
+========== 4.2.0 / 2013-03-18 ===================================
+
+Important Notice
+
+* http://code.google.com/p/lucene-gosen/issues/detail?id=39
+  Change Lucene/Solr 4.2.0 library 
+
+New Features & Improvements
+
+Bug Fixes
+
+API Changes
+
+Javadoc Fixes
+
+Others
+
+========== 4.1.0 / 2013-01-23 ===================================
 
 Important Notice
 
@@ -17,22 +34,6 @@ Javadoc Fixes
 
 Others
 
-========== 4.0.0 / 2012-10-12 ===================================
-
-Important Notice
-
-* http://code.google.com/p/lucene-gosen/issues/detail?id=37
-  Change Lucene/Solr 4.0.0 library 
-
-New Features & Improvements
-
-Bug Fixes
-
-API Changes
-
-Javadoc Fixes
-
-Others
 ========== 4.0.0 / 2012-10-12 ===================================
 
 Important Notice
