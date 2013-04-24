@@ -25,7 +25,6 @@ import net.java.sen.SenTestUtil;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.BaseTokenStreamTestCase;
-import org.apache.lucene.analysis.ReusableAnalyzerBase;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.gosen.GosenTokenizer;
@@ -35,7 +34,7 @@ import org.apache.lucene.util._TestUtil;
  * Tests for {@link GosenTokenizer}
  */
 public class TestGosenTokenizer extends BaseTokenStreamTestCase {
-  private Analyzer analyzer = new ReusableAnalyzerBase() {
+  private Analyzer analyzer = new Analyzer() {
     @Override
     protected TokenStreamComponents createComponents(String field, Reader reader) {
       Tokenizer tokenizer = new GosenTokenizer(reader, null, SenTestUtil.IPADIC_DIR);
@@ -119,13 +118,13 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
    * (results could be completely bogus, but makes sure we don't crash on some input)
    */
   public void testReliability() throws IOException {
-    checkRandomData(random, analyzer, 10000);
+    checkRandomData(random(), analyzer, 10000);
   }
   
   public void testLargeDocReliability() throws IOException {
     for (int i = 0; i < 100; i++) {
-      String s = _TestUtil.randomUnicodeString(random, 10000);
-      TokenStream ts = analyzer.reusableTokenStream("foo", new StringReader(s));
+      String s = _TestUtil.randomUnicodeString(random(), 10000);
+      TokenStream ts = analyzer.tokenStream("foo", new StringReader(s));
       ts.reset();
       while (ts.incrementToken()) {
       }
@@ -133,14 +132,14 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
   }
   
   public void testEnd() throws IOException {
-    assertTokenStreamContents(analyzer.reusableTokenStream("foo", new StringReader("これは本ではない")),
+    assertTokenStreamContents(analyzer.tokenStream("foo", new StringReader("これは本ではない")),
         new String[] { "これ", "は", "本", "で", "は", "ない" },
         new int[] { 0, 2, 3, 4, 5, 6 },
         new int[] { 2, 3, 4, 5, 6, 8 },
         Integer.valueOf(8)
     );
     
-    assertTokenStreamContents(analyzer.reusableTokenStream("foo", new StringReader("これは本ではない    ")),
+    assertTokenStreamContents(analyzer.tokenStream("foo", new StringReader("これは本ではない    ")),
         new String[] { "これ", "は", "本", "で", "は", "ない" },
         new int[] { 0, 2, 3, 4, 5, 6 },
         new int[] { 2, 3, 4, 5, 6, 8 },

@@ -18,6 +18,7 @@ package org.apache.solr.analysis;
 
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.gosen.GosenWidthFilter;
+import org.apache.lucene.analysis.util.TokenFilterFactory;
 
 /** 
  * Factory for {@link GosenWidthFilter}.
@@ -29,7 +30,7 @@ import org.apache.lucene.analysis.gosen.GosenWidthFilter;
  *   &lt;/analyzer&gt;
  * &lt;/fieldType&gt;</pre>
  */
-public class GosenWidthFilterFactory extends BaseTokenFilterFactory {
+public class GosenWidthFilterFactory extends TokenFilterFactory {
 
   public TokenStream create(TokenStream stream) {
     return new GosenWidthFilter(stream);

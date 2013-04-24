@@ -20,11 +20,12 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.lucene.analysis.CharArraySet;
+import org.apache.lucene.analysis.util.CharArraySet;
+import org.apache.lucene.analysis.util.ResourceLoader;
+import org.apache.lucene.analysis.util.ResourceLoaderAware;
+import org.apache.lucene.analysis.util.TokenFilterFactory;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.gosen.GosenPartOfSpeechKeepFilter;
-import org.apache.solr.common.ResourceLoader;
-import org.apache.solr.util.plugin.ResourceLoaderAware;
 
 /** 
  * Factory for {@link GosenPartOfSpeechKeepFilter}.
@@ -38,7 +39,7 @@ import org.apache.solr.util.plugin.ResourceLoaderAware;
  *   &lt;/analyzer&gt;
  * &lt;/fieldType&gt;</pre>
  */
-public class GosenPartOfSpeechKeepFilterFactory extends BaseTokenFilterFactory implements ResourceLoaderAware {
+public class GosenPartOfSpeechKeepFilterFactory extends TokenFilterFactory implements ResourceLoaderAware {
   private boolean enablePositionIncrements;
   private Set<String> keepTags;
 

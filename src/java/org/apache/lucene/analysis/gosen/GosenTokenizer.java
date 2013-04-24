@@ -119,9 +119,8 @@ public final class GosenTokenizer extends Tokenizer {
   }
 
   @Override
-  public void reset(Reader in) throws IOException {
-    super.reset(in);
-    tagger.reset(in);
+  public void reset() throws IOException {
+    tagger.reset(input);
     accumulatedCost = 0;
   }
 
