@@ -7,11 +7,8 @@ import net.java.sen.SenTestUtil;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.BaseTokenStreamTestCase;
-import org.apache.lucene.analysis.ReusableAnalyzerBase;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
-import org.apache.lucene.analysis.gosen.GosenBasicFormFilter;
-import org.apache.lucene.analysis.gosen.GosenTokenizer;
 
 /**
  * Copyright 2004 The Apache Software Foundation
@@ -30,7 +27,7 @@ import org.apache.lucene.analysis.gosen.GosenTokenizer;
  */
 
 public class TestGosenBasicFormFilter extends BaseTokenStreamTestCase {
-  private Analyzer analyzer = new ReusableAnalyzerBase() {
+  private Analyzer analyzer = new Analyzer() {
     @Override
     protected TokenStreamComponents createComponents(String field, Reader reader) {
       Tokenizer tokenizer = new GosenTokenizer(reader, null, SenTestUtil.IPADIC_DIR);
@@ -46,6 +43,6 @@ public class TestGosenBasicFormFilter extends BaseTokenStreamTestCase {
   }
   
   public void testRandomStrings() throws IOException {
-    checkRandomData(random, analyzer, 10000);
+    checkRandomData(random(), analyzer, 10000);
   }
 }

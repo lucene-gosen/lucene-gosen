@@ -1,6 +1,113 @@
 lucene-gosen Change Log
+========== 4.3.0 / 2013-04-26 ===================================
 
-========== trunk / YYYY-MM-DD ===================================
+Important Notice
+
+* http://code.google.com/p/lucene-gosen/issues/detail?id=41
+Change Lucene/Solr 4.3.0 library
+this release only use higher the version  lucene/solr 4.3.0.
+
+New Features & Improvements
+* TokenFilterFactory and TokenizerFactory throw exception(IllegalArgumentException) when arguments are invalid.(LUCENE-4877)
+
+Bug Fixes
+
+API Changes
+* remove init() method from *TokenizerFactory and *TokenFilterFactory,
+  and add ctor taking Map<String, String> (LUCENE-4642)
+
+Javadoc Fixes
+* GosenAnalyzer Javadoc fix.
+
+Others
+
+========== 4.2.1 / 2013-05-06 ===================================
+
+Important Notice
+
+* http://code.google.com/p/lucene-gosen/issues/detail?id=40
+  Change Lucene/Solr 4.2.1 library
+
+New Features & Improvements
+
+Bug Fixes
+
+API Changes
+
+Javadoc Fixes
+
+Others
+
+========== 4.2.0 / 2013-03-18 ===================================
+
+Important Notice
+
+* http://code.google.com/p/lucene-gosen/issues/detail?id=39
+  Change Lucene/Solr 4.2.0 library 
+
+New Features & Improvements
+
+Bug Fixes
+
+API Changes
+
+Javadoc Fixes
+
+Others
+
+========== 4.1.0 / 2013-01-23 ===================================
+
+Important Notice
+
+* http://code.google.com/p/lucene-gosen/issues/detail?id=38
+  Change Lucene/Solr 4.1.0 library 
+
+New Features & Improvements
+
+Bug Fixes
+
+API Changes
+
+Javadoc Fixes
+
+Others
+
+========== 4.0.0 / 2012-10-12 ===================================
+
+Important Notice
+
+* http://code.google.com/p/lucene-gosen/issues/detail?id=37
+  Change Lucene/Solr 4.0.0 library 
+
+New Features & Improvements
+
+Bug Fixes
+
+API Changes
+
+Javadoc Fixes
+
+Others
+
+========== 2.0.2 / 2012-07-07 ===================================
+
+Important Notice
+
+New Features & Improvements
+
+Bug Fixes
+
+API Changes
+
+Javadoc Fixes
+
+Others
+
+* http://code.google.com/p/lucene-gosen/issues/detail?id=29
+  Improve resource management, and refactor to import class 
+  Thanks haruyama (johtani)
+
+========== 2.0.1 / 2012-05-09 ===================================
 
 Important Notice
 
@@ -16,10 +123,6 @@ API Changes
 Javadoc Fixes
 
 Others
-
-* http://code.google.com/p/lucene-gosen/issues/detail?id=29
-  Improve resource management, and refactor to import class 
-  Thanks haruyama (johtani)
 
 ========== 2.0.0 / 2012-04-02 ===================================
 

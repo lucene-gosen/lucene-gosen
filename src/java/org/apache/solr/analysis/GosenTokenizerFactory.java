@@ -27,10 +27,12 @@ import net.java.sen.filter.stream.CompositeTokenFilter;
 
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.gosen.GosenTokenizer;
+import org.apache.lucene.analysis.util.TokenizerFactory;
+import org.apache.lucene.analysis.util.ResourceLoader;
+import org.apache.lucene.util.AttributeSource.AttributeFactory;
 import org.apache.lucene.util.IOUtils;
-import org.apache.solr.common.ResourceLoader;
 import org.apache.solr.core.SolrResourceLoader;
-import org.apache.solr.util.plugin.ResourceLoaderAware;
+import org.apache.lucene.analysis.util.ResourceLoaderAware;
 
 /**
  * Factory for {@link GosenTokenizer}.
@@ -41,17 +43,24 @@ import org.apache.solr.util.plugin.ResourceLoaderAware;
  *   &lt;/analyzer&gt;
  * &lt;/fieldType&gt;</pre>
  */
-public class GosenTokenizerFactory extends BaseTokenizerFactory implements ResourceLoaderAware {
+public class GosenTokenizerFactory extends TokenizerFactory implements ResourceLoaderAware {
   
   private CompositeTokenFilter compositeTokenFilter;
   private String dictionaryDir;
 
-  public void init(Map<String,String> args) {
-    super.init(args);
+  private final String compositePosFile;
+  private final String dirVal;
+
+  public GosenTokenizerFactory(Map<String,String> args) {
+    super(args);
+    compositePosFile = get(args, "compositePOS");
+    dirVal = get(args, "dictionaryDir");
+    if (!args.isEmpty()){
+      throw new IllegalArgumentException("Unknown parameters: " + args);
+    }
   }
 
   public void inform(ResourceLoader loader) {
-    String compositePosFile = args.get("compositePOS");
     if(compositePosFile != null){
       compositeTokenFilter = new CompositeTokenFilter();
       InputStreamReader isr = null;
@@ -73,7 +82,6 @@ public class GosenTokenizerFactory extends BaseTokenizerFactory implements Resou
         }
       }
     }
-    String dirVal = args.get("dictionaryDir");
     if (dirVal != null) {
       // no-dic jar 
       SolrResourceLoader solrLoader = SolrResourceLoader.class.cast(loader);
@@ -94,7 +102,7 @@ public class GosenTokenizerFactory extends BaseTokenizerFactory implements Resou
     }
   }
 
-  public Tokenizer create(Reader reader) {
+  public Tokenizer create(AttributeFactory factory, Reader reader) {
     return new GosenTokenizer(reader, compositeTokenFilter, dictionaryDir);
   }
 }

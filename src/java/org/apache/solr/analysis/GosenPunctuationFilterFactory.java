@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.gosen.GosenPunctuationFilter;
+import org.apache.lucene.analysis.util.TokenFilterFactory;
 
 /**
  * Factory for {@link GosenPunctuationFilter}.
@@ -32,12 +33,15 @@ import org.apache.lucene.analysis.gosen.GosenPunctuationFilter;
  *   &lt;/analyzer&gt;
  * &lt;/fieldType&gt;</pre>
  */
-public class GosenPunctuationFilterFactory extends BaseTokenFilterFactory {
-  private boolean enablePositionIncrements;
+public class GosenPunctuationFilterFactory extends TokenFilterFactory {
+  private final boolean enablePositionIncrements;
 
-  public void init(Map<String,String> args) {
-    super.init(args);
-    enablePositionIncrements = getBoolean("enablePositionIncrements", false);
+  public GosenPunctuationFilterFactory(Map<String,String> args) {
+    super(args);
+    enablePositionIncrements = getBoolean(args, "enablePositionIncrements", false);
+    if (!args.isEmpty()) {
+      throw new IllegalArgumentException("Unknown parameters: " + args);
+    }
   }
 
   public TokenStream create(TokenStream stream) {
