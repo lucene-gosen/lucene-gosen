@@ -20,6 +20,8 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.gosen.GosenBasicFormFilter;
 import org.apache.lucene.analysis.util.TokenFilterFactory;
 
+import java.util.Map;
+
 /** 
  * Factory for {@link GosenBasicFormFilter}.
  * <pre class="prettyprint" >
@@ -31,6 +33,13 @@ import org.apache.lucene.analysis.util.TokenFilterFactory;
  * &lt;/fieldType&gt;</pre>
  */
 public class GosenBasicFormFilterFactory extends TokenFilterFactory {
+
+  public GosenBasicFormFilterFactory(Map<String, String> args) {
+    super(args);
+    if (!args.isEmpty()) {
+      throw new IllegalArgumentException("Unknown parameters: " + args);
+    }
+  }
 
   public TokenStream create(TokenStream stream) {
     return new GosenBasicFormFilter(stream);

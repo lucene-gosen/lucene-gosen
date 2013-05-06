@@ -34,11 +34,14 @@ import org.apache.lucene.analysis.util.TokenFilterFactory;
  */
 public class GosenReadingsFormFilterFactory extends TokenFilterFactory {
   
-  private boolean romanized;
+  private final boolean romanized;
 
-  public void init(Map<String,String> args) {
-    super.init(args);
-    romanized = getBoolean("romanized", false);
+  public GosenReadingsFormFilterFactory(Map<String,String> args) {
+    super(args);
+    romanized = getBoolean(args, "romanized", false);
+    if (!args.isEmpty()) {
+      throw new IllegalArgumentException("Unknown parameters: " + args);
+    }
   }
 
   public TokenStream create(TokenStream input) {

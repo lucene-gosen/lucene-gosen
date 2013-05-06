@@ -23,7 +23,7 @@ import java.util.Set;
 
 import org.apache.lucene.analysis.core.LowerCaseFilter;
 import org.apache.lucene.analysis.core.StopFilter;
-import org.apache.lucene.analysis.miscellaneous.KeywordMarkerFilter;
+import org.apache.lucene.analysis.miscellaneous.SetKeywordMarkerFilter;
 import org.apache.lucene.analysis.util.StopwordAnalyzerBase;
 import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.analysis.TokenStream;
@@ -105,14 +105,14 @@ public class GosenAnalyzer extends StopwordAnalyzerBase {
 
   /**
    * Creates
-   * {@link org.apache.lucene.analysis.util.ReusableAnalyzerBase.TokenStreamComponents}
+   * {@link org.apache.lucene.analysis.Analyzer.TokenStreamComponents}
    * used to tokenize all the text in the provided {@link Reader}.
    * 
-   * @return {@link org.apache.lucene.analysis.util.ReusableAnalyzerBase.TokenStreamComponents}
+   * @return {@link org.apache.lucene.analysis.Analyzer.TokenStreamComponents}
    *         built from a {@link GosenTokenizer} filtered with
    *         {@link GosenWidthFilter}, {@link GosenPunctuationFilter},
    *         {@link GosenPartOfSpeechStopFilter}, {@link StopFilter},
-   *         {@link KeywordMarkerFilter} if a stem exclusion set is provided, 
+   *         {@link SetKeywordMarkerFilter} if a stem exclusion set is provided,
    *         {@link GosenBasicFormFilter}, {@link GosenKatakanaStemFilter},
    *         and  {@link LowerCaseFilter}
    */
@@ -124,7 +124,7 @@ public class GosenAnalyzer extends StopwordAnalyzerBase {
     stream = new GosenPartOfSpeechStopFilter(true, stream, stoptags);
     stream = new StopFilter(matchVersion, stream, stopwords);
     if (!stemExclusionSet.isEmpty())
-      stream = new KeywordMarkerFilter(stream, stemExclusionSet);
+      stream = new SetKeywordMarkerFilter(stream, stemExclusionSet);
     stream = new GosenBasicFormFilter(stream);
     stream = new GosenKatakanaStemFilter(stream);
     stream = new LowerCaseFilter(matchVersion, stream);

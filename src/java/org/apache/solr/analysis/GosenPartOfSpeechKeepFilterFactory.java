@@ -18,6 +18,7 @@ package org.apache.solr.analysis;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.lucene.analysis.util.CharArraySet;
@@ -40,12 +41,21 @@ import org.apache.lucene.analysis.gosen.GosenPartOfSpeechKeepFilter;
  * &lt;/fieldType&gt;</pre>
  */
 public class GosenPartOfSpeechKeepFilterFactory extends TokenFilterFactory implements ResourceLoaderAware {
-  private boolean enablePositionIncrements;
+  private final boolean enablePositionIncrements;
+  private final String keepTagFiles;
   private Set<String> keepTags;
 
+  public GosenPartOfSpeechKeepFilterFactory(Map<String, String> args) {
+    super(args);
+    keepTagFiles = require(args, "tags");
+    enablePositionIncrements = getBoolean(args, "enablePositionIncrements", false);
+
+    if (!args.isEmpty()) {
+      throw new IllegalArgumentException("Unknown parameters: " + args);
+    }
+  }
+
   public void inform(ResourceLoader loader) {
-    String keepTagFiles = args.get("tags");
-    enablePositionIncrements = getBoolean("enablePositionIncrements", false);
     try {
       CharArraySet cas = getWordSet(loader, keepTagFiles, false);
       keepTags = new HashSet<String>();
