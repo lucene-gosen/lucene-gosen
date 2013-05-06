@@ -1,6 +1,27 @@
 lucene-gosen Change Log
+========== 4.3.0 / 2013-04-26 ===================================
 
-========== 4.2.1 / 2013-04-04 ===================================
+Important Notice
+
+* http://code.google.com/p/lucene-gosen/issues/detail?id=41
+Change Lucene/Solr 4.3.0 library
+this release only use higher the version  lucene/solr 4.3.0.
+
+New Features & Improvements
+* TokenFilterFactory and TokenizerFactory throw exception(IllegalArgumentException) when arguments are invalid.(LUCENE-4877)
+
+Bug Fixes
+
+API Changes
+* remove init() method from *TokenizerFactory and *TokenFilterFactory,
+  and add ctor taking Map<String, String> (LUCENE-4642)
+
+Javadoc Fixes
+* GosenAnalyzer Javadoc fix.
+
+Others
+
+========== 4.2.1 / 2013-05-06 ===================================
 
 Important Notice
 
