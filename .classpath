@@ -10,10 +10,10 @@
 	<classpathentry kind="lib" path="lib/slf4j-api-1.6.6.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-jdk14-1.6.6.jar"/>
 	<classpathentry kind="lib" path="lib/randomizedtesting-runner-2.0.9.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-analyzers-common-4.3.0.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-core-4.3.0.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-test-framework-4.3.0.jar"/>
-	<classpathentry kind="lib" path="lib/solr-core-4.3.0.jar"/>
-	<classpathentry kind="lib" path="lib/solr-solrj-4.3.0.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-analyzers-common-4.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-core-4.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-test-framework-4.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/solr-core-4.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/solr-solrj-4.3.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
