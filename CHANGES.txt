@@ -1,4 +1,22 @@
 lucene-gosen Change Log
+
+========== 4.3.1 / 2013-06-17 ===================================
+
+Important Notice
+
+* http://code.google.com/p/lucene-gosen/issues/detail?id=43
+  Change Lucene/Solr 4.3.1 library
+
+New Features & Improvements
+
+Bug Fixes
+
+API Changes
+
+Javadoc Fixes
+
+Others
+
 ========== 4.3.0 / 2013-04-26 ===================================
 
 Important Notice
