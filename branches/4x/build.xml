@@ -6,7 +6,7 @@
   <!-- to change the dictionary type to naist-chasen, ant -Ddictype=naist-chasen -->
   <property name="dictype" value="ipadic"/>
 
-  <property name="version" value="4.3.1"/>
+  <property name="version" value="4.4.0"/>
 
   <property name="src.dir" location="src/java"/>
   <property name="cdic.dir" location="src/compiled-dictionaries"/>
@@ -72,6 +72,7 @@
              encoding="UTF-8"
              doctitle="lucene-gosen-${version}"
              source="1.6"
+locale="en_US"
              stylesheetfile="${javadoc.dir}/prettify/stylesheet+prettify.css">
       <link href="${javadoc.link.java}"/>
       <link href="${javadoc.link.lucene}"/>

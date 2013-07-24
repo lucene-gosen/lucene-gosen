@@ -48,7 +48,7 @@ public class GosenPartOfSpeechStopFilterFactory extends TokenFilterFactory imple
   public GosenPartOfSpeechStopFilterFactory(Map<String, String> args) {
     super(args);
     stopTagFiles = require(args, "tags");
-    enablePositionIncrements = getBoolean(args, "enablePositionIncrements", false);
+    enablePositionIncrements = getBoolean(args, "enablePositionIncrements", true);
 
     if (!args.isEmpty()) {
       throw new IllegalArgumentException("Unknown parameters: " + args);
@@ -69,6 +69,12 @@ public class GosenPartOfSpeechStopFilterFactory extends TokenFilterFactory imple
   }
 
   public TokenStream create(TokenStream stream) {
-    return new GosenPartOfSpeechStopFilter(enablePositionIncrements, stream, stopTags);
+    if (stopTags != null) {
+      @SuppressWarnings("deprecation")
+      final TokenStream filter = new GosenPartOfSpeechStopFilter(luceneMatchVersion, enablePositionIncrements, stream, stopTags);
+      return filter;
+    } else {
+      return stream;
+    }
   }
 }
