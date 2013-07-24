@@ -124,7 +124,7 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
   public void testLargeDocReliability() throws IOException {
     for (int i = 0; i < 100; i++) {
       String s = _TestUtil.randomUnicodeString(random(), 10000);
-      TokenStream ts = analyzer.tokenStream("foo", new StringReader(s));
+      TokenStream ts = analyzer.tokenStream("foo", s);
       ts.reset();
       while (ts.incrementToken()) {
       }
@@ -132,14 +132,14 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
   }
   
   public void testEnd() throws IOException {
-    assertTokenStreamContents(analyzer.tokenStream("foo", new StringReader("これは本ではない")),
+    assertTokenStreamContents(analyzer.tokenStream("foo", "これは本ではない"),
         new String[] { "これ", "は", "本", "で", "は", "ない" },
         new int[] { 0, 2, 3, 4, 5, 6 },
         new int[] { 2, 3, 4, 5, 6, 8 },
         Integer.valueOf(8)
     );
     
-    assertTokenStreamContents(analyzer.tokenStream("foo", new StringReader("これは本ではない    ")),
+    assertTokenStreamContents(analyzer.tokenStream("foo", "これは本ではない    "),
         new String[] { "これ", "は", "本", "で", "は", "ない" },
         new int[] { 0, 2, 3, 4, 5, 6 },
         new int[] { 2, 3, 4, 5, 6, 8 },

@@ -120,8 +120,8 @@ public class GosenAnalyzer extends StopwordAnalyzerBase {
   protected TokenStreamComponents createComponents(String field, Reader reader) {
     Tokenizer tokenizer = new GosenTokenizer(reader, null, dictionaryDir);
     TokenStream stream = new GosenWidthFilter(tokenizer);
-    stream = new GosenPunctuationFilter(true, stream);
-    stream = new GosenPartOfSpeechStopFilter(true, stream, stoptags);
+    stream = new GosenPunctuationFilter(matchVersion, stream);
+    stream = new GosenPartOfSpeechStopFilter(matchVersion, stream, stoptags);
     stream = new StopFilter(matchVersion, stream, stopwords);
     if (!stemExclusionSet.isEmpty())
       stream = new SetKeywordMarkerFilter(stream, stemExclusionSet);

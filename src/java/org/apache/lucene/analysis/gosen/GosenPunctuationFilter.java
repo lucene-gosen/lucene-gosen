@@ -21,6 +21,7 @@ import java.io.IOException;
 import org.apache.lucene.analysis.util.FilteringTokenFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.util.Version;
 
 /**
  * Removes punctuation tokens
@@ -28,8 +29,14 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 public final class GosenPunctuationFilter extends FilteringTokenFilter {
   private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
 
-  public GosenPunctuationFilter(boolean enablePositionIncrements, TokenStream input) {
-    super(enablePositionIncrements, input);
+  /** @deprecated enablePositionIncrements=false is not supported anymore as of Lucene 4.4. */
+  @Deprecated
+  public GosenPunctuationFilter(Version version, boolean enablePositionIncrements, TokenStream input) {
+    super(version, enablePositionIncrements, input);
+  }
+
+  public GosenPunctuationFilter(Version version, TokenStream input) {
+    super(version, input);
   }
 
   @Override
