@@ -1,5 +1,28 @@
 lucene-gosen Change Log
 
+
+========== 4.4.0 / 2013-07-24 ===================================
+
+Important Notice
+
+* http://code.google.com/p/lucene-gosen/issues/detail?id=42
+  default true, enablePositionIncrements(LUCENE-4963)
+
+* http://code.google.com/p/lucene-gosen/issues/detail?id=44
+  Change Lucene/Solr 4.4.0 library
+
+New Features & Improvements
+
+Bug Fixes
+
+API Changes
+
+* add ctor taking Version to GosenPartOfSpeecheKeepFilter, GosenPartOfSpeechStopFilter GosenPunctuationFilter (LUCENE-4963)
+
+Javadoc Fixes
+
+Others
+
 ========== 4.3.1 / 2013-06-17 ===================================
 
 Important Notice
