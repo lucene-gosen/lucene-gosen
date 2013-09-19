@@ -138,6 +138,7 @@ public final class GosenTokenizer extends Tokenizer {
 
   @Override
   public void end() throws IOException {
+    super.end();
     // set final offset
     final int finalOffset = correctOffset(tagger.end());
     offsetAtt.setOffset(finalOffset, finalOffset);
