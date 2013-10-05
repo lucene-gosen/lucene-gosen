@@ -23,15 +23,13 @@ import java.io.Reader;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.BaseTokenStreamTestCase;
 import org.apache.lucene.analysis.Tokenizer;
-import org.apache.lucene.analysis.WhitespaceTokenizer;
-import org.apache.lucene.analysis.ReusableAnalyzerBase;
-import org.apache.lucene.analysis.gosen.GosenWidthFilter;
+import org.apache.lucene.analysis.core.WhitespaceTokenizer;
 
 /**
  * Tests for {@link GosenWidthFilter}
  */
 public class TestGosenWidthFilter extends BaseTokenStreamTestCase {
-  private Analyzer analyzer = new ReusableAnalyzerBase() {
+  private Analyzer analyzer = new Analyzer() {
     @Override
     protected TokenStreamComponents createComponents(String fieldName, Reader reader) {
       Tokenizer source = new WhitespaceTokenizer(TEST_VERSION_CURRENT, reader);
@@ -62,6 +60,6 @@ public class TestGosenWidthFilter extends BaseTokenStreamTestCase {
   }
   
   public void testRandomData() throws IOException {
-    checkRandomData(random, analyzer, 10000);
+    checkRandomData(random(), analyzer, 10000);
   }
 }
