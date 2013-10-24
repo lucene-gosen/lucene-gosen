@@ -19,7 +19,7 @@ package org.apache.lucene.analysis.gosen;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.lucene.analysis.KeywordMarkerFilter;
+import org.apache.lucene.analysis.miscellaneous.SetKeywordMarkerFilter;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.gosen.tokenAttributes.ReadingsAttribute;
@@ -30,7 +30,7 @@ import org.apache.lucene.analysis.tokenattributes.KeywordAttribute;
  * Replaces term text with the {@link ReadingsAttribute}.
  * <p>
  * To prevent terms from being replaced use an instance of
- * {@link KeywordMarkerFilter} or a custom {@link TokenFilter} that sets
+ * {@link SetKeywordMarkerFilter} or a custom {@link TokenFilter} that sets
  * the {@link KeywordAttribute} before this {@link TokenStream}.
  * </p>
  */
