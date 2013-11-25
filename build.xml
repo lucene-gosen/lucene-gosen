@@ -6,7 +6,7 @@
   <!-- to change the dictionary type to naist-chasen, ant -Ddictype=naist-chasen -->
   <property name="dictype" value="ipadic"/>
 
-  <property name="version" value="4.6.0"/>
+  <property name="version" value="4.7.0"/>
 
   <property name="src.dir" location="src/java"/>
   <property name="cdic.dir" location="src/compiled-dictionaries"/>
