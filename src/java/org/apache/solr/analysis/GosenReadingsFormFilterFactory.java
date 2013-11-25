@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.gosen.GosenReadingsFormFilter;
+import org.apache.lucene.analysis.util.TokenFilterFactory;
 
 /** 
  * Factory for {@link GosenReadingsFormFilter}.
@@ -31,13 +32,16 @@ import org.apache.lucene.analysis.gosen.GosenReadingsFormFilter;
  *   &lt;/analyzer&gt;
  * &lt;/fieldType&gt;</pre>
  */
-public class GosenReadingsFormFilterFactory extends BaseTokenFilterFactory {
+public class GosenReadingsFormFilterFactory extends TokenFilterFactory {
   
-  private boolean romanized;
+  private final boolean romanized;
 
-  public void init(Map<String,String> args) {
-    super.init(args);
-    romanized = getBoolean("romanized", false);
+  public GosenReadingsFormFilterFactory(Map<String,String> args) {
+    super(args);
+    romanized = getBoolean(args, "romanized", false);
+    if (!args.isEmpty()) {
+      throw new IllegalArgumentException("Unknown parameters: " + args);
+    }
   }
 
   public TokenStream create(TokenStream input) {

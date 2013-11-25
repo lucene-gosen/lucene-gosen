@@ -21,13 +21,13 @@ import java.io.Reader;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.lucene.analysis.CharArraySet;
-import org.apache.lucene.analysis.LowerCaseFilter;
-import org.apache.lucene.analysis.StopFilter;
-import org.apache.lucene.analysis.StopwordAnalyzerBase;
+import org.apache.lucene.analysis.core.LowerCaseFilter;
+import org.apache.lucene.analysis.core.StopFilter;
+import org.apache.lucene.analysis.miscellaneous.SetKeywordMarkerFilter;
+import org.apache.lucene.analysis.util.StopwordAnalyzerBase;
+import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
-import org.apache.lucene.analysis.KeywordMarkerFilter;
 import org.apache.lucene.util.Version;
 
 /**
@@ -35,7 +35,7 @@ import org.apache.lucene.util.Version;
  */
 public class GosenAnalyzer extends StopwordAnalyzerBase {
   private final Set<String> stoptags;
-  private final Set<?> stemExclusionSet;
+  private final CharArraySet stemExclusionSet;
   private final String dictionaryDir;
 
   public static Set<?> getDefaultStopSet(){
@@ -51,7 +51,7 @@ public class GosenAnalyzer extends StopwordAnalyzerBase {
    * outer class accesses the static final set the first time.
    */
   private static class DefaultSetHolder {
-    static final Set<?> DEFAULT_STOP_SET;
+    static final CharArraySet DEFAULT_STOP_SET;
     static final Set<String> DEFAULT_STOP_TAGS;
 
     static {
@@ -96,7 +96,7 @@ public class GosenAnalyzer extends StopwordAnalyzerBase {
    *        {@link GosenBasicFormFilter} and {@link GosenKatakanaStemFilter}
    * @param dictionaryDir a directory of dictionary
    */
-  public GosenAnalyzer(Version version, Set<?> stopwords, Set<String> stoptags, Set<?> stemExclusionSet, String dictionaryDir) {
+  public GosenAnalyzer(Version version, CharArraySet stopwords, Set<String> stoptags, CharArraySet stemExclusionSet, String dictionaryDir) {
     super(version, stopwords);
     this.stoptags = stoptags;
     this.stemExclusionSet = stemExclusionSet;
@@ -105,14 +105,14 @@ public class GosenAnalyzer extends StopwordAnalyzerBase {
 
   /**
    * Creates
-   * {@link org.apache.lucene.analysis.util.ReusableAnalyzerBase.TokenStreamComponents}
+   * {@link org.apache.lucene.analysis.Analyzer.TokenStreamComponents}
    * used to tokenize all the text in the provided {@link Reader}.
    * 
-   * @return {@link org.apache.lucene.analysis.util.ReusableAnalyzerBase.TokenStreamComponents}
+   * @return {@link org.apache.lucene.analysis.Analyzer.TokenStreamComponents}
    *         built from a {@link GosenTokenizer} filtered with
    *         {@link GosenWidthFilter}, {@link GosenPunctuationFilter},
    *         {@link GosenPartOfSpeechStopFilter}, {@link StopFilter},
-   *         {@link KeywordMarkerFilter} if a stem exclusion set is provided, 
+   *         {@link SetKeywordMarkerFilter} if a stem exclusion set is provided,
    *         {@link GosenBasicFormFilter}, {@link GosenKatakanaStemFilter},
    *         and  {@link LowerCaseFilter}
    */
@@ -120,11 +120,11 @@ public class GosenAnalyzer extends StopwordAnalyzerBase {
   protected TokenStreamComponents createComponents(String field, Reader reader) {
     Tokenizer tokenizer = new GosenTokenizer(reader, null, dictionaryDir);
     TokenStream stream = new GosenWidthFilter(tokenizer);
-    stream = new GosenPunctuationFilter(true, stream);
-    stream = new GosenPartOfSpeechStopFilter(true, stream, stoptags);
+    stream = new GosenPunctuationFilter(matchVersion, stream);
+    stream = new GosenPartOfSpeechStopFilter(matchVersion, stream, stoptags);
     stream = new StopFilter(matchVersion, stream, stopwords);
     if (!stemExclusionSet.isEmpty())
-      stream = new KeywordMarkerFilter(stream, stemExclusionSet);
+      stream = new SetKeywordMarkerFilter(stream, stemExclusionSet);
     stream = new GosenBasicFormFilter(stream);
     stream = new GosenKatakanaStemFilter(stream);
     stream = new LowerCaseFilter(matchVersion, stream);

@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.gosen.GosenPunctuationFilter;
+import org.apache.lucene.analysis.util.TokenFilterFactory;
 
 /**
  * Factory for {@link GosenPunctuationFilter}.
@@ -27,20 +28,24 @@ import org.apache.lucene.analysis.gosen.GosenPunctuationFilter;
  * &lt;fieldType name="text_ja" class="solr.TextField"&gt;
  *   &lt;analyzer&gt;
  *     &lt;tokenizer class="solr.GosenTokenizerFactory"/&gt;
- *     &lt;filter class="solr.GosenPunctuationFilterFactory" 
- *             enablePositionIncrements="true"/&gt;
+ *     &lt;filter class="solr.GosenPunctuationFilterFactory" /&gt;
  *   &lt;/analyzer&gt;
  * &lt;/fieldType&gt;</pre>
  */
-public class GosenPunctuationFilterFactory extends BaseTokenFilterFactory {
-  private boolean enablePositionIncrements;
+public class GosenPunctuationFilterFactory extends TokenFilterFactory {
+  private final boolean enablePositionIncrements;
 
-  public void init(Map<String,String> args) {
-    super.init(args);
-    enablePositionIncrements = getBoolean("enablePositionIncrements", false);
+  public GosenPunctuationFilterFactory(Map<String,String> args) {
+    super(args);
+    enablePositionIncrements = getBoolean(args, "enablePositionIncrements", true);
+    if (!args.isEmpty()) {
+      throw new IllegalArgumentException("Unknown parameters: " + args);
+    }
   }
 
   public TokenStream create(TokenStream stream) {
-    return new GosenPunctuationFilter(enablePositionIncrements, stream);
+    @SuppressWarnings("deprecation")
+    final GosenPunctuationFilter filter = new GosenPunctuationFilter(luceneMatchVersion, enablePositionIncrements, stream);
+    return filter;
   }
 }
