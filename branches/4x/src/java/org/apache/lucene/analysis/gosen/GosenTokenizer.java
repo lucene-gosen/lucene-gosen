@@ -97,7 +97,7 @@ public final class GosenTokenizer extends Tokenizer {
     StringTagger stringTagger = SenFactory.getStringTagger(dictionaryDir);
     if(filter != null)
       stringTagger.addFilter(filter);
-    tagger = new StreamTagger2(stringTagger, in);
+    tagger = new StreamTagger2(stringTagger, this.input);
   }
 
   @Override
@@ -131,7 +131,14 @@ public final class GosenTokenizer extends Tokenizer {
   }
 
   @Override
+  public void close() throws IOException {
+    super.close();
+    tagger.reset(input);
+  }
+
+  @Override
   public void reset() throws IOException {
+    super.reset();
     tagger.reset(input);
     accumulatedCost = 0;
   }
