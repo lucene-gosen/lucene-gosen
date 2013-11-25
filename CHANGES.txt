@@ -1,5 +1,25 @@
 lucene-gosen Change Log
 
+========== 4.6.0 / 2013-11-25 ===================================
+
+Important Notice
+
+* http://code.google.com/p/lucene-gosen/issues/detail?id=47
+  Change Lucene/Solr 4.6.0 library
+  call super.reset() in GosenTokenizer.reset() method
+
+New Features & Improvements
+
+Bug Fixes
+
+API Changes
+
+* add close() method to GosenTokenizer.
+
+Javadoc Fixes
+
+Others
+
 ========== 4.5.1 / 2013-10-24 ===================================
 
 Important Notice

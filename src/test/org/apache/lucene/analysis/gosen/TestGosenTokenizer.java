@@ -18,21 +18,22 @@ package org.apache.lucene.analysis.gosen;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.io.StringReader;
 import java.util.Arrays;
 
 import net.java.sen.SenTestUtil;
 
+import net.java.sen.util.IOUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.BaseTokenStreamTestCase;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
-import org.apache.lucene.analysis.gosen.GosenTokenizer;
+import org.apache.lucene.util.LuceneTestCase;
 import org.apache.lucene.util._TestUtil;
 
 /**
  * Tests for {@link GosenTokenizer}
  */
+@LuceneTestCase.Slow
 public class TestGosenTokenizer extends BaseTokenStreamTestCase {
   private Analyzer analyzer = new Analyzer() {
     @Override
@@ -125,8 +126,13 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
     for (int i = 0; i < 100; i++) {
       String s = _TestUtil.randomUnicodeString(random(), 10000);
       TokenStream ts = analyzer.tokenStream("foo", s);
-      ts.reset();
-      while (ts.incrementToken()) {
+      try {
+        ts.reset();
+        while (ts.incrementToken()) {
+        }
+        ts.end();
+      } finally {
+        IOUtils.closeWhileHandlingException(ts);
       }
     }
   }
