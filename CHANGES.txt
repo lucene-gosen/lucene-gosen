@@ -14,6 +14,23 @@ Javadoc Fixes
 
 Others
 
+========== 4.6.1 / 2014-01-28 ===================================
+
+Important Notice
+
+* http://code.google.com/p/lucene-gosen/issues/detail?id=49
+  Change Lucene/Solr 4.6.1 library
+
+New Features & Improvements
+
+Bug Fixes
+
+API Changes
+
+Javadoc Fixes
+
+Others
+
 ========== 4.6.0 / 2013-11-25 ===================================
 
 Important Notice
