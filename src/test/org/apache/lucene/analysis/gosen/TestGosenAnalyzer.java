@@ -54,6 +54,6 @@ public class TestGosenAnalyzer extends BaseTokenStreamTestCase {
    */
   public void testReliability() throws IOException {
     Analyzer analyzer = new GosenAnalyzer(TEST_VERSION_CURRENT, SenTestUtil.IPADIC_DIR);
-    checkRandomData(random, analyzer, 10000);
+    checkRandomData(random(), analyzer, 10000*RANDOM_MULTIPLIER);
   }
 }
