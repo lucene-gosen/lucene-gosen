@@ -1,5 +1,19 @@
 lucene-gosen Change Log
 
+========== 4.8.0 / YYYY-MM-DD ===================================
+
+Important Notice
+
+New Features & Improvements
+
+Bug Fixes
+
+API Changes
+
+Javadoc Fixes
+
+Others
+
 ========== 4.7.1 / 2014-04-02 ===================================
 
 Important Notice
