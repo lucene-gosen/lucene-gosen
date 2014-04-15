@@ -6,7 +6,7 @@
   <!-- to change the dictionary type to naist-chasen, ant -Ddictype=naist-chasen -->
   <property name="dictype" value="ipadic"/>
 
-  <property name="version" value="2.1-dev"/>
+  <property name="version" value="4.7.2"/>
 
   <property name="src.dir" location="src/java"/>
   <property name="cdic.dir" location="src/compiled-dictionaries"/>
@@ -17,7 +17,7 @@
   <property name="javadoc.dir" location="docs/api"/>
   <property name="prettify.dir" location="prettify"/>
 
-  <property name="tests.seed" value="random" />
+  <property name="tests.seed" value="" />
   <property name="tests.iter" value="1" />
   <property name="tests.iter.min" value="${tests.iter}" />
   <property name="testmethod" value=""/>
@@ -25,10 +25,22 @@
   <path id="classpath">
     <fileset dir="lib">
       <include name="*.jar" />
+      <exclude name="junit-*.jar"/>
+      <exclude name="randomizedtesting-*.jar"/>
+      <exclude name="lucene-test-framework-*.jar"/>
+    </fileset>
+  </path>
+  
+  <path id="lucene-test-classpath">
+    <fileset dir="lib">
+      <include name="junit-*.jar"/>
+      <include name="randomizedtesting-*.jar"/>
+      <include name="lucene-test-framework-*.jar"/>
     </fileset>
   </path>
 
   <path id="testclasspath">
+    <path refid="lucene-test-classpath"/>
     <path refid="classpath"/>
     <pathelement location="${bin.dir}/classes/java" />
     <pathelement location="${bin.dir}/classes/test" />
@@ -59,7 +71,8 @@
              windowtitle="lucene-gosen-${version} API"
              encoding="UTF-8"
              doctitle="lucene-gosen-${version}"
-             source="1.5"
+             source="1.6"
+locale="en_US"
              stylesheetfile="${javadoc.dir}/prettify/stylesheet+prettify.css">
       <link href="${javadoc.link.java}"/>
       <link href="${javadoc.link.lucene}"/>
@@ -83,8 +96,8 @@
            includes="**/*.java"
            debug="true"
            encoding="utf-8"
-           source="1.5"
-           target="1.5">
+           source="1.6"
+           target="1.6">
       <compilerarg line="-Xlint -Xlint:-serial"/>
     </javac>
     <!-- Copy the resources folder (if existent) -->
@@ -102,8 +115,8 @@
            includes="**/*.java"
            debug="true"
            encoding="utf-8"
-           source="1.5"
-           target="1.5">
+           source="1.6"
+           target="1.6">
       <compilerarg line="-Xlint -Xlint:-serial"/>
     </javac>
   </target>
