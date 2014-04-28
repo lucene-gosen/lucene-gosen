@@ -28,7 +28,7 @@ import org.apache.lucene.analysis.BaseTokenStreamTestCase;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.util.LuceneTestCase;
-import org.apache.lucene.util._TestUtil;
+import org.apache.lucene.util.TestUtil;
 
 /**
  * Tests for {@link GosenTokenizer}
@@ -124,7 +124,7 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
   
   public void testLargeDocReliability() throws IOException {
     for (int i = 0; i < 100; i++) {
-      String s = _TestUtil.randomUnicodeString(random(), 10000);
+      String s = TestUtil.randomUnicodeString(random(), 10000);
       TokenStream ts = analyzer.tokenStream("foo", s);
       try {
         ts.reset();
