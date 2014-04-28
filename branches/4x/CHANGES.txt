@@ -1,8 +1,11 @@
 lucene-gosen Change Log
 
-========== 4.8.0 / YYYY-MM-DD ===================================
+========== 4.8.0 / 2014-04-28 ===================================
 
 Important Notice
+
+* http://code.google.com/p/lucene-gosen/issues/detail?id=53
+  Change Lucene/Solr 4.8.0 library and Move to Java 7 as minimum Java version
 
 New Features & Improvements
 
