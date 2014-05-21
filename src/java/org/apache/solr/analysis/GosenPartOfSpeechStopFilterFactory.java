@@ -18,13 +18,15 @@ package org.apache.solr.analysis;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
-import org.apache.lucene.analysis.CharArraySet;
+import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.gosen.GosenPartOfSpeechStopFilter;
-import org.apache.solr.common.ResourceLoader;
-import org.apache.solr.util.plugin.ResourceLoaderAware;
+import org.apache.lucene.analysis.util.ResourceLoader;
+import org.apache.lucene.analysis.util.ResourceLoaderAware;
+import org.apache.lucene.analysis.util.TokenFilterFactory;
 
 /** 
  * Factory for {@link GosenPartOfSpeechStopFilter}.
@@ -38,13 +40,22 @@ import org.apache.solr.util.plugin.ResourceLoaderAware;
  *   &lt;/analyzer&gt;
  * &lt;/fieldType&gt;</pre>
  */
-public class GosenPartOfSpeechStopFilterFactory extends BaseTokenFilterFactory implements ResourceLoaderAware {
-  private boolean enablePositionIncrements;
+public class GosenPartOfSpeechStopFilterFactory extends TokenFilterFactory implements ResourceLoaderAware {
+  private final boolean enablePositionIncrements;
+  private final String stopTagFiles;
   private Set<String> stopTags;
 
+  public GosenPartOfSpeechStopFilterFactory(Map<String, String> args) {
+    super(args);
+    stopTagFiles = require(args, "tags");
+    enablePositionIncrements = getBoolean(args, "enablePositionIncrements", true);
+
+    if (!args.isEmpty()) {
+      throw new IllegalArgumentException("Unknown parameters: " + args);
+    }
+  }
+
   public void inform(ResourceLoader loader) {
-    String stopTagFiles = args.get("tags");
-    enablePositionIncrements = getBoolean("enablePositionIncrements", false);
     try {
       CharArraySet cas = getWordSet(loader, stopTagFiles, false);
       stopTags = new HashSet<String>();
@@ -58,6 +69,12 @@ public class GosenPartOfSpeechStopFilterFactory extends BaseTokenFilterFactory i
   }
 
   public TokenStream create(TokenStream stream) {
-    return new GosenPartOfSpeechStopFilter(enablePositionIncrements, stream, stopTags);
+    if (stopTags != null) {
+      @SuppressWarnings("deprecation")
+      final TokenStream filter = new GosenPartOfSpeechStopFilter(luceneMatchVersion, enablePositionIncrements, stream, stopTags);
+      return filter;
+    } else {
+      return stream;
+    }
   }
 }

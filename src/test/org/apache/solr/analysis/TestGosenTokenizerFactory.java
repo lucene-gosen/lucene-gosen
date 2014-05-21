@@ -53,8 +53,7 @@ public class TestGosenTokenizerFactory extends LuceneTestCase {
     
     SolrResourceLoader loader = new SolrResourceLoader(baseDir.getAbsolutePath(), GosenTokenizerFactory.class.getClassLoader());
     Map<String, String> args = new HashMap<String, String>();
-    GosenTokenizerFactory factory = new GosenTokenizerFactory();
-    factory.init(args);
+    GosenTokenizerFactory factory = new GosenTokenizerFactory(args);
     factory.inform(loader);
     Field field = GosenTokenizerFactory.class.getDeclaredField("dictionaryDir");
     field.setAccessible(true);
@@ -62,26 +61,34 @@ public class TestGosenTokenizerFactory extends LuceneTestCase {
     
     // relative path (from conf dir)
     args.put("dictionaryDir", dicDir.getName());
-    factory = new GosenTokenizerFactory();
-    factory.init(args);
+    factory = new GosenTokenizerFactory(args);
     factory.inform(loader);
     assertEquals("dictionaryDir is incorrect.", dicDir.getAbsolutePath(), field.get(factory));
     
     // absolute path
     args.put("dictionaryDir", dicDir.getAbsolutePath());
-    factory = new GosenTokenizerFactory();
-    factory.init(args);
+    factory = new GosenTokenizerFactory(args);
     factory.inform(loader);
     assertEquals("dictionaryDir is incorrect.", dicDir.getAbsolutePath(), field.get(factory));
     
     // not exists path
     String notExistsPath = dicDir.getAbsolutePath() + "/hogehoge";
     args.put("dictionaryDir", notExistsPath);
-    factory = new GosenTokenizerFactory();
-    factory.init(args);
+    factory = new GosenTokenizerFactory(args);
     factory.inform(loader);
     assertEquals("dictionaryDir is incorrect.", notExistsPath, field.get(factory));
     
     
+  }
+
+  public void testBogusArgments() throws Exception{
+    try{
+      new GosenTokenizerFactory(new HashMap<String, String>() {{
+        put("bogusArg", "bogusValue");
+      }});
+      fail();
+    } catch (IllegalArgumentException expected) {
+      assertTrue(expected.getMessage().contains("Unknown parameters"));
+    }
   }
 }
