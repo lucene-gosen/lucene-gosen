@@ -35,6 +35,7 @@ import org.apache.lucene.analysis.gosen.tokenAttributes.ReadingsAttribute;
 import org.apache.lucene.analysis.gosen.tokenAttributes.SentenceStartAttribute;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
+import org.apache.lucene.util.AttributeFactory;
 
 /**
  * This is a Japanese tokenizer which uses "Sen" morphological
