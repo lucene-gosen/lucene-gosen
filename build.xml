@@ -125,7 +125,7 @@ locale="en_US"
   <target name="test" depends="compile-tests, build-dic-ipadic, build-dic-naist-chasen"
           description="execute JUnit tests">
     <sequential>
-      <junit printsummary="no" haltonfailure="no" maxmemory="512M" forkmode="perBatch"
+      <junit printsummary="no" haltonfailure="no" maxmemory="512M"
              errorProperty="tests.failed" failureProperty="tests.failed">
         <formatter type="brief" usefile="no"/>
         <classpath refid="testclasspath"/>
