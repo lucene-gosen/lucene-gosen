@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry kind="src" path="src/resources"/>
+	<classpathentry kind="src" path="src/test"/>
+	<classpathentry kind="src" path="src/compiled-dictionaries/ipadic"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/lucene-test-framework-4.9.0.jar"/>
+	<classpathentry kind="lib" path="lib/jisx0213-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.10.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.6.6.jar"/>
+	<classpathentry kind="lib" path="lib/randomizedtesting-runner-2.0.13.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-analyzers-common-4.9.0.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-codecs-4.9.0.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-core-4.9.0.jar"/>
+	<classpathentry kind="lib" path="lib/solr-core-4.9.0.jar"/>
+	<classpathentry kind="lib" path="lib/solr-solrj-4.9.0.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
