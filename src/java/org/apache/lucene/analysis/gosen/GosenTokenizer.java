@@ -35,6 +35,7 @@ import org.apache.lucene.analysis.gosen.tokenAttributes.ReadingsAttribute;
 import org.apache.lucene.analysis.gosen.tokenAttributes.SentenceStartAttribute;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
+import org.apache.lucene.util.AttributeFactory;
 
 /**
  * This is a Japanese tokenizer which uses "Sen" morphological
@@ -73,19 +74,31 @@ public final class GosenTokenizer extends Tokenizer {
   private int accumulatedCost = 0;
 
   public GosenTokenizer(Reader in) {
-    this(in, null, null);
+    this(AttributeFactory.DEFAULT_ATTRIBUTE_FACTORY, in, null, null);
   }
 
   public GosenTokenizer(Reader in, StreamFilter filter) {
-    this(in, null, null);
+    this(AttributeFactory.DEFAULT_ATTRIBUTE_FACTORY, in, filter, null);
   }
   
   public GosenTokenizer(Reader in, StreamFilter filter, String dictionaryDir) {
-    super(in);
+    this(AttributeFactory.DEFAULT_ATTRIBUTE_FACTORY, in, filter, dictionaryDir);
+  }
+
+  /**
+   * Create A new GosenTokenizer
+   *
+   * @param factory the AttributeFactory to use
+   * @param in input Reader containing text
+   * @param filter stream filter
+   * @param dictionaryDir lucene-gosen dictionary directory
+   */
+  public GosenTokenizer(AttributeFactory factory, Reader in, StreamFilter filter, String dictionaryDir){
+    super(factory, in);
     StringTagger stringTagger = SenFactory.getStringTagger(dictionaryDir);
     if(filter != null)
       stringTagger.addFilter(filter);
-    tagger = new StreamTagger2(stringTagger, in);
+    tagger = new StreamTagger2(stringTagger, this.input);
   }
 
   @Override
@@ -119,14 +132,21 @@ public final class GosenTokenizer extends Tokenizer {
   }
 
   @Override
-  public void reset(Reader in) throws IOException {
-    super.reset(in);
-    tagger.reset(in);
+  public void close() throws IOException {
+    super.close();
+    tagger.reset(input);
+  }
+
+  @Override
+  public void reset() throws IOException {
+    super.reset();
+    tagger.reset(input);
     accumulatedCost = 0;
   }
 
   @Override
   public void end() throws IOException {
+    super.end();
     // set final offset
     final int finalOffset = correctOffset(tagger.end());
     offsetAtt.setOffset(finalOffset, finalOffset);

@@ -19,9 +19,10 @@ package org.apache.lucene.analysis.gosen;
 import java.io.IOException;
 import java.util.Set;
 
-import org.apache.lucene.analysis.FilteringTokenFilter;
+import org.apache.lucene.analysis.util.FilteringTokenFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.gosen.tokenAttributes.PartOfSpeechAttribute;
+import org.apache.lucene.util.Version;
 
 /**
  * Removes tokens that do NOT match a set of POS tags.
@@ -32,8 +33,15 @@ public final class GosenPartOfSpeechKeepFilter extends FilteringTokenFilter {
   private final Set<String> keepTags;
   private final PartOfSpeechAttribute posAtt = addAttribute(PartOfSpeechAttribute.class);
 
-  public GosenPartOfSpeechKeepFilter(boolean enablePositionIncrements, TokenStream input, Set<String> keepTags) {
-    super(enablePositionIncrements, input);
+  /** @deprecated enablePositionIncrements=false is not supported anymore as of Lucene 4.4. */
+  @Deprecated
+  public GosenPartOfSpeechKeepFilter(Version version, boolean enablePositionIncrements, TokenStream input, Set<String> keepTags) {
+    super(version, enablePositionIncrements, input);
+    this.keepTags = keepTags;
+  }
+
+  public GosenPartOfSpeechKeepFilter(Version version, TokenStream input, Set<String> keepTags) {
+    super(version, input);
     this.keepTags = keepTags;
   }
 
