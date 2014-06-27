@@ -74,15 +74,15 @@ public final class GosenTokenizer extends Tokenizer {
   private int accumulatedCost = 0;
 
   public GosenTokenizer(Reader in) {
-    this(AttributeFactory.DEFAULT_ATTRIBUTE_FACTORY, in, null, null);
+    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, in, null, null);
   }
 
   public GosenTokenizer(Reader in, StreamFilter filter) {
-    this(AttributeFactory.DEFAULT_ATTRIBUTE_FACTORY, in, filter, null);
+    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, in, filter, null);
   }
   
   public GosenTokenizer(Reader in, StreamFilter filter, String dictionaryDir) {
-    this(AttributeFactory.DEFAULT_ATTRIBUTE_FACTORY, in, filter, dictionaryDir);
+    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, in, filter, dictionaryDir);
   }
 
   /**
