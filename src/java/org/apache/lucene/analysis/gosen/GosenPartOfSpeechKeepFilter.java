@@ -40,8 +40,8 @@ public final class GosenPartOfSpeechKeepFilter extends FilteringTokenFilter {
     this.keepTags = keepTags;
   }
 
-  public GosenPartOfSpeechKeepFilter(Version version, TokenStream input, Set<String> keepTags) {
-    super(version, input);
+  public GosenPartOfSpeechKeepFilter(TokenStream input, Set<String> keepTags) {
+    super(input);
     this.keepTags = keepTags;
   }
 
