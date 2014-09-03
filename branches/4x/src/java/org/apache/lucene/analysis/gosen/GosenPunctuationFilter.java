@@ -35,8 +35,8 @@ public final class GosenPunctuationFilter extends FilteringTokenFilter {
     super(version, enablePositionIncrements, input);
   }
 
-  public GosenPunctuationFilter(Version version, TokenStream input) {
-    super(version, input);
+  public GosenPunctuationFilter(TokenStream input) {
+    super(input);
   }
 
   @Override

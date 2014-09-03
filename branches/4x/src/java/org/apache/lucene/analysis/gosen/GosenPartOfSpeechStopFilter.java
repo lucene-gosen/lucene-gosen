@@ -38,8 +38,8 @@ public final class GosenPartOfSpeechStopFilter extends FilteringTokenFilter {
     this.stopTags = stopTags;
   }
 
-  public GosenPartOfSpeechStopFilter(Version version, TokenStream input, Set<String> stopTags) {
-    super(version, input);
+  public GosenPartOfSpeechStopFilter(TokenStream input, Set<String> stopTags) {
+    super(input);
     this.stopTags = stopTags;
   }
 

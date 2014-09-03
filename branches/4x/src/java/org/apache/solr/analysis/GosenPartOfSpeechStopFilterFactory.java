@@ -27,6 +27,7 @@ import org.apache.lucene.analysis.gosen.GosenPartOfSpeechStopFilter;
 import org.apache.lucene.analysis.util.ResourceLoader;
 import org.apache.lucene.analysis.util.ResourceLoaderAware;
 import org.apache.lucene.analysis.util.TokenFilterFactory;
+import org.apache.lucene.util.Version;
 
 /** 
  * Factory for {@link GosenPartOfSpeechStopFilter}.
@@ -50,6 +51,10 @@ public class GosenPartOfSpeechStopFilterFactory extends TokenFilterFactory imple
     stopTagFiles = require(args, "tags");
     enablePositionIncrements = getBoolean(args, "enablePositionIncrements", true);
 
+    if (enablePositionIncrements == false &&
+        (luceneMatchVersion == null || luceneMatchVersion.onOrAfter(Version.LUCENE_4_4_0))) {
+      throw new IllegalArgumentException("enablePositionIncrements=false is not supported anymore as of Lucene 4.4");
+    }
     if (!args.isEmpty()) {
       throw new IllegalArgumentException("Unknown parameters: " + args);
     }
