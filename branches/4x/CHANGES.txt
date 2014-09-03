@@ -4,7 +4,7 @@ lucene-gosen Change Log
 
 Important Notice
 
-* http://code.google.com/p/lucene-gosen/issues/detail?id=55
+* http://code.google.com/p/lucene-gosen/issues/detail?id=57
     Change Lucene/Solr 4.10.0 library
 
 New Features & Improvements
