@@ -27,7 +27,7 @@ import java.util.HashMap;
 
 public class TestGosenPunctuationFilterFactory extends BaseTokenStreamTestCase {
 
-  String protectedTokens = "+\n-\n\\#\n【\n】\n";
+  String protectedTokens = "+\n-\n\\#\n【\n】\n℃\n";
 
   /**
    * Testing voiced fricatives mapping.
@@ -103,10 +103,10 @@ public class TestGosenPunctuationFilterFactory extends BaseTokenStreamTestCase {
   }
 
   public void testPunctuationFilter02() throws Exception {
-    Reader reader = new StringReader("楽★天");
+    Reader reader = new StringReader("アパッチ★ソーラー");
     TokenStream stream = jatok_factory.create(reader);
     stream = factory.create(stream);
-    assertTokenStreamContents(stream, new String[]{"楽", "天"});
+    assertTokenStreamContents(stream, new String[]{"アパッチ", "ソーラー"});
   }
 
   public void testPunctuationFilter03() throws Exception {
@@ -238,4 +238,13 @@ public class TestGosenPunctuationFilterFactory extends BaseTokenStreamTestCase {
             new int[]{10,18},
             new int[]{2,2});
   }
+
+  public void testPunctuationFilter17() throws Exception {
+    Reader reader = new StringReader("4℃"); //=> /4/℃/
+    TokenStream stream = jatok_factory.create(reader);
+    stream = posinc_factory.create(stream);
+    assertTokenStreamContents(stream,
+            new String[]{"4", "℃"});
+  }
+
 }

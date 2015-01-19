@@ -35,6 +35,7 @@ import org.apache.lucene.analysis.Tokenizer;
 public class GosenAnalyzer extends StopwordAnalyzerBase {
   private final Set<String> stoptags;
   private final CharArraySet stemExclusionSet;
+  private final CharArraySet punctExclusionSet;
   private final String dictionaryDir;
 
   public static Set<?> getDefaultStopSet(){
@@ -84,20 +85,36 @@ public class GosenAnalyzer extends StopwordAnalyzerBase {
   public GosenAnalyzer(String dictionaryDir) {
     this(DefaultSetHolder.DEFAULT_STOP_SET, DefaultSetHolder.DEFAULT_STOP_TAGS, CharArraySet.EMPTY_SET, dictionaryDir);
   }
+
+  /**
+   * Create a GosenAnalyzer with the default stopwords and stoptags and no stemExclusionSet
+   */
+  public GosenAnalyzer(String dictionaryDir, CharArraySet punctExclusionSet) {
+    this(DefaultSetHolder.DEFAULT_STOP_SET, DefaultSetHolder.DEFAULT_STOP_TAGS, CharArraySet.EMPTY_SET, punctExclusionSet, dictionaryDir);
+  }
   
   /**
-   * Create a GosenAnalyzer with the specified stopwords, stoptags, and stemExclusionSet
-   * 
-   * @param stopwords a stopword set: words matching these (Surf
-   * @param stoptags a stoptags set: words containing these parts of speech will be removed from the stream.
-   * @param stemExclusionSet a stemming exclusion set: these words are ignored by 
-   *        {@link GosenBasicFormFilter} and {@link GosenKatakanaStemFilter}
-   * @param dictionaryDir a directory of dictionary
+   * Create a GosenAnalyzer with the specified stopwords, stoptags, stemExclusionSet and dictionaryDir
    */
   public GosenAnalyzer(CharArraySet stopwords, Set<String> stoptags, CharArraySet stemExclusionSet, String dictionaryDir) {
+    this(stopwords, stoptags, stemExclusionSet, null, dictionaryDir);
+  }
+
+  /**
+   *
+   * @param stopwords a stopword set: words matching these parts of word list will be removed from the stream.
+   * @param stoptags a stoptags set: words containing these parts of speech will be removed from the stream.
+   * @param stemExclusionSet a stemming exclusion set: these words are ignored by
+   *        {@link GosenBasicFormFilter} and {@link GosenKatakanaStemFilter}
+   * @param punctExclusionSet a exclustion set for the punctuation filter: these words are ignored by
+   *        {@link GosenPunctuationFilter}
+   * @param dictionaryDir a directory of dictionary
+   */
+  public GosenAnalyzer(CharArraySet stopwords, Set<String> stoptags, CharArraySet stemExclusionSet, CharArraySet punctExclusionSet, String dictionaryDir) {
     super(stopwords);
     this.stoptags = stoptags;
     this.stemExclusionSet = stemExclusionSet;
+    this.punctExclusionSet = punctExclusionSet;
     this.dictionaryDir = dictionaryDir;
   }
 
@@ -118,7 +135,7 @@ public class GosenAnalyzer extends StopwordAnalyzerBase {
   protected TokenStreamComponents createComponents(String field, Reader reader) {
     Tokenizer tokenizer = new GosenTokenizer(reader, null, dictionaryDir);
     TokenStream stream = new GosenWidthFilter(tokenizer);
-    stream = new GosenPunctuationFilter(stream);
+    stream = new GosenPunctuationFilter(stream, punctExclusionSet);
     stream = new GosenPartOfSpeechStopFilter(stream, stoptags);
     stream = new StopFilter(stream, stopwords);
     if (!stemExclusionSet.isEmpty())

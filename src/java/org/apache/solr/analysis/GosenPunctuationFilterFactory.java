@@ -35,7 +35,7 @@ import org.apache.lucene.util.Version;
  *     &lt;tokenizer class="solr.GosenTokenizerFactory"/&gt;
  *     &lt;filter class="solr.GosenPunctuationFilterFactory"
  *         enablePositionIncrements="true"
- *          protectedTokens="lang/ja/punctuation-filter-protected.txt"/&gt;
+ *         protectedTokens="lang/ja/punctuation-filter-protected.txt"/&gt;
  *   &lt;/analyzer&gt;
  * &lt;/fieldType&gt;</pre>
  */
@@ -71,7 +71,7 @@ public class GosenPunctuationFilterFactory extends TokenFilterFactory implements
 
   public void loadProtectedTokens(ResourceLoader loader) throws IOException {
     CharArraySet casTriggerWords = getWordSet(loader, protectedFile, false);
-    protectedSet = new CharArraySet(luceneMatchVersion, casTriggerWords.size(), false);
+    protectedSet = new CharArraySet(casTriggerWords.size(), false);
     for (Object elem : casTriggerWords) {
       char chars[] = (char[]) elem;
       if (chars[0] == '\\' && chars[1] == '#') {

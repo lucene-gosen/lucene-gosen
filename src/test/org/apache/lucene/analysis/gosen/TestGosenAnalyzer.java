@@ -23,6 +23,7 @@ import net.java.sen.SenTestUtil;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.BaseTokenStreamTestCase;
 import org.apache.lucene.analysis.gosen.GosenAnalyzer;
+import org.apache.lucene.analysis.util.CharArraySet;
 
 /**
  * Simple tests for {@link GosenAnalyzer} 
@@ -47,7 +48,15 @@ public class TestGosenAnalyzer extends BaseTokenStreamTestCase {
       new int[] { 1, 2, 2,  2 }
     );
   }
-  
+
+
+  public void testSpecialSymbol() throws IOException {
+    CharArraySet set = new CharArraySet(asSet("+", "-", "\\#", "【", "】", "℃"), false);
+    assertAnalyzesTo(new GosenAnalyzer(SenTestUtil.IPADIC_DIR, set), "4℃",
+            new String[] { "4", "℃" }
+    );
+  }
+
   /**
    * Analyzes random unicode strings, to ensure no exception
    * (results could be completely bogus, but makes sure we don't crash on some input)

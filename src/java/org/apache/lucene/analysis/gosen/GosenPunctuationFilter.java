@@ -39,10 +39,10 @@ public final class GosenPunctuationFilter extends FilteringTokenFilter {
   }
 
   public GosenPunctuationFilter(TokenStream input) {
-    this(null, input);
+    this(input, null);
   }
 
-  public GosenPunctuationFilter(CharArraySet protectedSet, TokenStream input) {
+  public GosenPunctuationFilter(TokenStream input, CharArraySet protectedSet) {
     super(input);
     this.protectedSet = protectedSet;
   }
