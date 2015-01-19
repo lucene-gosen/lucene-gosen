@@ -18,6 +18,7 @@ package org.apache.lucene.analysis.gosen;
 
 import java.io.IOException;
 
+import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.analysis.util.FilteringTokenFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
@@ -28,19 +29,29 @@ import org.apache.lucene.util.Version;
  */
 public final class GosenPunctuationFilter extends FilteringTokenFilter {
   private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
+  private CharArraySet protectedSet;
 
   /** @deprecated enablePositionIncrements=false is not supported anymore as of Lucene 4.4. */
   @Deprecated
-  public GosenPunctuationFilter(Version version, boolean enablePositionIncrements, TokenStream input) {
+  public GosenPunctuationFilter(Version version, boolean enablePositionIncrements, CharArraySet protectedSet, TokenStream input) {
     super(version, enablePositionIncrements, input);
+    this.protectedSet = protectedSet;
   }
 
   public GosenPunctuationFilter(TokenStream input) {
+    this(null, input);
+  }
+
+  public GosenPunctuationFilter(CharArraySet protectedSet, TokenStream input) {
     super(input);
+    this.protectedSet = protectedSet;
   }
 
   @Override
   protected boolean accept() throws IOException {
+    if (protectedSet != null && protectedSet.contains(termAtt.buffer()[0])) {
+      return true;
+    }
     return termAtt.length() > 0 && !isPunctuation(termAtt.buffer()[0]);
   }
   
