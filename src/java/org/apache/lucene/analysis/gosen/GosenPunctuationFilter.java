@@ -29,12 +29,6 @@ import org.apache.lucene.util.Version;
 public final class GosenPunctuationFilter extends FilteringTokenFilter {
   private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
 
-  /** @deprecated enablePositionIncrements=false is not supported anymore as of Lucene 4.4. */
-  @Deprecated
-  public GosenPunctuationFilter(Version version, boolean enablePositionIncrements, TokenStream input) {
-    super(version, enablePositionIncrements, input);
-  }
-
   public GosenPunctuationFilter(TokenStream input) {
     super(input);
   }

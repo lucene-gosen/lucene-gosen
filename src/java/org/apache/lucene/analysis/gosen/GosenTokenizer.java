@@ -73,28 +73,27 @@ public final class GosenTokenizer extends Tokenizer {
   // so we accumulate this so we can then subtract to present an absolute cost.
   private int accumulatedCost = 0;
 
-  public GosenTokenizer(Reader in) {
-    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, in, null, null);
+  public GosenTokenizer() {
+    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, null, null);
   }
 
-  public GosenTokenizer(Reader in, StreamFilter filter) {
-    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, in, filter, null);
+  public GosenTokenizer(StreamFilter filter) {
+    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, filter, null);
   }
   
-  public GosenTokenizer(Reader in, StreamFilter filter, String dictionaryDir) {
-    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, in, filter, dictionaryDir);
+  public GosenTokenizer(StreamFilter filter, String dictionaryDir) {
+    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, filter, dictionaryDir);
   }
 
   /**
    * Create A new GosenTokenizer
    *
    * @param factory the AttributeFactory to use
-   * @param in input Reader containing text
    * @param filter stream filter
    * @param dictionaryDir lucene-gosen dictionary directory
    */
-  public GosenTokenizer(AttributeFactory factory, Reader in, StreamFilter filter, String dictionaryDir){
-    super(factory, in);
+  public GosenTokenizer(AttributeFactory factory, StreamFilter filter, String dictionaryDir){
+    super(factory);
     StringTagger stringTagger = SenFactory.getStringTagger(dictionaryDir);
     if(filter != null)
       stringTagger.addFilter(filter);

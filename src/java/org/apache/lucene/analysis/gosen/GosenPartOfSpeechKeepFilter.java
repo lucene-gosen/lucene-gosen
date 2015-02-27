@@ -33,13 +33,6 @@ public final class GosenPartOfSpeechKeepFilter extends FilteringTokenFilter {
   private final Set<String> keepTags;
   private final PartOfSpeechAttribute posAtt = addAttribute(PartOfSpeechAttribute.class);
 
-  /** @deprecated enablePositionIncrements=false is not supported anymore as of Lucene 4.4. */
-  @Deprecated
-  public GosenPartOfSpeechKeepFilter(Version version, boolean enablePositionIncrements, TokenStream input, Set<String> keepTags) {
-    super(version, enablePositionIncrements, input);
-    this.keepTags = keepTags;
-  }
-
   public GosenPartOfSpeechKeepFilter(TokenStream input, Set<String> keepTags) {
     super(input);
     this.keepTags = keepTags;

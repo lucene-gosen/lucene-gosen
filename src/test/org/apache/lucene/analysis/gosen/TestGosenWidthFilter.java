@@ -31,8 +31,8 @@ import org.apache.lucene.analysis.core.WhitespaceTokenizer;
 public class TestGosenWidthFilter extends BaseTokenStreamTestCase {
   private Analyzer analyzer = new Analyzer() {
     @Override
-    protected TokenStreamComponents createComponents(String fieldName, Reader reader) {
-      Tokenizer source = new WhitespaceTokenizer(TEST_VERSION_CURRENT, reader);
+    protected TokenStreamComponents createComponents(String fieldName) {
+      Tokenizer source = new WhitespaceTokenizer();
       return new TokenStreamComponents(source, new GosenWidthFilter(source));
     }
   };

@@ -50,7 +50,7 @@ public class GosenPunctuationFilterFactory extends TokenFilterFactory {
 
   public TokenStream create(TokenStream stream) {
     @SuppressWarnings("deprecation")
-    final GosenPunctuationFilter filter = new GosenPunctuationFilter(luceneMatchVersion, enablePositionIncrements, stream);
+    final GosenPunctuationFilter filter = new GosenPunctuationFilter(stream);
     return filter;
   }
 }

@@ -37,8 +37,8 @@ import org.apache.lucene.util.TestUtil;
 public class TestGosenTokenizer extends BaseTokenStreamTestCase {
   private Analyzer analyzer = new Analyzer() {
     @Override
-    protected TokenStreamComponents createComponents(String field, Reader reader) {
-      Tokenizer tokenizer = new GosenTokenizer(reader, null, SenTestUtil.IPADIC_DIR);
+    protected TokenStreamComponents createComponents(String field) {
+      Tokenizer tokenizer = new GosenTokenizer(null, SenTestUtil.IPADIC_DIR);
       return new TokenStreamComponents(tokenizer, tokenizer);
     }
   };

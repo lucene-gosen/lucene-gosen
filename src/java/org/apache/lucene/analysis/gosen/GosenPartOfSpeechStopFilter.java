@@ -31,13 +31,6 @@ public final class GosenPartOfSpeechStopFilter extends FilteringTokenFilter {
   private final Set<String> stopTags;
   private final PartOfSpeechAttribute posAtt = addAttribute(PartOfSpeechAttribute.class);
 
-  /** @deprecated enablePositionIncrements=false is not supported anymore as of Lucene 4.4. */
-  @Deprecated
-  public GosenPartOfSpeechStopFilter(Version version, boolean enablePositionIncrements, TokenStream input, Set<String> stopTags) {
-    super(version, enablePositionIncrements, input);
-    this.stopTags = stopTags;
-  }
-
   public GosenPartOfSpeechStopFilter(TokenStream input, Set<String> stopTags) {
     super(input);
     this.stopTags = stopTags;

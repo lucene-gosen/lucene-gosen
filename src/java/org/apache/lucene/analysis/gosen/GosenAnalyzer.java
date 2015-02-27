@@ -21,6 +21,7 @@ import java.io.Reader;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.LowerCaseFilter;
 import org.apache.lucene.analysis.core.StopFilter;
 import org.apache.lucene.analysis.miscellaneous.SetKeywordMarkerFilter;
@@ -76,7 +77,7 @@ public class GosenAnalyzer extends StopwordAnalyzerBase {
   public GosenAnalyzer() {
     this(DefaultSetHolder.DEFAULT_STOP_SET, DefaultSetHolder.DEFAULT_STOP_TAGS, CharArraySet.EMPTY_SET, null);
   }
-  
+
   /**
    * Create a GosenAnalyzer with the default stopwords and stoptags and no stemExclusionSet<br>
    * and argument of dictionaryDir.
@@ -115,8 +116,8 @@ public class GosenAnalyzer extends StopwordAnalyzerBase {
    *         and  {@link LowerCaseFilter}
    */
   @Override
-  protected TokenStreamComponents createComponents(String field, Reader reader) {
-    Tokenizer tokenizer = new GosenTokenizer(reader, null, dictionaryDir);
+  protected TokenStreamComponents createComponents(String field) {
+    Tokenizer tokenizer = new GosenTokenizer(null, dictionaryDir);
     TokenStream stream = new GosenWidthFilter(tokenizer);
     stream = new GosenPunctuationFilter(stream);
     stream = new GosenPartOfSpeechStopFilter(stream, stoptags);

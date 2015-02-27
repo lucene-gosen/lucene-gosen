@@ -102,7 +102,7 @@ public class GosenTokenizerFactory extends TokenizerFactory implements ResourceL
     }
   }
 
-  public Tokenizer create(AttributeFactory factory, Reader reader) {
-    return new GosenTokenizer(reader, compositeTokenFilter, dictionaryDir);
+  public Tokenizer create(AttributeFactory factory) {
+    return new GosenTokenizer(compositeTokenFilter, dictionaryDir);
   }
 }

@@ -19,7 +19,10 @@ package org.apache.solr.analysis;
 import net.java.sen.SenTestUtil;
 import org.apache.lucene.analysis.BaseTokenStreamTestCase;
 import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.Tokenizer;
+import org.apache.lucene.util.Version;
 import org.apache.solr.core.SolrResourceLoader;
+import org.apache.solr.update.VersionBucket;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,13 +58,16 @@ public class TestGosenPartOfSpeechKeepFilterFactory extends BaseTokenStreamTestC
     }});
     SolrResourceLoader loader = new SolrResourceLoader(baseDir.getAbsolutePath(), GosenTokenizerFactory.class.getClassLoader());
     tokenizerFactory.inform(loader);
-    TokenStream ts = tokenizerFactory.create(new StringReader("私は制限スピードを超える。"));
+    //TokenStream ts = tokenizerFactory.create(new StringReader("私は制限スピードを超える。"));
+    Tokenizer tokenizer = tokenizerFactory.create();
+    tokenizer.setReader(new StringReader("私は制限スピードを超える。"));
     Map<String,String> args = new HashMap<String,String>();
-    args.put("luceneMatchVersion", TEST_VERSION_CURRENT.toString());
+    //args.put("luceneMatchVersion", TEST_VERSION_CURRENT.toString());
+    args.put("luceneMatchVersion", Version.LATEST.toString());
     args.put("tags", "stoptags.txt");
     GosenPartOfSpeechKeepFilterFactory factory = new GosenPartOfSpeechKeepFilterFactory(args);
     factory.inform(new StringMockResourceLoader(tags));
-    ts = factory.create(ts);
+    TokenStream ts = factory.create(tokenizer);
     assertTokenStreamContents(ts,
         new String[] { "超える" }
     );

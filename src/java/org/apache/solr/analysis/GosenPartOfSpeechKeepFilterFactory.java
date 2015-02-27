@@ -76,7 +76,7 @@ public class GosenPartOfSpeechKeepFilterFactory extends TokenFilterFactory imple
   public TokenStream create(TokenStream stream) {
    if (keepTags != null) {
       @SuppressWarnings("deprecation")
-      final TokenStream filter = new GosenPartOfSpeechKeepFilter(luceneMatchVersion, enablePositionIncrements, stream, keepTags);
+      final TokenStream filter = new GosenPartOfSpeechKeepFilter(stream, keepTags);
       return filter;
     } else {
       return stream;
