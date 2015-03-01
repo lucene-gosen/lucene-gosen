@@ -58,11 +58,9 @@ public class TestGosenPartOfSpeechKeepFilterFactory extends BaseTokenStreamTestC
     }});
     SolrResourceLoader loader = new SolrResourceLoader(baseDir.getAbsolutePath(), GosenTokenizerFactory.class.getClassLoader());
     tokenizerFactory.inform(loader);
-    //TokenStream ts = tokenizerFactory.create(new StringReader("私は制限スピードを超える。"));
     Tokenizer tokenizer = tokenizerFactory.create();
     tokenizer.setReader(new StringReader("私は制限スピードを超える。"));
     Map<String,String> args = new HashMap<String,String>();
-    //args.put("luceneMatchVersion", TEST_VERSION_CURRENT.toString());
     args.put("luceneMatchVersion", Version.LATEST.toString());
     args.put("tags", "stoptags.txt");
     GosenPartOfSpeechKeepFilterFactory factory = new GosenPartOfSpeechKeepFilterFactory(args);
