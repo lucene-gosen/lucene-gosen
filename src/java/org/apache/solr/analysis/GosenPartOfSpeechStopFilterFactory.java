@@ -36,24 +36,26 @@ import org.apache.lucene.util.Version;
  *   &lt;analyzer&gt;
  *     &lt;tokenizer class="solr.GosenTokenizerFactory"/&gt;
  *     &lt;filter class="solr.GosenPartOfSpeechStopFilterFactory" 
- *             tags="stopTags.txt" 
- *             enablePositionIncrements="true"/&gt;
+ *             tags="stopTags.txt"/&gt;
  *   &lt;/analyzer&gt;
  * &lt;/fieldType&gt;</pre>
  */
 public class GosenPartOfSpeechStopFilterFactory extends TokenFilterFactory implements ResourceLoaderAware {
-  private final boolean enablePositionIncrements;
+  private boolean enablePositionIncrements;
   private final String stopTagFiles;
   private Set<String> stopTags;
 
   public GosenPartOfSpeechStopFilterFactory(Map<String, String> args) {
     super(args);
     stopTagFiles = require(args, "tags");
-    enablePositionIncrements = getBoolean(args, "enablePositionIncrements", true);
-
-    if (enablePositionIncrements == false &&
+    if (luceneMatchVersion.onOrAfter(Version.LUCENE_5_0_0) == false) {
+      enablePositionIncrements = getBoolean(args, "enablePositionIncrements", true);
+      if (enablePositionIncrements == false &&
         (luceneMatchVersion == null || luceneMatchVersion.onOrAfter(Version.LUCENE_4_4_0))) {
-      throw new IllegalArgumentException("enablePositionIncrements=false is not supported anymore as of Lucene 4.4");
+        throw new IllegalArgumentException("enablePositionIncrements=false is not supported anymore as of Lucene 4.4");
+      }
+    } else if (args.containsKey("enablePositionIncrements")) {
+      throw new IllegalArgumentException("enablePositionIncrements is not a valid option as of Lucene 5.0");
     }
     if (!args.isEmpty()) {
       throw new IllegalArgumentException("Unknown parameters: " + args);

@@ -34,14 +34,18 @@ import org.apache.lucene.util.Version;
  * &lt;/fieldType&gt;</pre>
  */
 public class GosenPunctuationFilterFactory extends TokenFilterFactory {
-  private final boolean enablePositionIncrements;
+  private boolean enablePositionIncrements;
 
   public GosenPunctuationFilterFactory(Map<String,String> args) {
     super(args);
-    enablePositionIncrements = getBoolean(args, "enablePositionIncrements", true);
-    if (enablePositionIncrements == false &&
+    if (luceneMatchVersion.onOrAfter(Version.LUCENE_5_0_0) == false) {
+      enablePositionIncrements = getBoolean(args, "enablePositionIncrements", true);
+      if (enablePositionIncrements == false &&
         (luceneMatchVersion == null || luceneMatchVersion.onOrAfter(Version.LUCENE_4_4_0))) {
-      throw new IllegalArgumentException("enablePositionIncrements=false is not supported anymore as of Lucene 4.4");
+        throw new IllegalArgumentException("enablePositionIncrements=false is not supported anymore as of Lucene 4.4");
+      }
+    } else if (args.containsKey("enablePositionIncrements")) {
+      throw new IllegalArgumentException("enablePositionIncrements is not a valid option as of Lucene 5.0");
     }
     if (!args.isEmpty()) {
       throw new IllegalArgumentException("Unknown parameters: " + args);
