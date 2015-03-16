@@ -1,8 +1,8 @@
 Installation With Apache Solr 5.0:
 
 1. run 'ant'. this will make lucene-gosen-{version}.jar
-2. create example/solr/lib and put this jar file in it.
-3. copy stopwords_ja.txt and stoptags_ja.txt into example/solr/conf
+2. create <your_solr_home>/<collection_dir>/lib and put this jar file in it.
+3. copy stopwords_ja.txt and stoptags_ja.txt into <your_solr_home>/<collection_dir>/conf/lang
 4. add "text_ja_gosen" fieldtype: see example/schema.xml.snippet for example configuration.
 
 refer to example/ for an example japanese configuration with comments explaining
