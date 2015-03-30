@@ -1,0 +1,10 @@
+# A list of protected token
++
+-
+\#
+【
+】
+@
+&
+°
+!

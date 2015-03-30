@@ -30,7 +30,7 @@ public class TestGosenPunctuationFilterFactory extends BaseTokenStreamTestCase {
   String protectedTokens = "+\n-\n\\#\n【\n】\n℃\n";
 
   /**
-   * Testing voiced fricatives mapping.
+   * Testing punctuation filter.
    */
   GosenPunctuationFilterFactory factory;
   GosenPunctuationFilterFactory protected_factory;
