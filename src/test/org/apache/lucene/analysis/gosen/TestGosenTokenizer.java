@@ -16,12 +16,7 @@ package org.apache.lucene.analysis.gosen;
  * limitations under the License.
  */
 
-import java.io.IOException;
-import java.io.Reader;
-import java.util.Arrays;
-
 import net.java.sen.SenTestUtil;
-
 import net.java.sen.util.IOUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.BaseTokenStreamTestCase;
@@ -29,6 +24,9 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.util.LuceneTestCase;
 import org.apache.lucene.util.TestUtil;
+
+import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * Tests for {@link GosenTokenizer}
@@ -42,7 +40,21 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
       return new TokenStreamComponents(tokenizer, tokenizer);
     }
   };
-  
+
+  private Analyzer analyzer2 = new Analyzer() {
+    @Override
+    protected TokenStreamComponents createComponents(String field) {
+      Tokenizer tokenizer = new GosenTokenizer(null, SenTestUtil.IPADIC_DIR, false);
+      return new TokenStreamComponents(tokenizer, tokenizer);
+    }
+  };
+
+  //=================================================================================================================
+
+  /**
+   * Compatibility mode
+   */
+
   public void testDecomposition1() throws IOException {
     assertAnalyzesTo(analyzer, "本来は、貧困層の女性や子供に医療保護を提供するために創設された制度である、" +
                          "アメリカ低所得者医療援助制度が、今日では、その予算の約３分の１を老人に費やしている。",
@@ -99,7 +111,25 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
       new int[] { 2, 3, 5, 9, 10, 15, 16, 19, 20, 22, 26, 27, 32, 33 }
     );
   }
-  
+
+  /** Tests a sentence that consists of Katakana characters */
+  public void testUnknownKatakanaSentence() throws IOException {
+    assertAnalyzesTo(analyzer, "メイフラワーアレンジメント",
+            new String[] { "メイフラワーアレンジメント" },
+            new int[] { 0 },
+            new int[] { 13 }
+    );
+  }
+
+  /** Tests a sentence that consists of Katakana characters */
+  public void testUnknownKatakanaSentence2() throws IOException {
+    assertAnalyzesTo(analyzer, "フラワーアレンジメント",
+            new String[] { "フラワー", "アレンジメント" },
+            new int[] { 0, 4 },
+            new int[] { 4, 11 }
+    );
+  }
+
   /** Tests that for large documents the buffer offset is accumulated */
   public void testOffsetAccumulation() throws IOException {
       StringBuilder sb = new StringBuilder();
@@ -152,4 +182,59 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
         Integer.valueOf(12)
     );
   }
+
+  //=================================================================================================================
+
+  /**
+   */
+  public void testSymbol() throws IOException {
+    assertAnalyzesTo(analyzer2, "testing 1234",
+            new String[] { "testing", "1234" },
+            new int[] { 0, 8 },
+            new int[] { 7, 12 }
+    );
+  }
+
+  //=================================================================================================================
+
+  /**
+   * New Behavior
+   *
+   * Do not concatenate consecutive Katakana tokens when a sentence has a UNKNOWN Katakana token.
+   */
+  public void testDecompositionNew3() throws IOException {
+    assertAnalyzesTo(analyzer2, "魔女狩大将マシュー・ホプキンス。",
+            new String[] { "魔女", "狩", "大将", "マ", "シュー", "・", "ホ", "プ", "キン", "ス", "。" },
+            new int[] { 0, 2, 3, 5, 6, 9, 10, 11, 12, 14, 15 },
+            new int[] { 2, 3, 5, 6, 9, 10, 11, 12, 14, 15, 16 }
+    );
+  }
+
+  /** Tests that sentence offset is incorporated into the resulting offsets */
+  public void testTwoSentencesNew() throws IOException {
+    assertAnalyzesTo(analyzer2, "魔女狩大将マシュー・ホプキンス。 魔女狩大将マシュー・ホプキンス。",
+            new String[] { "魔女", "狩", "大将", "マ", "シュー", "・", "ホ", "プ", "キン", "ス", "。", "魔女", "狩", "大将", "マ", "シュー", "・", "ホ", "プ", "キン", "ス", "。" },
+            new int[] { 0, 2, 3, 5, 6, 9, 10, 11, 12, 14, 15, 17, 19, 20, 22, 23, 26, 27, 28, 29, 31, 32  },
+            new int[] { 2, 3, 5, 6, 9, 10, 11, 12, 14, 15, 16, 19, 20, 22, 23, 26, 27, 28, 29, 31, 32, 33 }
+    );
+  }
+
+  /** Tests a sentence that consists of Katakana characters */
+  public void testUnknownKatakanaSentenceNew() throws IOException {
+    assertAnalyzesTo(analyzer2, "メイフラワーアレンジメント",
+            new String[] { "メ", "イ", "フラワー", "アレンジメント" },
+            new int[] { 0, 1, 2, 6 },
+            new int[] { 1, 2, 6, 13 }
+    );
+  }
+
+  /** Tests a sentence that consists of Katakana characters */
+  public void testUnknownKatakanaSentenceNew2() throws IOException {
+    assertAnalyzesTo(analyzer2, "フラワーアレンジメント",
+            new String[] { "フラワー", "アレンジメント" },
+            new int[] { 0, 4 },
+            new int[] { 4, 11 }
+    );
+  }
+
 }

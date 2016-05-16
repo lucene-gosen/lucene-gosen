@@ -17,6 +17,7 @@ package org.apache.lucene.analysis.gosen.tokenAttributes;
  */
 
 import org.apache.lucene.util.AttributeImpl;
+import org.apache.lucene.util.AttributeReflector;
 
 public class CostAttributeImpl extends AttributeImpl implements CostAttribute, Cloneable {
   
@@ -35,6 +36,11 @@ public class CostAttributeImpl extends AttributeImpl implements CostAttribute, C
   @Override
   public void clear() {
     this.cost = 0;
+  }
+
+  @Override
+  public void reflectWith(AttributeReflector attributeReflector) {
+    attributeReflector.reflect(CostAttribute.class, "cost", getCost());
   }
 
   @Override

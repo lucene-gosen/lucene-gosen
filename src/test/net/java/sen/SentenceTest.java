@@ -20,6 +20,7 @@
 package net.java.sen;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -767,7 +768,7 @@ public class SentenceTest extends LuceneTestCase {
     
     Viterbi viterbi = getViterbi();
     
-    List<Token> tokens = viterbi.getBestTokens (testSentence);
+    List<Token> tokens = viterbi.getBestTokens(testSentence, new ArrayList<Token>());
     
     compareTokens (testTokens, tokens);
   }

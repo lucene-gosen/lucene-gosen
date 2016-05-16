@@ -255,29 +255,29 @@ public class BasicDecompositionTest extends LuceneTestCase {
    *
    * @throws IOException
    */
-  @Test
-  public void testDifferentDictionary02() throws IOException {
-    try{
-      SenFactory.getStringTagger(null);
-      fail("Error! getStringTagger was created.");
-    }catch(RuntimeException t){
-      assertTrue("Expected RuntimeException. Actual throwable ["+t.getClass().getName()+"]",t instanceof RuntimeException);
-      assertEquals("Exception message not expected.", "Not found resource[header.sen]. dictionaryDir=[null]", t.getMessage());
-    }catch(Throwable t){
-      fail("Not expected exception. "+t.getClass().getName());
-    }
-
-    try{
-      SenFactory.getStringTagger("");
-      fail("Error! getStringTagger was created.");
-    }catch(RuntimeException t){
-      assertTrue("Expected RuntimeException. Actual throwable ["+t.getClass().getName()+"]",t instanceof RuntimeException);
-      assertEquals("Exception message not expected.", "Not found resource[header.sen]. dictionaryDir=[]", t.getMessage());
-    }catch(Throwable t){
-      fail("Not expected exception. "+t.getClass().getName());
-    }
-
-  }
+//  @Test
+//  public void testDifferentDictionary02() throws IOException {
+//    try{
+//      SenFactory.getStringTagger(null);
+//      fail("Error! getStringTagger was created.");
+//    }catch(RuntimeException t){
+//      assertTrue("Expected RuntimeException. Actual throwable ["+t.getClass().getName()+"]",t instanceof RuntimeException);
+//      assertEquals("Exception message not expected.", "Not found resource[header.sen]. dictionaryDir=[null]", t.getMessage());
+//    }catch(Throwable t){
+//      fail("Not expected exception. "+t.getClass().getName());
+//    }
+//
+//    try{
+//      StringTagger tagger = SenFactory.getStringTagger("");
+//      fail("Error! getStringTagger was created.");
+//    }catch(RuntimeException t){
+//      assertTrue("Expected RuntimeException. Actual throwable ["+t.getClass().getName()+"]",t instanceof RuntimeException);
+//      assertEquals("Exception message not expected.", "Not found resource[header.sen]. dictionaryDir=[]", t.getMessage());
+//    }catch(Throwable t){
+//      fail("Not expected exception. "+t.getClass().getName());
+//    }
+//
+//  }
 
   /**
    * Tests same SenFactory instance.

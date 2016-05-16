@@ -17,6 +17,7 @@ package org.apache.lucene.analysis.gosen.tokenAttributes;
  */
 
 import org.apache.lucene.util.AttributeImpl;
+import org.apache.lucene.util.AttributeReflector;
 
 public class SentenceStartAttributeImpl extends AttributeImpl implements SentenceStartAttribute, Cloneable {
   
@@ -35,6 +36,11 @@ public class SentenceStartAttributeImpl extends AttributeImpl implements Sentenc
   @Override
   public void clear() {
     this.sentenceStart = false;
+  }
+
+  @Override
+  public void reflectWith(AttributeReflector attributeReflector) {
+    attributeReflector.reflect(SentenceStartAttribute.class, "sentenceStartFrom", getSentenceStart());
   }
 
   @Override

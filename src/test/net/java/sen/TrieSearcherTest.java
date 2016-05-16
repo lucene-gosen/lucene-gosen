@@ -49,6 +49,9 @@ public class TrieSearcherTest extends LuceneTestCase {
         "a",
         "ab",
         "abc",
+        "c",
+        "cd",
+        "cde",
         "q",
         "qw",
         "qwe",
@@ -68,10 +71,13 @@ public class TrieSearcherTest extends LuceneTestCase {
         701,
         801,
         901,
-        1001
+        1001,
+        1101,
+        1201,
+        1301,
     };
     
-    TrieBuilder builder = new TrieBuilder(keys, values, 10);
+    TrieBuilder builder = new TrieBuilder(keys, values, 13);
     File tempFile = File.createTempFile("tst", null);
     builder.build (tempFile.getAbsolutePath());
     
@@ -100,7 +106,7 @@ public class TrieSearcherTest extends LuceneTestCase {
     
     assertEquals (6, count);
     for (int i = 0; i < 6; i++) {
-      assertEquals (values[i + 3], results[i]);
+      assertEquals (values[i + 6], results[i]);
     }
   }
 }

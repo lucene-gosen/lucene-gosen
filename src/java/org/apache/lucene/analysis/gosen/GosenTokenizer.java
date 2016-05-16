@@ -1,5 +1,3 @@
-package org.apache.lucene.analysis.gosen;
-
 /**
  * Copyright 2004 The Apache Software Foundation
  *
@@ -16,8 +14,9 @@ package org.apache.lucene.analysis.gosen;
  * limitations under the License.
  */
 
+package org.apache.lucene.analysis.gosen;
+
 import java.io.IOException;
-import java.io.Reader;
 
 import net.java.sen.SenFactory;
 import net.java.sen.StringTagger;
@@ -54,6 +53,8 @@ import org.apache.lucene.util.AttributeFactory;
  */
 public final class GosenTokenizer extends Tokenizer {
   private final StreamTagger2 tagger;
+
+  // Term attributes
   private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
   private final OffsetAttribute offsetAtt = addAttribute(OffsetAttribute.class);
   
@@ -85,18 +86,29 @@ public final class GosenTokenizer extends Tokenizer {
     this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, filter, dictionaryDir);
   }
 
+  public GosenTokenizer(StreamFilter filter, String dictionaryDir, boolean compatibilityMode) {
+    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, filter, dictionaryDir, compatibilityMode);
+  }
+
+  public GosenTokenizer(AttributeFactory factory, StreamFilter filter, String dictionaryDir) {
+    this(factory, filter, dictionaryDir, true);
+  }
+
   /**
    * Create A new GosenTokenizer
    *
    * @param factory the AttributeFactory to use
    * @param filter stream filter
    * @param dictionaryDir lucene-gosen dictionary directory
+   * @param compatibilityMode
    */
-  public GosenTokenizer(AttributeFactory factory, StreamFilter filter, String dictionaryDir){
+  public GosenTokenizer(AttributeFactory factory, StreamFilter filter, String dictionaryDir, boolean compatibilityMode) {
     super(factory);
+    SenFactory.setCompatibilityMode(compatibilityMode);
     StringTagger stringTagger = SenFactory.getStringTagger(dictionaryDir);
-    if(filter != null)
+    if (filter != null) {
       stringTagger.addFilter(filter);
+    }
     tagger = new StreamTagger2(stringTagger, this.input);
   }
 

@@ -57,7 +57,6 @@ public class SenTestUtil {
   /**
    * Returns a StringTagger for testing
    *
-   * @param dictionaryDir dictionary's directory
    * @return The StringTagger
    */
   public static StringTagger getStringTagger() {

@@ -311,7 +311,7 @@ public class ReadingProcessor {
   private List<Token> getTokens() {
     try {
       if (needsAnalysis) {
-        tokens = viterbi.getBestTokens(sentence);
+        tokens = viterbi.getBestTokens(sentence, new ArrayList<Token>());
         needsAnalysis = false;
       }
       return tokens;
