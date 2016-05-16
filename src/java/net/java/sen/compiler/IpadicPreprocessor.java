@@ -94,8 +94,7 @@ public class IpadicPreprocessor {
     BufferedWriter writer = null;
 
     try {
-      fis = new FileInputStream(this.inputDirectory + File.separator
-          + "connect.cha");
+      fis = new FileInputStream(this.inputDirectory + File.separator + "connect.cha");
       isr = new InputStreamReader(fis, this.charset);
       reader = new BufferedReader(isr);
       fos = new FileOutputStream(outputFilename);
