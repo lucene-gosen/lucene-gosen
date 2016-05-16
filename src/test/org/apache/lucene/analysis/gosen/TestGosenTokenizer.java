@@ -99,7 +99,28 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
       new int[] { 2, 3, 5, 9, 10, 15, 16, 19, 20, 22, 26, 27, 32, 33 }
     );
   }
-  
+
+  /** Tests a sentence that consists of Katakana characters */
+  public void testUnknownKatakanaSentence() throws IOException {
+    assertAnalyzesTo(analyzer, "メイフラワーアレンジメント",
+            new String[] { "メイフラワーアレンジメント" },
+            new int[] { 0 },
+            new int[] { 13 }
+//            new String[] { "メイ", "フラワー", "アレンジメント" },
+//            new int[] { 0, 2, 6 },
+//            new int[] { 2, 6, 13 }
+    );
+  }
+
+  /** Tests a sentence that consists of Katakana characters */
+  public void testUnknownKatakanaSentence2() throws IOException {
+    assertAnalyzesTo(analyzer, "フラワーアレンジメント",
+            new String[] { "フラワー", "アレンジメント" },
+            new int[] { 0, 4 },
+            new int[] { 4, 11 }
+    );
+  }
+
   /** Tests that for large documents the buffer offset is accumulated */
   public void testOffsetAccumulation() throws IOException {
       StringBuilder sb = new StringBuilder();
