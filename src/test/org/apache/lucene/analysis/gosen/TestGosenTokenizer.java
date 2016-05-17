@@ -69,9 +69,12 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
   
   public void testDecomposition3() throws IOException {
     assertAnalyzesTo(analyzer, "魔女狩大将マシュー・ホプキンス。",
-      new String[] { "魔女", "狩", "大将", "マシュー", "・", "ホプキンス", "。" },
-      new int[] { 0, 2, 3, 5,  9, 10, 15 },
-      new int[] { 2, 3, 5, 9, 10, 15, 16 }
+//      new String[] { "魔女", "狩", "大将", "マシュー", "・", "ホプキンス", "。" },
+//      new int[] { 0, 2, 3, 5,  9, 10, 15 },
+//      new int[] { 2, 3, 5, 9, 10, 15, 16 }
+      new String[] { "魔女", "狩", "大将", "マ", "シュー", "・", "ホ", "プ", "キン", "ス", "。" },
+      new int[] { 0, 2, 3, 5, 6, 9, 10, 11, 12, 14, 15 },
+      new int[] { 2, 3, 5, 6, 9, 10, 11, 12, 14, 15, 16 }
     );
   }
   
@@ -94,21 +97,21 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
   /** Tests that sentence offset is incorporated into the resulting offsets */
   public void testTwoSentences() throws IOException {
     assertAnalyzesTo(analyzer, "魔女狩大将マシュー・ホプキンス。 魔女狩大将マシュー・ホプキンス。",
-      new String[] { "魔女", "狩", "大将", "マシュー", "・", "ホプキンス", "。", "魔女", "狩", "大将", "マシュー", "・", "ホプキンス", "。" },
-      new int[] { 0, 2, 3, 5,  9, 10, 15, 17, 19, 20, 22, 26, 27, 32 },
-      new int[] { 2, 3, 5, 9, 10, 15, 16, 19, 20, 22, 26, 27, 32, 33 }
+//      new String[] { "魔女", "狩", "大将", "マシュー", "・", "ホプキンス", "。", "魔女", "狩", "大将", "マシュー", "・", "ホプキンス", "。" },
+//      new int[] { 0, 2, 3, 5,  9, 10, 15, 17, 19, 20, 22, 26, 27, 32 },
+//      new int[] { 2, 3, 5, 9, 10, 15, 16, 19, 20, 22, 26, 27, 32, 33 }
+        new String[] { "魔女", "狩", "大将", "マ", "シュー", "・", "ホ", "プ", "キン", "ス", "。", "魔女", "狩", "大将", "マ", "シュー", "・", "ホ", "プ", "キン", "ス", "。" },
+        new int[] { 0, 2, 3, 5, 6, 9, 10, 11, 12, 14, 15, 17, 19, 20, 22, 23, 26, 27, 28, 29, 31, 32  },
+        new int[] { 2, 3, 5, 6, 9, 10, 11, 12, 14, 15, 16, 19, 20, 22, 23, 26, 27, 28, 29, 31, 32, 33 }
     );
   }
 
   /** Tests a sentence that consists of Katakana characters */
   public void testUnknownKatakanaSentence() throws IOException {
     assertAnalyzesTo(analyzer, "メイフラワーアレンジメント",
-            new String[] { "メイフラワーアレンジメント" },
-            new int[] { 0 },
-            new int[] { 13 }
-//            new String[] { "メイ", "フラワー", "アレンジメント" },
-//            new int[] { 0, 2, 6 },
-//            new int[] { 2, 6, 13 }
+            new String[] { "メ", "イ", "フラワー", "アレンジメント" },
+            new int[] { 0, 1, 2, 6 },
+            new int[] { 1, 2, 6, 13 }
     );
   }
 

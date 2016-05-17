@@ -48,8 +48,8 @@ public class SenFactory {
   
   private static final Map<String,SenFactory> map = new ConcurrentHashMap<String,SenFactory>();
   
-  private static final String EMPTY_DICTIONARYDIR_KEY = "NO_DICTIONARY_INSTANCE"; 
-  
+  private static final String EMPTY_DICTIONARYDIR_KEY = "NO_DICTIONARY_INSTANCE";
+
   /**
    * Get the singleton factory instance
    * @param dictionaryDir a directory of dictinaries
@@ -125,10 +125,10 @@ public class SenFactory {
 
   private final String[] posIndex, conjTypeIndex, conjFormIndex;
   private final ByteBuffer costs, pos, tokens, trie;
-  
-  
+
   public static final String unknownPOS = "未知語";
-  
+  private static boolean groupingUnknownTokens = true;
+
   private static ByteBuffer loadBuffer(String resource, int size, String dictionaryDir) throws IOException {
     InputStream in = null;
     try {
@@ -156,20 +156,22 @@ public class SenFactory {
   /**
    * Builds a Tokenizer for the given dictionary configuration
    *
-   * @param configurationFilename The dictionary configuration filename
+   * @param dictionaryDir The dictionary configuration filename
    * @return The constructed Tokenizer
    */
   private static Tokenizer getTokenizer(String dictionaryDir) {
     SenFactory localInstance = SenFactory.getInstance(dictionaryDir);
     
     return new JapaneseTokenizer(
-        new Dictionary(localInstance.costs.asShortBuffer(),
-          localInstance.pos.duplicate(),
-          localInstance.tokens.duplicate(),
-          localInstance.trie.asIntBuffer(),
-          localInstance.posIndex,
-          localInstance.conjTypeIndex,
-          localInstance.conjFormIndex), unknownPOS);
+            new Dictionary(localInstance.costs.asShortBuffer(),
+                    localInstance.pos.duplicate(),
+                    localInstance.tokens.duplicate(),
+                    localInstance.trie.asIntBuffer(),
+                    localInstance.posIndex,
+                    localInstance.conjTypeIndex,
+                    localInstance.conjFormIndex),
+            unknownPOS,
+            groupingUnknownTokens);
   }
   
   /**
@@ -202,5 +204,9 @@ public class SenFactory {
   static ReadingProcessor getReadingProcessor(String dictionaryDir) {
     //for test only
     return new ReadingProcessor(getTokenizer(dictionaryDir));
+  }
+
+  public static void setGroupingUnknownTokens(boolean flag) {
+    groupingUnknownTokens = flag;
   }
 }

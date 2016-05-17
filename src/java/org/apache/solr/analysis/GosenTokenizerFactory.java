@@ -20,7 +20,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.Map;
 
 import net.java.sen.filter.stream.CompositeTokenFilter;
@@ -39,7 +38,10 @@ import org.apache.lucene.analysis.util.ResourceLoaderAware;
  * <pre class="prettyprint" >
  * &lt;fieldType name="text_ja" class="solr.TextField"&gt;
  *   &lt;analyzer&gt;
- *     &lt;tokenizer class="solr.GosenTokenizerFactory" compositePOS="compositePOS.txt" dictionaryDir="/opt/dictionary" /&gt;
+ *     &lt;tokenizer class="solr.GosenTokenizerFactory"
+ *       compositePOS="compositePOS.txt"
+ *       dictionaryDir="/opt/dictionary"
+ *       groupingUnknownTokens="false / true" /&gt;
  *   &lt;/analyzer&gt;
  * &lt;/fieldType&gt;</pre>
  */
@@ -50,11 +52,15 @@ public class GosenTokenizerFactory extends TokenizerFactory implements ResourceL
 
   private final String compositePosFile;
   private final String dirVal;
+  private final boolean groupingUnknownTokens;
 
   public GosenTokenizerFactory(Map<String,String> args) {
     super(args);
+
     compositePosFile = get(args, "compositePOS");
     dirVal = get(args, "dictionaryDir");
+    groupingUnknownTokens = getBoolean(args, "groupingUnknownTokens", true);
+
     if (!args.isEmpty()){
       throw new IllegalArgumentException("Unknown parameters: " + args);
     }
@@ -103,6 +109,6 @@ public class GosenTokenizerFactory extends TokenizerFactory implements ResourceL
   }
 
   public Tokenizer create(AttributeFactory factory) {
-    return new GosenTokenizer(compositeTokenFilter, dictionaryDir);
+    return new GosenTokenizer(compositeTokenFilter, dictionaryDir, groupingUnknownTokens);
   }
 }

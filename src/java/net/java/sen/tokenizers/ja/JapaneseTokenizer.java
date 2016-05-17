@@ -93,6 +93,9 @@ public class JapaneseTokenizer extends Tokenizer {
         case OTHER:
           length = 1;
           break;
+        case KATAKANA:
+          length = 1;
+          break;
           
         default:
           length = 1;
@@ -133,7 +136,7 @@ public class JapaneseTokenizer extends Tokenizer {
     // Synthesize token for longest consecutive run of same character class
     iterator.rewindToOrigin();
     int unknownTokenLength = findUnknownToken(iterator);
-    
+
     Node unknownNode = getUnknownNode(surface, iterator.origin(), unknownTokenLength, skipped + unknownTokenLength);
     unknownNode.rnext = resultNode;
     
@@ -145,8 +148,9 @@ public class JapaneseTokenizer extends Tokenizer {
    * 
    * @param dictionary The Dictionary in which to search for possible morphemes
    * @param unknownPartOfSpeechDescription The part-of-speech code to use for unknown tokens
+   * @param groupingUnknownTokens Grouping unknown tokens to generate a token.
    */
-  public JapaneseTokenizer(Dictionary dictionary, String unknownPartOfSpeechDescription) {
-    super(dictionary, unknownPartOfSpeechDescription);
+  public JapaneseTokenizer(Dictionary dictionary, String unknownPartOfSpeechDescription, boolean groupingUnknownTokens) {
+    super(dictionary, unknownPartOfSpeechDescription, groupingUnknownTokens);
   }
 }

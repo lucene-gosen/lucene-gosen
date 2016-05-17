@@ -144,7 +144,7 @@ public class Dictionary {
     int size = 0;
     
     int n = TrieSearcher.commonPrefixSearch(trieBuffer, iterator, trieSearchResults);
-    
+
     for (int i = 0; i < n; i++) {
       int k = trieSearchResults[i] & 0xff;
       int p = trieSearchResults[i] >> 8;
@@ -181,7 +181,7 @@ public class Dictionary {
     
     this.connectionCostBuffer = buffer.slice();
     
-    // Map position infomation file.
+    // Map position information file.
     this.partOfSpeechInfoBuffer = partOfSpeechInfoBuffer;
     
     // Map token file
