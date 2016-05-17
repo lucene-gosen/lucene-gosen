@@ -90,10 +90,8 @@ public class JapaneseTokenizer extends Tokenizer {
       switch (charClass) {
         case HIRAGANA:
         case KANJI:
-        case OTHER:
-          length = 1;
-          break;
         case KATAKANA:
+        case OTHER:
           length = 1;
           break;
           
@@ -129,7 +127,7 @@ public class JapaneseTokenizer extends Tokenizer {
       resultNode = newNode;
     }
     
-    if ((resultNode != null) && (charClass == HIRAGANA || charClass == KANJI)) {
+    if ((resultNode != null) && (charClass == HIRAGANA || charClass == KANJI || charClass == KATAKANA)) {
       return resultNode;
     }
     
