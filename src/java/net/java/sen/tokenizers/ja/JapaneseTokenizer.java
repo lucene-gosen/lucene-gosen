@@ -92,8 +92,10 @@ public class JapaneseTokenizer extends Tokenizer {
         case KANJI:
         case KATAKANA:
         case OTHER:
-          length = 1;
-          break;
+          if (compatibilityMode) {
+            length = 1;
+            break;
+          }
           
         default:
           length = 1;
