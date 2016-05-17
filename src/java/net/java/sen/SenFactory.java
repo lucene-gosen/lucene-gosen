@@ -127,7 +127,7 @@ public class SenFactory {
   private final ByteBuffer costs, pos, tokens, trie;
 
   public static final String unknownPOS = "未知語";
-  private static boolean groupingUnknownTokens = true;
+  private static boolean compatibilityMode = true;
 
   private static ByteBuffer loadBuffer(String resource, int size, String dictionaryDir) throws IOException {
     InputStream in = null;
@@ -171,7 +171,7 @@ public class SenFactory {
                     localInstance.conjTypeIndex,
                     localInstance.conjFormIndex),
             unknownPOS,
-            groupingUnknownTokens);
+            compatibilityMode);
   }
   
   /**
@@ -206,7 +206,7 @@ public class SenFactory {
     return new ReadingProcessor(getTokenizer(dictionaryDir));
   }
 
-  public static void setGroupingUnknownTokens(boolean flag) {
-    groupingUnknownTokens = flag;
+  public static void setCompatibilityMode(boolean flag) {
+    compatibilityMode = flag;
   }
 }

@@ -86,8 +86,8 @@ public final class GosenTokenizer extends Tokenizer {
     this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, filter, dictionaryDir);
   }
 
-  public GosenTokenizer(StreamFilter filter, String dictionaryDir, boolean groupingUnknownTokens) {
-    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, filter, dictionaryDir, groupingUnknownTokens);
+  public GosenTokenizer(StreamFilter filter, String dictionaryDir, boolean compatibilityMode) {
+    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, filter, dictionaryDir, compatibilityMode);
   }
 
   public GosenTokenizer(AttributeFactory factory, StreamFilter filter, String dictionaryDir) {
@@ -100,11 +100,11 @@ public final class GosenTokenizer extends Tokenizer {
    * @param factory the AttributeFactory to use
    * @param filter stream filter
    * @param dictionaryDir lucene-gosen dictionary directory
-   * @param groupingUnknownTokens
+   * @param compatibilityMode
    */
-  public GosenTokenizer(AttributeFactory factory, StreamFilter filter, String dictionaryDir, boolean groupingUnknownTokens) {
+  public GosenTokenizer(AttributeFactory factory, StreamFilter filter, String dictionaryDir, boolean compatibilityMode) {
     super(factory);
-    SenFactory.setGroupingUnknownTokens(groupingUnknownTokens);
+    SenFactory.setCompatibilityMode(compatibilityMode);
     StringTagger stringTagger = SenFactory.getStringTagger(dictionaryDir);
     if (filter != null) {
       stringTagger.addFilter(filter);

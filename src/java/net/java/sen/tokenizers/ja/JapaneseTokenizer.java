@@ -146,9 +146,9 @@ public class JapaneseTokenizer extends Tokenizer {
    * 
    * @param dictionary The Dictionary in which to search for possible morphemes
    * @param unknownPartOfSpeechDescription The part-of-speech code to use for unknown tokens
-   * @param groupingUnknownTokens Grouping unknown tokens to generate a token.
+   * @param compatibilityMode Grouping unknown tokens to generate a token.
    */
-  public JapaneseTokenizer(Dictionary dictionary, String unknownPartOfSpeechDescription, boolean groupingUnknownTokens) {
-    super(dictionary, unknownPartOfSpeechDescription, groupingUnknownTokens);
+  public JapaneseTokenizer(Dictionary dictionary, String unknownPartOfSpeechDescription, boolean compatibilityMode) {
+    super(dictionary, unknownPartOfSpeechDescription, compatibilityMode);
   }
 }

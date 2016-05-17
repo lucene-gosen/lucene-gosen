@@ -57,9 +57,9 @@ public abstract class Tokenizer {
   protected final String unknownPartOfSpeechDescription;
 
   /**
-   * Tokenizer groups unknown tokens.
+   * Behaves as before
    */
-  protected final boolean groupingUnknownTokens;
+  protected final boolean compatibilityMode;
   
   /**
    * @return Returns the dictionary used to find possible morphemes
@@ -138,9 +138,9 @@ public abstract class Tokenizer {
    * @param dictionary The {@link Dictionary} to search within
    * @param unknownPartOfSpeechDescription The part-of-speech code to use for
    *        unknown tokens
-   * @param groupingUnknownTokens Grouping unknown tokens as one token
+   * @param compatibilityMode Grouping unknown tokens as one token
    */
-  public Tokenizer(Dictionary dictionary, String unknownPartOfSpeechDescription, boolean groupingUnknownTokens) {
+  public Tokenizer(Dictionary dictionary, String unknownPartOfSpeechDescription, boolean compatibilityMode) {
     this.dictionary = dictionary;
     this.unknownPartOfSpeechDescription = unknownPartOfSpeechDescription;
     
@@ -155,6 +155,6 @@ public abstract class Tokenizer {
     
     this.unknownMorpheme = new Morpheme(unknownPartOfSpeechDescription, null, null, "*", new String[0], new String[0], null);
 
-    this.groupingUnknownTokens = groupingUnknownTokens;
+    this.compatibilityMode = compatibilityMode;
   }
 }
