@@ -208,8 +208,7 @@ public class DictionaryBuilder {
       CostMatrixBuilder[] matrixBuilders, int partOfSpeechStart, int partOfSpeechSize, String charset,
       String bosPartOfSpeech, String eosPartOfSpeech, String unknownPartOfSpeech, VirtualTupleList dictionaryList, CToken[] standardCTokens) throws IOException
       {
-    String[] csvValues = null;
-    
+
     CSVData key_b = new CSVData();
     CSVData pos_b = new CSVData();
 
@@ -234,6 +233,7 @@ public class DictionaryBuilder {
           fileInputStream = new FileInputStream(dictionaryCSVFilename);
           parser = new CSVParser(fileInputStream, charset);
 
+          String[] csvValues;
           while ((csvValues = parser.nextTokens()) != null) {
 
             if (csvValues.length < (partOfSpeechSize + partOfSpeechStart)) {
