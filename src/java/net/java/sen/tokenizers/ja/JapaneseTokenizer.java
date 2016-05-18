@@ -90,13 +90,15 @@ public class JapaneseTokenizer extends Tokenizer {
       switch (charClass) {
         case HIRAGANA:
         case KANJI:
-        case KATAKANA:
         case OTHER:
-          if (compatibilityMode) {
+          length = 1;
+          break;
+
+        case KATAKANA:
+          if (!compatibilityMode) {
             length = 1;
             break;
           }
-          
         default:
           length = 1;
           while (iterator.hasNext() && (getCharClass(iterator.next()) == charClass)) {
@@ -129,7 +131,7 @@ public class JapaneseTokenizer extends Tokenizer {
       resultNode = newNode;
     }
     
-    if ((resultNode != null) && (charClass == HIRAGANA || charClass == KANJI || charClass == KATAKANA)) {
+    if ((resultNode != null) && (charClass == HIRAGANA || charClass == KANJI || (!compatibilityMode && charClass == KATAKANA))) {
       return resultNode;
     }
     

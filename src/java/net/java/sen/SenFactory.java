@@ -127,7 +127,7 @@ public class SenFactory {
   private final ByteBuffer costs, pos, tokens, trie;
 
   public static final String unknownPOS = "未知語";
-  private static boolean compatibilityMode = true;
+  public static boolean compatibilityMode = true;
 
   private static ByteBuffer loadBuffer(String resource, int size, String dictionaryDir) throws IOException {
     InputStream in = null;
