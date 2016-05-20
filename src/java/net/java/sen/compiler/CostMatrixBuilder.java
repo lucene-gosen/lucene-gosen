@@ -113,12 +113,6 @@ class CostMatrixBuilder {
           results.set(k++, i);
         }
       }
-      if (k == 0) {
-        // Insert rule information to the ruleList buffer
-        int lastRule = ruleIndex.size();
-        ruleList.add(lastRule, csv);
-        results.add(k++, lastRule);
-      }
       results.setSize(k);
     }
 
