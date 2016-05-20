@@ -48,12 +48,12 @@ public class GosenPartOfSpeechStopFilterFactory extends TokenFilterFactory imple
   public GosenPartOfSpeechStopFilterFactory(Map<String, String> args) {
     super(args);
     stopTagFiles = require(args, "tags");
-    if (luceneMatchVersion.onOrAfter(Version.LUCENE_5_0_0) == false) {
+    if (!luceneMatchVersion.onOrAfter(Version.LUCENE_5_0_0)) {
       enablePositionIncrements = getBoolean(args, "enablePositionIncrements", true);
-      if (enablePositionIncrements == false &&
-        (luceneMatchVersion == null || luceneMatchVersion.onOrAfter(Version.LUCENE_4_4_0))) {
-        throw new IllegalArgumentException("enablePositionIncrements=false is not supported anymore as of Lucene 4.4");
-      }
+//      if (enablePositionIncrements == false &&
+//        (luceneMatchVersion == null || luceneMatchVersion.onOrAfter(Version.LUCENE_4_4_0))) {
+//        throw new IllegalArgumentException("enablePositionIncrements=false is not supported anymore as of Lucene 4.4");
+//      }
     } else if (args.containsKey("enablePositionIncrements")) {
       throw new IllegalArgumentException("enablePositionIncrements is not a valid option as of Lucene 5.0");
     }
