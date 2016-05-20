@@ -204,10 +204,18 @@ public class DictionaryBuilder {
    *
    * @throws IOException 
    */
-  private void createPartOfSpeechDataFile(List<String> dictionaryCSVFilenames, String partOfSpeechDataFilename, String partOfSpeechIndexFilename,
-      CostMatrixBuilder[] matrixBuilders, int partOfSpeechStart, int partOfSpeechSize, String charset,
-      String bosPartOfSpeech, String eosPartOfSpeech, String unknownPartOfSpeech, VirtualTupleList dictionaryList, CToken[] standardCTokens) throws IOException
-      {
+  private void createPartOfSpeechDataFile(List<String> dictionaryCSVFilenames,
+                                          String partOfSpeechDataFilename,
+                                          String partOfSpeechIndexFilename,
+                                          CostMatrixBuilder[] matrixBuilders,
+                                          int partOfSpeechStart,
+                                          int partOfSpeechSize,
+                                          String charset,
+                                          String bosPartOfSpeech,
+                                          String eosPartOfSpeech,
+                                          String unknownPartOfSpeech,
+                                          VirtualTupleList dictionaryList,
+                                          CToken[] standardCTokens) throws IOException {
 
     CSVData key_b = new CSVData();
     CSVData pos_b = new CSVData();
@@ -253,12 +261,11 @@ public class DictionaryBuilder {
 
             CToken ctoken = new CToken();
 
-            ctoken.rcAttr2 = (short) matrixBuilders[0].getDicId(key_b
-                .toString());
-            ctoken.rcAttr1 = (short) matrixBuilders[1].getDicId(key_b
-                .toString());
-            ctoken.lcAttr = (short) matrixBuilders[2]
-                .getDicId(key_b.toString());
+            ctoken.rcAttr2 = (short) matrixBuilders[0].getDicId(key_b.toString());
+            ctoken.rcAttr1 = (short) matrixBuilders[1].getDicId(key_b.toString());
+
+            ctoken.lcAttr = (short) matrixBuilders[2].getDicId(key_b.toString());
+
             ctoken.partOfSpeechIndex = outputStream.size();
             ctoken.length = (short) csvValues[0].length();
             ctoken.cost = (short) Integer.parseInt(csvValues[1]);
@@ -274,8 +281,7 @@ public class DictionaryBuilder {
                 partOfSpeechBuilder.append("-");
               }
             }
-            String partOfSpeech = partOfSpeechBuilder.substring(0,
-                partOfSpeechBuilder.length() - 1);
+            String partOfSpeech = partOfSpeechBuilder.substring(0, partOfSpeechBuilder.length() - 1);
             String conjugationalType = csvValues[partOfSpeechStart + 4];
             String conjugationalForm = csvValues[partOfSpeechStart + 5];
             String basicForm = csvValues[partOfSpeechStart + 6];
@@ -337,8 +343,7 @@ public class DictionaryBuilder {
               }
             }
 
-            DictionaryUtil.writeVInt(outputStream, readings.size() << 1
-                | encoding);
+            DictionaryUtil.writeVInt(outputStream, readings.size() << 1 | encoding);
 
             for (int i = 0; i < readings.size(); i++) {
               String reading = readings.get(i);
@@ -347,16 +352,14 @@ public class DictionaryBuilder {
                 // if the pronunciation is the same as the associated reading,
                 // we
                 // write a 0 for the length
-                DictionaryUtil.writeVInt(outputStream,
-                    reading.length() << 1 | 0);
+                DictionaryUtil.writeVInt(outputStream, reading.length() << 1 | 0);
                 if (encoding == 0) {
                   DictionaryUtil.writeKatakana(outputStream, reading);
                 } else {
                   outputStream.writeChars(reading);
                 }
               } else {
-                DictionaryUtil.writeVInt(outputStream,
-                    reading.length() << 1 | 1);
+                DictionaryUtil.writeVInt(outputStream, reading.length() << 1 | 1);
                 if (encoding == 0) {
                   DictionaryUtil.writeKatakana(outputStream, reading);
                 } else {
@@ -413,20 +416,16 @@ public class DictionaryBuilder {
         standardCTokens[1] = eosCToken;
 
         CToken unknownCToken = new CToken();
-        unknownCToken.rcAttr2 = (short) matrixBuilders[0]
-            .getDicId(unknownPartOfSpeech);
-        unknownCToken.rcAttr1 = (short) matrixBuilders[1]
-            .getDicId(unknownPartOfSpeech);
-        unknownCToken.lcAttr = (short) matrixBuilders[2]
-            .getDicId(unknownPartOfSpeech);
+        unknownCToken.rcAttr2 = (short) matrixBuilders[0].getDicId(unknownPartOfSpeech);
+        unknownCToken.rcAttr1 = (short) matrixBuilders[1].getDicId(unknownPartOfSpeech);
+        unknownCToken.lcAttr = (short) matrixBuilders[2].getDicId(unknownPartOfSpeech);
         unknownCToken.partOfSpeechIndex = -1;
         standardCTokens[2] = unknownCToken;
       } finally {
         IOUtils.closeWhileHandlingException(index, fos);
       }
     } finally {
-      IOUtils.closeWhileHandlingException(outputStream, bufferedOutputStream,
-          fileOutputStream);
+      IOUtils.closeWhileHandlingException(outputStream, bufferedOutputStream, fileOutputStream);
     }
   }
 
@@ -444,9 +443,11 @@ public class DictionaryBuilder {
    * @return An array of three <code>CostMatrixBuilder</code>s
    * @throws IOException
    */
-  private CostMatrixBuilder[] createConnectionCostFile(
-      String connectionCSVFilename, String connectionCostDataFilename,
-      short defaultCost, String charset) throws IOException {
+  private CostMatrixBuilder[] createConnectionCostFile(String connectionCSVFilename,
+                                                       String connectionCostDataFilename,
+                                                       short defaultCost,
+                                                       String charset) throws IOException {
+
     CostMatrixBuilder[] matrixBuilders = new CostMatrixBuilder[3];
 
     matrixBuilders[0] = new CostMatrixBuilder();
@@ -503,8 +504,6 @@ public class DictionaryBuilder {
       int ruleSize = rule1.size();
       
       // Write connection cost data
-      MappedByteBuffer buffer = null;
-      ShortBuffer shortBuffer = null;
       int matrixSizeBytes = (size1 * size2 * size3 * 2);
       int headerSizeBytes = (3 * 2);
 
@@ -515,9 +514,8 @@ public class DictionaryBuilder {
       file.writeShort(size3);
       file.setLength(headerSizeBytes + matrixSizeBytes);
       indexChannel = file.getChannel();
-      buffer = indexChannel.map(FileChannel.MapMode.READ_WRITE,
-          headerSizeBytes, matrixSizeBytes);
-      shortBuffer = buffer.asShortBuffer();
+      MappedByteBuffer buffer = indexChannel.map(FileChannel.MapMode.READ_WRITE, headerSizeBytes, matrixSizeBytes);
+      ShortBuffer shortBuffer = buffer.asShortBuffer();
 
       for (int i = 0; i < (size1 * size2 * size3); i++) {
         shortBuffer.put(i, defaultCost);
@@ -559,9 +557,9 @@ public class DictionaryBuilder {
    * @return The Trie precursor data
    * @throws IOException 
    */
-  private TrieData createTokenFile(String tokenDataFilename, CToken[] standardCTokens, VirtualTupleList tupleList)
-  throws IOException
-  {
+  private TrieData createTokenFile(String tokenDataFilename,
+                                   CToken[] standardCTokens,
+                                   VirtualTupleList tupleList) throws IOException {
     
     TrieData trieData = new TrieData();
     

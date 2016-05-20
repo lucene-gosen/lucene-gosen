@@ -94,24 +94,33 @@ class CostMatrixBuilder {
     for (int j = 0; j < ruleList.size(); j++) {
       results.set(j, j);
     }
-    
-    for (int j = 0; j < csv.length; j++) {
-      int k = 0;
-      for (int n = 0; n < results.size(); n++) {
-        int i = results.get(n);
-        String rl_ij = ruleList.get(i)[j];
+
+    int i;
+    int j;
+    int k = 0;
+    int n;
+    String rl_ij = null;
+    for (j = 0; j < csv.length; j++) {
+      i = k = 0;
+      for (n = 0; n < results.size(); n++) {
+        i = results.get(n);
+        rl_ij = ruleList.get(i)[j];
         if (
             ((!parent) && (csv[j].charAt(0) == '*'))
             || ((parent) && (rl_ij.charAt(0) == '*'))
             || rl_ij.equals(csv[j])
         )
         {
-          results.set(k++, results.get(n));
+//          results.set(k++, results.get(n));
+          results.set(k++, i);
         }
+      }
+      if (k == 0) {
+        throw new IllegalArgumentException();
       }
       results.setSize(k);
     }
-    
+
     return results;
   }
   
