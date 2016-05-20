@@ -1,5 +1,3 @@
-package org.apache.lucene.analysis.gosen;
-
 /**
  * Copyright 2004 The Apache Software Foundation
  *
@@ -15,6 +13,8 @@ package org.apache.lucene.analysis.gosen;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package org.apache.lucene.analysis.gosen;
 
 import java.io.IOException;
 import java.util.Set;
