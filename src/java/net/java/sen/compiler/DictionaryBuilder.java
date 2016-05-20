@@ -477,15 +477,17 @@ public class DictionaryBuilder {
         if (t.length < 4) {
           throw new IOException("Connection cost CSV format error");
         }
+
+        // First POS information
         matrixBuilders[0].add(t[0]);
         rule1.add(t[0]);
-
+        // Second POS information
         matrixBuilders[1].add(t[1]);
         rule2.add(t[1]);
-
+        // Third POS information
         matrixBuilders[2].add(t[2]);
         rule3.add(t[2]);
-
+        // Score for the above combination
         if (line == scores.length) {
           scores = resize(scores);
         }

@@ -94,7 +94,7 @@ public class GosenTokenizerFactory extends TokenizerFactory implements ResourceL
       File d0 = new File(dirVal);
       File d = d0;
       if (!d.isAbsolute())
-        d = new File(solrLoader.getConfigDir() + dirVal);
+        d = new File(solrLoader.getConfigDir() + File.separator + dirVal);
       if (d.isDirectory() && d.canRead()) {
         // relative path (from solr/conf)
         dictionaryDir = d.getAbsolutePath();
