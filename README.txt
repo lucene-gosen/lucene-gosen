@@ -1,4 +1,4 @@
-Installation With Apache Solr 5.5.1:
+Installation With Apache Solr 6.0.0:
 
 1. run 'ant'. this will make lucene-gosen-{version}.jar
 2. create <your_solr_home>/<collection_dir>/lib and put this jar file in it.
@@ -8,7 +8,7 @@ Installation With Apache Solr 5.5.1:
 refer to example/ for an example japanese configuration with comments explaining
    what the various configuration options are.
 
-Installation with Apache Lucene 5.5.1:
+Installation with Apache Lucene 6.0.0:
 
 1. run 'ant'. this will make lucene-gosen-{version}.jar
 2. add this jar file to your classpath, and use GosenAnalyzer, or make your own analyzer from
