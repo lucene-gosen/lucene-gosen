@@ -47,10 +47,11 @@ public class GosenPartOfSpeechStopFilterFactory extends TokenFilterFactory imple
 
   public GosenPartOfSpeechStopFilterFactory(Map<String, String> args) {
     super(args);
+
     stopTagFiles = require(args, "tags");
-    if (!luceneMatchVersion.onOrAfter(Version.LUCENE_6_0_0)) {
-      enablePositionIncrements = getBoolean(args, "enablePositionIncrements", true);
-    } else if (args.containsKey("enablePositionIncrements")) {
+    enablePositionIncrements = getBoolean(args, "enablePositionIncrements", true);
+
+    if (args.containsKey("enablePositionIncrements")) {
       throw new IllegalArgumentException("enablePositionIncrements is not a valid option as of Lucene 5.0");
     }
     if (!args.isEmpty()) {

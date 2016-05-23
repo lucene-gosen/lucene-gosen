@@ -186,6 +186,18 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
   //=================================================================================================================
 
   /**
+   */
+  public void testSymbol() throws IOException {
+    assertAnalyzesTo(analyzer2, "testing 1234",
+            new String[] { "testing", "1234" },
+            new int[] { 0, 8 },
+            new int[] { 7, 12 }
+    );
+  }
+
+  //=================================================================================================================
+
+  /**
    * New Behavior
    *
    * Do not concatenate consecutive Katakana tokens when a sentence has a UNKNOWN Katakana token.

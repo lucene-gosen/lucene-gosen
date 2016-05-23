@@ -73,22 +73,29 @@ public class GosenAnalyzer extends StopwordAnalyzerBase {
   }
   
   /**
-   * Create a GosenAnalyzer with the default stopwords and stoptags and no stemExclusionSet
+   * Create a GosenAnalyzer with default parameter values
    */
   public GosenAnalyzer() {
     this(DefaultSetHolder.DEFAULT_STOP_SET, DefaultSetHolder.DEFAULT_STOP_TAGS, CharArraySet.EMPTY_SET, null);
   }
 
   /**
-   * Create a GosenAnalyzer with the default stopwords and stoptags and no stemExclusionSet<br>
-   * and argument of dictionaryDir.
+   * Create a GosenAnalyzer with the specified dictionaryDir
    */
   public GosenAnalyzer(String dictionaryDir) {
     this(DefaultSetHolder.DEFAULT_STOP_SET, DefaultSetHolder.DEFAULT_STOP_TAGS, CharArraySet.EMPTY_SET, dictionaryDir);
   }
-  
+
   /**
-   * Create a GosenAnalyzer with the specified stopwords, stoptags, and stemExclusionSet
+   * Create a GosenAnalyzer that only receives dictionaryDir and compatibilityMode value.
+   */
+  public GosenAnalyzer(String dictionaryDir, boolean compatibilityMode) {
+    this(DefaultSetHolder.DEFAULT_STOP_SET, DefaultSetHolder.DEFAULT_STOP_TAGS, CharArraySet.EMPTY_SET, dictionaryDir,
+            compatibilityMode);
+  }
+
+  /**
+   * Create a GosenAnalyzer with the specified stopwords, stoptags, stemExclusionSet and dictionaryDir
    */
   public GosenAnalyzer(CharArraySet stopwords, Set<String> stoptags, CharArraySet stemExclusionSet, String dictionaryDir) {
     this(stopwords, stoptags, stemExclusionSet, dictionaryDir, true);
