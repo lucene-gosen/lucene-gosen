@@ -1,5 +1,22 @@
 lucene-gosen Change Log
 
+========== 6.0.0 / 2016-05-27 ===================================
+
+Important Notice
+
+* http://code.google.com/p/lucene-gosen/issues/detail?id=57
+    Change Lucene/Solr 6.0.0 library
+
+New Features & Improvements
+
+Bug Fixes
+
+API Changes
+
+Javadoc Fixes
+
+Others
+
 ========== 4.10.0 / YYYY-MM-DD ===================================
 
 Important Notice
