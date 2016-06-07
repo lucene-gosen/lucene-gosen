@@ -237,8 +237,8 @@ public class BasicDecompositionTest extends LuceneTestCase {
         new Token ("ない", 7090, 6, 2, new Morpheme ("助動詞", "特殊・ナイ", "基本形", "*", new String[]{"ナイ"}, new String[]{"ナイ"}, null))
     };
 
-    StringTagger ipadicTagger = SenFactory.getStringTagger(ipadicDir);
-    StringTagger naistChasenTagger = SenFactory.getStringTagger(naistChasenDir);
+    StringTagger ipadicTagger = SenFactory.getStringTagger(ipadicDir, false);
+    StringTagger naistChasenTagger = SenFactory.getStringTagger(naistChasenDir, false);
 
     assertNotSame(ipadicTagger, naistChasenTagger);
 

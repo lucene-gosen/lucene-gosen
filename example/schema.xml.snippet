@@ -27,8 +27,9 @@
              BasicFormAttribute, ConjugationAttribute, PartOfSpeechAttribute, PronunciationsAttribute,
              ReadingsAttribute, and SentenceStartAttribute.
              Option setting
-             compositePOS : merge multiple similar tokens by a part-of-speech based configrations
+             compositePOS : merge multiple similar tokens by a part-of-speech based configurations.
              dictionaryDir : specified a dictionary directory. you can use multiple dictionary for each tokenizer.
+             tokenizeUnknownKatakana : if set to true, not concatenate consecutive Unknown Katakana tokens.
         -->
         <tokenizer class="solr.GosenTokenizerFactory" compositePOS="compositePOS.txt" dictionaryDir="dictionary/naist-chasen"/>
 
@@ -56,7 +57,7 @@
         <!-- alternatively, instead of using a part-of-speech based stopfilter, you can use a
              part-of-speech based keepfilter: specifying only the parts of speech you wish to index.
              anything else will be removed. HOWEVER: this could be a little dangerous, because if
-             we upgrade ipadic they might add some new tags (the tags are fairly specific), and suddenly
+             we upgrade IPAdic they might add some new tags (the tags are fairly specific), and suddenly
              things that you were indexing before are no longer being indexed. Its recommended to
              use the part-of-speech based stopfilter above if at all possible, for safety.
         <filter class="solr.GosenPartOfSpeechKeepFilterFactory" tags="lang/keeptags_ja.txt"/>

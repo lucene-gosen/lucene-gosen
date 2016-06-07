@@ -74,24 +74,27 @@ public final class GosenTokenizer extends Tokenizer {
   // so we accumulate this so we can then subtract to present an absolute cost.
   private int accumulatedCost = 0;
 
+  /**
+   * Constructors
+   */
   public GosenTokenizer() {
-    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, null, null);
+    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, null, null, false);
   }
 
   public GosenTokenizer(StreamFilter filter) {
-    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, filter, null);
+    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, filter, null, false);
   }
   
   public GosenTokenizer(StreamFilter filter, String dictionaryDir) {
-    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, filter, dictionaryDir);
+    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, filter, dictionaryDir, false);
   }
 
-  public GosenTokenizer(StreamFilter filter, String dictionaryDir, boolean compatibilityMode) {
-    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, filter, dictionaryDir, compatibilityMode);
+  public GosenTokenizer(StreamFilter filter, String dictionaryDir, boolean tokenizeUnknownKatakana) {
+    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, filter, dictionaryDir, tokenizeUnknownKatakana);
   }
 
   public GosenTokenizer(AttributeFactory factory, StreamFilter filter, String dictionaryDir) {
-    this(factory, filter, dictionaryDir, true);
+    this(factory, filter, dictionaryDir, false);
   }
 
   /**
@@ -100,12 +103,11 @@ public final class GosenTokenizer extends Tokenizer {
    * @param factory the AttributeFactory to use
    * @param filter stream filter
    * @param dictionaryDir lucene-gosen dictionary directory
-   * @param compatibilityMode
+   * @param tokenizeUnknownKatakana determine whether segmenting unknown katakana or not
    */
-  public GosenTokenizer(AttributeFactory factory, StreamFilter filter, String dictionaryDir, boolean compatibilityMode) {
+  public GosenTokenizer(AttributeFactory factory, StreamFilter filter, String dictionaryDir, boolean tokenizeUnknownKatakana) {
     super(factory);
-    SenFactory.setCompatibilityMode(compatibilityMode);
-    StringTagger stringTagger = SenFactory.getStringTagger(dictionaryDir);
+    StringTagger stringTagger = SenFactory.getStringTagger(dictionaryDir, tokenizeUnknownKatakana);
     if (filter != null) {
       stringTagger.addFilter(filter);
     }
