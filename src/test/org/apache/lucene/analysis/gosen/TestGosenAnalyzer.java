@@ -52,7 +52,7 @@ public class TestGosenAnalyzer extends BaseTokenStreamTestCase {
    * Tests a sentence that consists of Katakana characters
    */
   public void testUnknownKatakanaSentence() throws IOException {
-    assertAnalyzesTo(new GosenAnalyzer(SenTestUtil.IPADIC_DIR, true), "メイフラワーアレンジメント",
+    assertAnalyzesTo(new GosenAnalyzer(SenTestUtil.IPADIC_DIR, false), "メイフラワーアレンジメント",
             new String[] { "メイフラワーアレンジメント" },
             new int[] { 0 },
             new int[] { 13 }
@@ -63,7 +63,7 @@ public class TestGosenAnalyzer extends BaseTokenStreamTestCase {
    * Tests a sentence that consists of Katakana characters
    */
   public void testUnknownKatakanaSentence2() throws IOException {
-    assertAnalyzesTo(new GosenAnalyzer(SenTestUtil.IPADIC_DIR, false), "メイフラワーアレンジメント",
+    assertAnalyzesTo(new GosenAnalyzer(SenTestUtil.IPADIC_DIR, true), "メイフラワーアレンジメント",
             new String[] { "メ", "イ", "フラワ", "アレンジメント" },
             new int[] { 0, 1, 2, 6, },
             new int[] { 1, 2, 6, 13 }

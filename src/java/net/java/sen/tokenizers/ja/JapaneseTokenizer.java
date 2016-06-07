@@ -50,7 +50,7 @@ public class JapaneseTokenizer extends Tokenizer {
   
   /** Character class for half-width forms */
   static final int HALF_WIDTH = 0x85;
-  
+
   /**
    * Gets the character class of the given character
    *
@@ -95,7 +95,7 @@ public class JapaneseTokenizer extends Tokenizer {
           break;
 
         case KATAKANA:
-          if (!compatibilityMode) {
+          if (isTokenizeUnknownKatakan()) {
             length = 1;
             break;
           }
@@ -131,7 +131,7 @@ public class JapaneseTokenizer extends Tokenizer {
       resultNode = newNode;
     }
     
-    if ((resultNode != null) && (charClass == HIRAGANA || charClass == KANJI || (!compatibilityMode && charClass == KATAKANA))) {
+    if ((resultNode != null) && (charClass == HIRAGANA || charClass == KANJI || (isTokenizeUnknownKatakan() && charClass == KATAKANA))) {
       return resultNode;
     }
     
@@ -150,9 +150,9 @@ public class JapaneseTokenizer extends Tokenizer {
    * 
    * @param dictionary The Dictionary in which to search for possible morphemes
    * @param unknownPartOfSpeechDescription The part-of-speech code to use for unknown tokens
-   * @param compatibilityMode Grouping unknown tokens to generate a token.
+   * @param tokenizeUnknownKatakana Grouping unknown tokens to generate a token.
    */
-  public JapaneseTokenizer(Dictionary dictionary, String unknownPartOfSpeechDescription, boolean compatibilityMode) {
-    super(dictionary, unknownPartOfSpeechDescription, compatibilityMode);
+  public JapaneseTokenizer(Dictionary dictionary, String unknownPartOfSpeechDescription, boolean tokenizeUnknownKatakana) {
+    super(dictionary, unknownPartOfSpeechDescription, tokenizeUnknownKatakana);
   }
 }

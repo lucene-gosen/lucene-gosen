@@ -41,7 +41,7 @@ import org.apache.lucene.analysis.util.ResourceLoaderAware;
  *     &lt;tokenizer class="solr.GosenTokenizerFactory"
  *       compositePOS="compositePOS.txt"
  *       dictionaryDir="/opt/dictionary"
- *       compatibilityMode="false / true" /&gt;
+ *       tokenizeUnknownKatakana="false / true" /&gt;
  *   &lt;/analyzer&gt;
  * &lt;/fieldType&gt;</pre>
  */
@@ -52,14 +52,14 @@ public class GosenTokenizerFactory extends TokenizerFactory implements ResourceL
 
   private final String compositePosFile;
   private final String dirVal;
-  private final boolean compatibilityMode;
+  private final boolean tokenizeUnknownKatakana;
 
   public GosenTokenizerFactory(Map<String,String> args) {
     super(args);
 
     compositePosFile = get(args, "compositePOS");
     dirVal = get(args, "dictionaryDir");
-    compatibilityMode = getBoolean(args, "compatibilityMode", true);
+    tokenizeUnknownKatakana = getBoolean(args, "tokenizeUnknownKatakana", false);
 
     if (!args.isEmpty()){
       throw new IllegalArgumentException("Unknown parameters: " + args);
@@ -109,6 +109,6 @@ public class GosenTokenizerFactory extends TokenizerFactory implements ResourceL
   }
 
   public Tokenizer create(AttributeFactory factory) {
-    return new GosenTokenizer(compositeTokenFilter, dictionaryDir, compatibilityMode);
+    return new GosenTokenizer(compositeTokenFilter, dictionaryDir, tokenizeUnknownKatakana);
   }
 }

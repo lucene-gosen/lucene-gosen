@@ -36,7 +36,7 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
   private Analyzer analyzer = new Analyzer() {
     @Override
     protected TokenStreamComponents createComponents(String field) {
-      Tokenizer tokenizer = new GosenTokenizer(null, SenTestUtil.IPADIC_DIR);
+      Tokenizer tokenizer = new GosenTokenizer(null, SenTestUtil.IPADIC_DIR, false);
       return new TokenStreamComponents(tokenizer, tokenizer);
     }
   };
@@ -44,7 +44,7 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
   private Analyzer analyzer2 = new Analyzer() {
     @Override
     protected TokenStreamComponents createComponents(String field) {
-      Tokenizer tokenizer = new GosenTokenizer(null, SenTestUtil.IPADIC_DIR, false);
+      Tokenizer tokenizer = new GosenTokenizer(null, SenTestUtil.IPADIC_DIR, true);
       return new TokenStreamComponents(tokenizer, tokenizer);
     }
   };
