@@ -108,15 +108,9 @@ public class GosenAnalyzer extends StopwordAnalyzerBase {
    * @param stoptags          a stoptags set: words containing these parts of speech will be removed from the stream.
    * @param stemExclusionSet  a stemming exclusion set: these words are ignored by
    *                           {@link GosenBasicFormFilter} and {@link GosenKatakanaStemFilter}
-<<<<<<< HEAD
-   * @param dictionaryDir     a directory of dictionarr
-   * @param tokenizeUnknownKatakana a flag that control segmentation behaviour :
-   *                           if false, will not concatenate consecutive Katakana tokens when one of them is an UNKNOWN.
-=======
    * @param dictionaryDir     a directory of dictionary
    * @param tokenizeUnknownKatakana a flag that control segmentation behaviour :
    *                                 if false, will not concatenate consecutive Katakana tokens when one of them is an UNKNOWN.
->>>>>>> dev-6.0.0-rev2
    */
   public GosenAnalyzer(CharArraySet stopwords, Set<String> stoptags, CharArraySet stemExclusionSet, String dictionaryDir, boolean tokenizeUnknownKatakana) {
     super(stopwords);

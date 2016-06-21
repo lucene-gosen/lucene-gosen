@@ -77,6 +77,7 @@ public final class GosenTokenizer extends Tokenizer {
   // Default value for UNKNOWN Katakana tokenization
   public static final boolean DEFAULT_UNKNOWN_KATAKANA_TOKENIZATION = false;
 
+
   /**
    * Constructors
    */
