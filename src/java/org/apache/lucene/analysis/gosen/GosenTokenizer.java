@@ -1,5 +1,3 @@
-package org.apache.lucene.analysis.gosen;
-
 /**
  * Copyright 2004 The Apache Software Foundation
  *
@@ -16,8 +14,9 @@ package org.apache.lucene.analysis.gosen;
  * limitations under the License.
  */
 
+package org.apache.lucene.analysis.gosen;
+
 import java.io.IOException;
-import java.io.Reader;
 
 import net.java.sen.SenFactory;
 import net.java.sen.StringTagger;
@@ -54,6 +53,8 @@ import org.apache.lucene.util.AttributeFactory;
  */
 public final class GosenTokenizer extends Tokenizer {
   private final StreamTagger2 tagger;
+
+  // Term attributes
   private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
   private final OffsetAttribute offsetAtt = addAttribute(OffsetAttribute.class);
   
@@ -73,16 +74,31 @@ public final class GosenTokenizer extends Tokenizer {
   // so we accumulate this so we can then subtract to present an absolute cost.
   private int accumulatedCost = 0;
 
+  // Default value for UNKNOWN Katakana tokenization
+  public static final boolean DEFAULT_UNKNOWN_KATAKANA_TOKENIZATION = false;
+
+
+  /**
+   * Constructors
+   */
   public GosenTokenizer() {
-    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, null, null);
+    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, null, null, DEFAULT_UNKNOWN_KATAKANA_TOKENIZATION);
   }
 
   public GosenTokenizer(StreamFilter filter) {
-    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, filter, null);
+    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, filter, null, DEFAULT_UNKNOWN_KATAKANA_TOKENIZATION);
   }
   
   public GosenTokenizer(StreamFilter filter, String dictionaryDir) {
-    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, filter, dictionaryDir);
+    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, filter, dictionaryDir, DEFAULT_UNKNOWN_KATAKANA_TOKENIZATION);
+  }
+
+  public GosenTokenizer(StreamFilter filter, String dictionaryDir, boolean tokenizeUnknownKatakana) {
+    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, filter, dictionaryDir, tokenizeUnknownKatakana);
+  }
+
+  public GosenTokenizer(AttributeFactory factory, StreamFilter filter, String dictionaryDir) {
+    this(factory, filter, dictionaryDir, DEFAULT_UNKNOWN_KATAKANA_TOKENIZATION);
   }
 
   /**
@@ -91,12 +107,14 @@ public final class GosenTokenizer extends Tokenizer {
    * @param factory the AttributeFactory to use
    * @param filter stream filter
    * @param dictionaryDir lucene-gosen dictionary directory
+   * @param tokenizeUnknownKatakana determine whether segmenting unknown katakana or not
    */
-  public GosenTokenizer(AttributeFactory factory, StreamFilter filter, String dictionaryDir){
+  public GosenTokenizer(AttributeFactory factory, StreamFilter filter, String dictionaryDir, boolean tokenizeUnknownKatakana) {
     super(factory);
-    StringTagger stringTagger = SenFactory.getStringTagger(dictionaryDir);
-    if(filter != null)
+    StringTagger stringTagger = SenFactory.getStringTagger(dictionaryDir, tokenizeUnknownKatakana);
+    if (filter != null) {
       stringTagger.addFilter(filter);
+    }
     tagger = new StreamTagger2(stringTagger, this.input);
   }
 

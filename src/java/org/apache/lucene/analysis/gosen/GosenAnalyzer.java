@@ -1,5 +1,3 @@
-package org.apache.lucene.analysis.gosen;
-
 /**
  * Copyright 2004 The Apache Software Foundation
  *
@@ -16,12 +14,13 @@ package org.apache.lucene.analysis.gosen;
  * limitations under the License.
  */
 
+package org.apache.lucene.analysis.gosen;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.LowerCaseFilter;
 import org.apache.lucene.analysis.core.StopFilter;
 import org.apache.lucene.analysis.miscellaneous.SetKeywordMarkerFilter;
@@ -30,6 +29,8 @@ import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
 
+import static org.apache.lucene.analysis.gosen.GosenTokenizer.DEFAULT_UNKNOWN_KATAKANA_TOKENIZATION;
+
 /**
  * Analyzer for Japanese which uses "Sen" morphological analyzer.
  */
@@ -37,6 +38,7 @@ public class GosenAnalyzer extends StopwordAnalyzerBase {
   private final Set<String> stoptags;
   private final CharArraySet stemExclusionSet;
   private final String dictionaryDir;
+  private final boolean tokenizeUnknownKatakana;
 
   public static Set<?> getDefaultStopSet(){
     return DefaultSetHolder.DEFAULT_STOP_SET;
@@ -72,34 +74,50 @@ public class GosenAnalyzer extends StopwordAnalyzerBase {
   }
   
   /**
-   * Create a GosenAnalyzer with the default stopwords and stoptags and no stemExclusionSet
+   * Create a GosenAnalyzer with default parameter values
    */
   public GosenAnalyzer() {
-    this(DefaultSetHolder.DEFAULT_STOP_SET, DefaultSetHolder.DEFAULT_STOP_TAGS, CharArraySet.EMPTY_SET, null);
+    this(DefaultSetHolder.DEFAULT_STOP_SET, DefaultSetHolder.DEFAULT_STOP_TAGS, CharArraySet.EMPTY_SET, null, DEFAULT_UNKNOWN_KATAKANA_TOKENIZATION);
   }
 
   /**
-   * Create a GosenAnalyzer with the default stopwords and stoptags and no stemExclusionSet<br>
-   * and argument of dictionaryDir.
+   * Create a GosenAnalyzer with the specified dictionaryDir
    */
   public GosenAnalyzer(String dictionaryDir) {
-    this(DefaultSetHolder.DEFAULT_STOP_SET, DefaultSetHolder.DEFAULT_STOP_TAGS, CharArraySet.EMPTY_SET, dictionaryDir);
+    this(DefaultSetHolder.DEFAULT_STOP_SET, DefaultSetHolder.DEFAULT_STOP_TAGS, CharArraySet.EMPTY_SET, dictionaryDir, DEFAULT_UNKNOWN_KATAKANA_TOKENIZATION);
   }
-  
+
   /**
-   * Create a GosenAnalyzer with the specified stopwords, stoptags, and stemExclusionSet
-   * 
-   * @param stopwords a stopword set: words matching these (Surf
-   * @param stoptags a stoptags set: words containing these parts of speech will be removed from the stream.
-   * @param stemExclusionSet a stemming exclusion set: these words are ignored by 
-   *        {@link GosenBasicFormFilter} and {@link GosenKatakanaStemFilter}
-   * @param dictionaryDir a directory of dictionary
+   * Create a GosenAnalyzer that only receives dictionaryDir and tokenizeUnknownKatakana value.
+   */
+  public GosenAnalyzer(String dictionaryDir, boolean tokenizeUnknownKatakana) {
+    this(DefaultSetHolder.DEFAULT_STOP_SET, DefaultSetHolder.DEFAULT_STOP_TAGS, CharArraySet.EMPTY_SET, dictionaryDir, tokenizeUnknownKatakana);
+  }
+
+  /**
+   * Create a GosenAnalyzer with the specified stopwords, stoptags, stemExclusionSet and dictionaryDir
    */
   public GosenAnalyzer(CharArraySet stopwords, Set<String> stoptags, CharArraySet stemExclusionSet, String dictionaryDir) {
+    this(stopwords, stoptags, stemExclusionSet, dictionaryDir, DEFAULT_UNKNOWN_KATAKANA_TOKENIZATION);
+  }
+
+  /**
+   * Create a GosenAnalyzer with the specified stopwords, stoptags, stemExclusionSet, dictionaryDir and tokenizeUnknownKatakana
+   *
+   * @param stopwords         a stopword set: words matching these words will be removed from the stream.
+   * @param stoptags          a stoptags set: words containing these parts of speech will be removed from the stream.
+   * @param stemExclusionSet  a stemming exclusion set: these words are ignored by
+   *                           {@link GosenBasicFormFilter} and {@link GosenKatakanaStemFilter}
+   * @param dictionaryDir     a directory of dictionary
+   * @param tokenizeUnknownKatakana a flag that control segmentation behaviour :
+   *                                 if false, will not concatenate consecutive Katakana tokens when one of them is an UNKNOWN.
+   */
+  public GosenAnalyzer(CharArraySet stopwords, Set<String> stoptags, CharArraySet stemExclusionSet, String dictionaryDir, boolean tokenizeUnknownKatakana) {
     super(stopwords);
     this.stoptags = stoptags;
     this.stemExclusionSet = stemExclusionSet;
     this.dictionaryDir = dictionaryDir;
+    this.tokenizeUnknownKatakana = tokenizeUnknownKatakana;
   }
 
   /**
@@ -117,7 +135,7 @@ public class GosenAnalyzer extends StopwordAnalyzerBase {
    */
   @Override
   protected TokenStreamComponents createComponents(String field) {
-    Tokenizer tokenizer = new GosenTokenizer(null, dictionaryDir);
+    Tokenizer tokenizer = new GosenTokenizer(null, dictionaryDir, tokenizeUnknownKatakana);
     TokenStream stream = new GosenWidthFilter(tokenizer);
     stream = new GosenPunctuationFilter(stream);
     stream = new GosenPartOfSpeechStopFilter(stream, stoptags);

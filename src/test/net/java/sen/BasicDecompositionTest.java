@@ -237,8 +237,8 @@ public class BasicDecompositionTest extends LuceneTestCase {
         new Token ("ない", 7090, 6, 2, new Morpheme ("助動詞", "特殊・ナイ", "基本形", "*", new String[]{"ナイ"}, new String[]{"ナイ"}, null))
     };
 
-    StringTagger ipadicTagger = SenFactory.getStringTagger(ipadicDir);
-    StringTagger naistChasenTagger = SenFactory.getStringTagger(naistChasenDir);
+    StringTagger ipadicTagger = SenFactory.getStringTagger(ipadicDir, false);
+    StringTagger naistChasenTagger = SenFactory.getStringTagger(naistChasenDir, false);
 
     assertNotSame(ipadicTagger, naistChasenTagger);
 
@@ -247,36 +247,6 @@ public class BasicDecompositionTest extends LuceneTestCase {
 
     List<Token> naistChasenActualTokens = naistChasenTagger.analyze(testString);
     compareTokens (expectedNaistChasenTokens, naistChasenActualTokens);
-  }
-
-  /**
-   * Tests string decomposition.<br>
-   * empty dictionaryDir case.
-   *
-   * @throws IOException
-   */
-  @Test
-  public void testDifferentDictionary02() throws IOException {
-    try{
-      SenFactory.getStringTagger(null);
-      fail("Error! getStringTagger was created.");
-    }catch(RuntimeException t){
-      assertTrue("Expected RuntimeException. Actual throwable ["+t.getClass().getName()+"]",t instanceof RuntimeException);
-      assertEquals("Exception message not expected.", "Not found resource[header.sen]. dictionaryDir=[null]", t.getMessage());
-    }catch(Throwable t){
-      fail("Not expected exception. "+t.getClass().getName());
-    }
-
-    try{
-      SenFactory.getStringTagger("");
-      fail("Error! getStringTagger was created.");
-    }catch(RuntimeException t){
-      assertTrue("Expected RuntimeException. Actual throwable ["+t.getClass().getName()+"]",t instanceof RuntimeException);
-      assertEquals("Exception message not expected.", "Not found resource[header.sen]. dictionaryDir=[]", t.getMessage());
-    }catch(Throwable t){
-      fail("Not expected exception. "+t.getClass().getName());
-    }
-
   }
 
   /**

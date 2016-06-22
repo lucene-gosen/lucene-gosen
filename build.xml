@@ -6,7 +6,7 @@
   <!-- to change the dictionary type to naist-chasen, ant -Ddictype=naist-chasen -->
   <property name="dictype" value="ipadic"/>
 
-  <property name="version" value="5.0.0"/>
+  <property name="version" value="6.0.0"/>
 
   <property name="src.dir" location="src/java"/>
   <property name="cdic.dir" location="src/compiled-dictionaries"/>
@@ -71,8 +71,8 @@
              windowtitle="lucene-gosen-${version} API"
              encoding="UTF-8"
              doctitle="lucene-gosen-${version}"
-             source="1.7"
-locale="en_US"
+             source="1.8"
+             locale="en_US"
              stylesheetfile="${javadoc.dir}/prettify/stylesheet+prettify.css">
       <link href="${javadoc.link.java}"/>
       <link href="${javadoc.link.lucene}"/>
@@ -96,8 +96,8 @@ locale="en_US"
            includes="**/*.java"
            debug="true"
            encoding="utf-8"
-           source="1.7"
-           target="1.7">
+           source="1.8"
+           target="1.8">
       <compilerarg line="-Xlint -Xlint:-serial"/>
     </javac>
     <!-- Copy the resources folder (if existent) -->
@@ -115,8 +115,8 @@ locale="en_US"
            includes="**/*.java"
            debug="true"
            encoding="utf-8"
-           source="1.7"
-           target="1.7">
+           source="1.8"
+           target="1.8">
       <compilerarg line="-Xlint -Xlint:-serial"/>
     </javac>
   </target>

@@ -47,13 +47,19 @@ import net.java.sen.tokenizers.ja.JapaneseTokenizer;
 public class SenFactory {
   
   private static final Map<String,SenFactory> map = new ConcurrentHashMap<String,SenFactory>();
-  
-  private static final String EMPTY_DICTIONARYDIR_KEY = "NO_DICTIONARY_INSTANCE"; 
-  
+  private static final String EMPTY_DICTIONARYDIR_KEY = "NO_DICTIONARY_INSTANCE";
+
+  public static final String unknownPOS = "未知語";
+
+  private final String[] posIndex, conjTypeIndex, conjFormIndex;
+  private final ByteBuffer costs, pos, tokens, trie;
+
   /**
    * Get the singleton factory instance
-   * @param dictionaryDir a directory of dictinaries
-   */
+   *
+   * @param dictionaryDir a directory of dictionaries
+   * @return the factory instance
+     */
   public synchronized static SenFactory getInstance(String dictionaryDir) {
     
     String key = (dictionaryDir == null || dictionaryDir.trim().length() == 0) ? EMPTY_DICTIONARYDIR_KEY : dictionaryDir; 
@@ -69,10 +75,17 @@ public class SenFactory {
     
     return instance;
   }
-  
+
+  /**
+   * Constructor for Sen, which is an Japanese Morphological Analyzer
+   *
+   * @param dictionaryDir
+   * @throws IOException
+   */
   private SenFactory(String dictionaryDir) throws IOException {
     InputStream in = null;
     DataInputStream din = null;
+
     // read main data files
     try {
       in = getInputStream("header.sen", dictionaryDir);
@@ -85,8 +98,6 @@ public class SenFactory {
       IOUtils.closeWhileHandlingException(din, in);
     }
 
-      
-    
     // read index files
     try {
       in = getInputStream("posIndex.sen", dictionaryDir);
@@ -109,7 +120,13 @@ public class SenFactory {
       IOUtils.closeWhileHandlingException(din, in);
     }
   }
-  
+
+  /**
+   * @param name
+   * @param dictionaryDir
+   * @return
+   * @throws IOException
+   */
   private static InputStream getInputStream(String name, String dictionaryDir) throws IOException{
     InputStream in = null;
     if(dictionaryDir == null || dictionaryDir.trim().length() == 0){
@@ -123,12 +140,15 @@ public class SenFactory {
     return in;
   }
 
-  private final String[] posIndex, conjTypeIndex, conjFormIndex;
-  private final ByteBuffer costs, pos, tokens, trie;
-  
-  
-  public static final String unknownPOS = "未知語";
-  
+  /**
+   * Load specified dictionary data into ByteBuffer
+   *
+   * @param resource
+   * @param size
+   * @param dictionaryDir
+   * @return
+   * @throws IOException
+   */
   private static ByteBuffer loadBuffer(String resource, int size, String dictionaryDir) throws IOException {
     InputStream in = null;
     try {
@@ -156,51 +176,60 @@ public class SenFactory {
   /**
    * Builds a Tokenizer for the given dictionary configuration
    *
-   * @param configurationFilename The dictionary configuration filename
+   * @param dictionaryDir The dictionary configuration filename
+   * @param tokenizeUnknownKatakana
    * @return The constructed Tokenizer
    */
-  private static Tokenizer getTokenizer(String dictionaryDir) {
+  private static Tokenizer getTokenizer(String dictionaryDir, boolean tokenizeUnknownKatakana) {
     SenFactory localInstance = SenFactory.getInstance(dictionaryDir);
     
     return new JapaneseTokenizer(
-        new Dictionary(localInstance.costs.asShortBuffer(),
-          localInstance.pos.duplicate(),
-          localInstance.tokens.duplicate(),
-          localInstance.trie.asIntBuffer(),
-          localInstance.posIndex,
-          localInstance.conjTypeIndex,
-          localInstance.conjFormIndex), unknownPOS);
+            new Dictionary(
+                    localInstance.costs.asShortBuffer(),
+                    localInstance.pos.duplicate(),
+                    localInstance.tokens.duplicate(),
+                    localInstance.trie.asIntBuffer(),
+                    localInstance.posIndex,
+                    localInstance.conjTypeIndex,
+                    localInstance.conjFormIndex
+            ),
+            unknownPOS,
+            tokenizeUnknownKatakana);
   }
   
   /**
    * Creates a Viterbi from the given configuration
    *
    * @param dictionaryDir a directory of dictionary
+   * @param tokenizeUnknownKatakana
    * @return A Viterbi
    */
-  static Viterbi getViterbi(String dictionaryDir) {
+  static Viterbi getViterbi(String dictionaryDir, boolean tokenizeUnknownKatakana) {
     // for test only
-    return new Viterbi(getTokenizer(dictionaryDir));
+    return new Viterbi(getTokenizer(dictionaryDir, tokenizeUnknownKatakana));
   }
   
   /**
    * Creates a StringTagger from the given configuration
    *
    * @param dictionaryDir a directory of dictionary
+   * @param tokenizeUnknownKatakana
    * @return A StringTagger
-   */
-  public static StringTagger getStringTagger(String dictionaryDir) {
-    return new StringTagger(getTokenizer(dictionaryDir));
+     */
+  public static StringTagger getStringTagger(String dictionaryDir, boolean tokenizeUnknownKatakana) {
+    return new StringTagger(getTokenizer(dictionaryDir, tokenizeUnknownKatakana));
   }
   
   /**
    * Creates a ReadingProcessor from the given configuration
    *
-   * @param dictionaryDir a directory of dictionary
-   * @return A ReadingProcessor
+   * @param dictionaryDir
+   * @param tokenizeUnknownKatakana
+   * @return The reading processor
    */
-  static ReadingProcessor getReadingProcessor(String dictionaryDir) {
+  static ReadingProcessor getReadingProcessor(String dictionaryDir, boolean tokenizeUnknownKatakana) {
     //for test only
-    return new ReadingProcessor(getTokenizer(dictionaryDir));
+    return new ReadingProcessor(getTokenizer(dictionaryDir, tokenizeUnknownKatakana));
   }
+
 }

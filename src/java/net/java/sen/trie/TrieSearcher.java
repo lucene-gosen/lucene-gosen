@@ -42,7 +42,7 @@ public class TrieSearcher {
     int num = 0;
     int n;
     int p;
-    
+
     while (iterator.hasNext()) {
       p = b;
       n = trieData.get(p << 1);
@@ -58,7 +58,7 @@ public class TrieSearcher {
         // We fell off the end of the Trie data
         return num;
       }
-      
+
       if (b == trieData.get((p << 1) + 1)) {
         b = trieData.get(p << 1);
       } else {

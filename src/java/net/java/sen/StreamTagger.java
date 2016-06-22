@@ -22,6 +22,7 @@ package net.java.sen;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.List;
 
 import net.java.sen.dictionary.Token;
@@ -127,7 +128,7 @@ public class StreamTagger {
         if (i == -1) {
           return false;
         }
-        tokens = stringTagger.analyze(new String(buffer, 0, i));
+        tokens = stringTagger.analyze(new String(buffer, 0, i), new ArrayList<Token>());
       } while (tokens == null);
       this.currentTokenIndex = 0;
       
@@ -165,7 +166,7 @@ public class StreamTagger {
         if (i == -1) {
           return null;
         }
-        tokens = stringTagger.analyze(new String(buffer, 0, i));
+        tokens = stringTagger.analyze(new String(buffer, 0, i), new ArrayList<Token>());
       } while (tokens == null || tokens.isEmpty());
       currentTokenIndex = 0;
       

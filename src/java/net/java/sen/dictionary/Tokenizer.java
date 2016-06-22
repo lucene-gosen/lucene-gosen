@@ -55,7 +55,19 @@ public abstract class Tokenizer {
    * The part-of-speech code to use for unknown tokens
    */
   protected final String unknownPartOfSpeechDescription;
-  
+
+  /**
+   * The flag value that enables Gosen to determine whether concatenating consecutive Unknown Katakana tokens or not
+   */
+  protected final boolean tokenizeUnknownKatakana;
+
+  /**
+   * @return Returns the flag value
+   */
+  public boolean isTokenizeUnknownKatakan() {
+    return tokenizeUnknownKatakana;
+  }
+
   /**
    * @return Returns the dictionary used to find possible morphemes
    */
@@ -133,8 +145,9 @@ public abstract class Tokenizer {
    * @param dictionary The {@link Dictionary} to search within
    * @param unknownPartOfSpeechDescription The part-of-speech code to use for
    *        unknown tokens
+   * @param tokenizeUnknownKatakana Grouping unknown tokens as one token
    */
-  public Tokenizer(Dictionary dictionary, String unknownPartOfSpeechDescription) {
+  public Tokenizer(Dictionary dictionary, String unknownPartOfSpeechDescription, boolean tokenizeUnknownKatakana) {
     this.dictionary = dictionary;
     this.unknownPartOfSpeechDescription = unknownPartOfSpeechDescription;
     
@@ -148,5 +161,7 @@ public abstract class Tokenizer {
     this.unknownCToken.cost = 30000;
     
     this.unknownMorpheme = new Morpheme(unknownPartOfSpeechDescription, null, null, "*", new String[0], new String[0], null);
+
+    this.tokenizeUnknownKatakana = tokenizeUnknownKatakana;
   }
 }

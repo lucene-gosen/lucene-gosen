@@ -56,7 +56,8 @@ public class TestGosenPartOfSpeechKeepFilterFactory extends BaseTokenStreamTestC
     GosenTokenizerFactory tokenizerFactory = new GosenTokenizerFactory(new HashMap<String,String>(){{
       put("dictionaryDir", SenTestUtil.IPADIC_DIR);
     }});
-    SolrResourceLoader loader = new SolrResourceLoader(baseDir.getAbsolutePath(), GosenTokenizerFactory.class.getClassLoader());
+    SolrResourceLoader loader = new SolrResourceLoader(
+            baseDir.getAbsoluteFile().toPath(), GosenTokenizerFactory.class.getClassLoader());
     tokenizerFactory.inform(loader);
     Tokenizer tokenizer = tokenizerFactory.create();
     tokenizer.setReader(new StringReader("私は制限スピードを超える。"));

@@ -90,28 +90,32 @@ class CostMatrixBuilder {
   private Vector<Integer> getIdList(String csv[], boolean parent) {
     Vector<Integer> results = new Vector<Integer>(ruleList.size());
     results.setSize(ruleList.size());
-    
+
+    // Initialize results buffer that is based on the size of the ruleList
+    // And initial value is just a incremental numbers that will be an index of the ruleList.
     for (int j = 0; j < ruleList.size(); j++) {
       results.set(j, j);
     }
-    
+
+    // Find a rule or rules that match with csv
+    String ruleString = null;
     for (int j = 0; j < csv.length; j++) {
       int k = 0;
       for (int n = 0; n < results.size(); n++) {
         int i = results.get(n);
-        String rl_ij = ruleList.get(i)[j];
+        ruleString = ruleList.get(i)[j];
         if (
             ((!parent) && (csv[j].charAt(0) == '*'))
-            || ((parent) && (rl_ij.charAt(0) == '*'))
-            || rl_ij.equals(csv[j])
+            || ((parent) && (ruleString.charAt(0) == '*'))
+            || ruleString.equals(csv[j])
         )
         {
-          results.set(k++, results.get(n));
+          results.set(k++, i);
         }
       }
       results.setSize(k);
     }
-    
+
     return results;
   }
   
@@ -132,7 +136,7 @@ class CostMatrixBuilder {
     int priority[] = new int[results.size()];
     int max = 0;
     for (int i = 0; i < results.size(); i++) {
-      String csvValues[] = this.ruleList.get(results.get(i));
+      String csvValues[] = ruleList.get(results.get(i));
       for (int j = 0; j < csvValues.length; j++) {
         if (csvValues[j].charAt(0) != '*') {
           priority[i]++;

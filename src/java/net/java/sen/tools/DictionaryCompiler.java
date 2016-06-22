@@ -35,8 +35,7 @@ public class DictionaryCompiler {
    * @param args &lt;Custom dictionary file&gt; (optional)
    * @throws IOException 
    */
-  public static void main(String args[]) throws IOException {
-    String[] customDictionaries = args;
-    new DictionaryBuilder(customDictionaries);
+  public static void main(String[] args) throws IOException {
+    new DictionaryBuilder(args);
   }
 }

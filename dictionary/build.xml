@@ -83,10 +83,9 @@
       <classpath>
         <pathelement location="."/>
         <pathelement location="../build/classes/java"/>
-        <pathelement location="../lib/jisx0213-1.0.jar"/>
         <pathelement path="${java.class.path}"/>
       </classpath>
-      <arg line="X-EUC-JISX0213" />
+      <arg line="EUC-JP" />
       <arg line="${dic.dir}" />
       <arg line="." />
     </java>

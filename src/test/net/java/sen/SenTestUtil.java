@@ -57,12 +57,11 @@ public class SenTestUtil {
   /**
    * Returns a StringTagger for testing
    *
-   * @param dictionaryDir dictionary's directory
    * @return The StringTagger
    */
   public static StringTagger getStringTagger() {
     if (stringTagger == null) {
-      stringTagger = SenFactory.getStringTagger(IPADIC_DIR);
+      stringTagger = SenFactory.getStringTagger(IPADIC_DIR, false);
     }
     
     stringTagger.removeFilters();
@@ -77,7 +76,7 @@ public class SenTestUtil {
    */
   public static Viterbi getViterbi() {
     if (viterbi == null) {
-      viterbi = SenFactory.getViterbi(IPADIC_DIR);
+      viterbi = SenFactory.getViterbi(IPADIC_DIR, false);
     }
     
     return viterbi;
@@ -90,7 +89,7 @@ public class SenTestUtil {
    */
   public static ReadingProcessor getReadingProcessor() {
     if (readingProcessor == null) {
-      readingProcessor = SenFactory.getReadingProcessor(IPADIC_DIR);
+      readingProcessor = SenFactory.getReadingProcessor(IPADIC_DIR, false);
     }
     
     readingProcessor.clearFilters();

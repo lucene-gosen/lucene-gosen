@@ -1,5 +1,3 @@
-package org.apache.solr.analysis;
-
 /**
  * Copyright 2004 The Apache Software Foundation
  *
@@ -15,6 +13,8 @@ package org.apache.solr.analysis;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package org.apache.solr.analysis;
 
 import java.util.Map;
 
@@ -38,13 +38,10 @@ public class GosenPunctuationFilterFactory extends TokenFilterFactory {
 
   public GosenPunctuationFilterFactory(Map<String,String> args) {
     super(args);
-    if (luceneMatchVersion.onOrAfter(Version.LUCENE_5_0_0) == false) {
-      enablePositionIncrements = getBoolean(args, "enablePositionIncrements", true);
-      if (enablePositionIncrements == false &&
-        (luceneMatchVersion == null || luceneMatchVersion.onOrAfter(Version.LUCENE_4_4_0))) {
-        throw new IllegalArgumentException("enablePositionIncrements=false is not supported anymore as of Lucene 4.4");
-      }
-    } else if (args.containsKey("enablePositionIncrements")) {
+
+    enablePositionIncrements = getBoolean(args, "enablePositionIncrements", true);
+
+    if (args.containsKey("enablePositionIncrements")) {
       throw new IllegalArgumentException("enablePositionIncrements is not a valid option as of Lucene 5.0");
     }
     if (!args.isEmpty()) {

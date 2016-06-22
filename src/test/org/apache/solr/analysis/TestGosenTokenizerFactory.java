@@ -51,7 +51,7 @@ public class TestGosenTokenizerFactory extends LuceneTestCase {
   
   public void testDictionaryDir() throws Exception {
     
-    SolrResourceLoader loader = new SolrResourceLoader(baseDir.getAbsolutePath(), GosenTokenizerFactory.class.getClassLoader());
+    SolrResourceLoader loader = new SolrResourceLoader(baseDir.toPath(), GosenTokenizerFactory.class.getClassLoader());
     Map<String, String> args = new HashMap<String, String>();
     GosenTokenizerFactory factory = new GosenTokenizerFactory(args);
     factory.inform(loader);
