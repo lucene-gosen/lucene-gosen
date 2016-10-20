@@ -74,19 +74,23 @@ public final class GosenTokenizer extends Tokenizer {
   // so we accumulate this so we can then subtract to present an absolute cost.
   private int accumulatedCost = 0;
 
+  // Default value for UNKNOWN Katakana tokenization
+  public static final boolean DEFAULT_UNKNOWN_KATAKANA_TOKENIZATION = false;
+
+
   /**
    * Constructors
    */
   public GosenTokenizer() {
-    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, null, null, false);
+    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, null, null, DEFAULT_UNKNOWN_KATAKANA_TOKENIZATION);
   }
 
   public GosenTokenizer(StreamFilter filter) {
-    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, filter, null, false);
+    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, filter, null, DEFAULT_UNKNOWN_KATAKANA_TOKENIZATION);
   }
   
   public GosenTokenizer(StreamFilter filter, String dictionaryDir) {
-    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, filter, dictionaryDir, false);
+    this(DEFAULT_TOKEN_ATTRIBUTE_FACTORY, filter, dictionaryDir, DEFAULT_UNKNOWN_KATAKANA_TOKENIZATION);
   }
 
   public GosenTokenizer(StreamFilter filter, String dictionaryDir, boolean tokenizeUnknownKatakana) {
@@ -94,7 +98,7 @@ public final class GosenTokenizer extends Tokenizer {
   }
 
   public GosenTokenizer(AttributeFactory factory, StreamFilter filter, String dictionaryDir) {
-    this(factory, filter, dictionaryDir, false);
+    this(factory, filter, dictionaryDir, DEFAULT_UNKNOWN_KATAKANA_TOKENIZATION);
   }
 
   /**
