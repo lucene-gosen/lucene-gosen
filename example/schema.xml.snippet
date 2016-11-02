@@ -22,6 +22,13 @@
              mappings before the text is sent to the tokenizer.
         <charFilter class="solr.MappingCharFilterFactory" mapping="lang/mapping-japanese.txt"/>
         -->
+        <!-- ICU4J based character normalizer GosenCharacterNormalizeFilter:
+             Instead of using MappingCharFilter or GosenWidthFactory, this CharFilter normalizes characters
+             based on given normalization form which is based on UNICODE standard.
+             "NFD", "NFC", "NFKD" and "NFKC" can be specified as a value for 'name' attribute, and
+             'mode' attribute can accept either "compose" or "decompose".
+        <charFilter class="solr.GosenCharacterNormalizeFilterFactory" name="nfkc" mode="compose"/>
+        -->
 
         <!-- morphological tokenizer: sets the SURFACE form as the token, but also sets these attributes:
              BasicFormAttribute, ConjugationAttribute, PartOfSpeechAttribute, PronunciationsAttribute,

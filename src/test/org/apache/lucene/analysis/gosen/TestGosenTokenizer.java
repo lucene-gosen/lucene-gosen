@@ -1,11 +1,10 @@
-package org.apache.lucene.analysis.gosen;
-
-/**
- * Copyright 2004 The Apache Software Foundation
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -16,6 +15,8 @@ package org.apache.lucene.analysis.gosen;
  * limitations under the License.
  */
 
+package org.apache.lucene.analysis.gosen;
+
 import net.java.sen.SenTestUtil;
 import net.java.sen.util.IOUtils;
 import org.apache.lucene.analysis.Analyzer;
@@ -24,6 +25,7 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.util.LuceneTestCase;
 import org.apache.lucene.util.TestUtil;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -55,6 +57,7 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
    * Compatibility mode
    */
 
+  @Test
   public void testDecomposition1() throws IOException {
     assertAnalyzesTo(analyzer, "本来は、貧困層の女性や子供に医療保護を提供するために創設された制度である、" +
                          "アメリカ低所得者医療援助制度が、今日では、その予算の約３分の１を老人に費やしている。",
@@ -71,6 +74,7 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
     );
   }
 
+  @Test
   public void testDecomposition2() throws IOException {
     assertAnalyzesTo(analyzer, "麻薬の密売は根こそぎ絶やさなければならない",
       new String[] { "麻薬", "の", "密売", "は", "根こそぎ", "絶やさ", "な", "けれ", "ば", "なら", "ない" },
@@ -78,7 +82,8 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
       new int[] { 2, 3, 5, 6, 10, 13, 14, 16, 17, 19, 21 }
     );
   }
-  
+
+  @Test
   public void testDecomposition3() throws IOException {
     assertAnalyzesTo(analyzer, "魔女狩大将マシュー・ホプキンス。",
       new String[] { "魔女", "狩", "大将", "マシュー", "・", "ホプキンス", "。" },
@@ -86,7 +91,8 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
       new int[] { 2, 3, 5, 9, 10, 15, 16 }
     );
   }
-  
+
+  @Test
   public void testDecomposition4() throws IOException {
     assertAnalyzesTo(analyzer, "これは本ではない",
       new String[] { "これ", "は", "本", "で", "は", "ない" },
@@ -95,6 +101,7 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
     );
   }
 
+  @Test
   public void testDecomposition5() throws IOException {
     assertAnalyzesTo(analyzer, "くよくよくよくよくよくよくよくよくよくよくよくよくよくよくよくよくよくよくよくよ",
       new String[] { "くよくよ", "くよくよ", "くよくよ", "くよくよ", "くよくよ", "くよくよ", "くよくよ", "くよくよ", "くよくよ", "くよくよ" },
@@ -104,6 +111,7 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
   }
   
   /** Tests that sentence offset is incorporated into the resulting offsets */
+  @Test
   public void testTwoSentences() throws IOException {
     assertAnalyzesTo(analyzer, "魔女狩大将マシュー・ホプキンス。 魔女狩大将マシュー・ホプキンス。",
       new String[] { "魔女", "狩", "大将", "マシュー", "・", "ホプキンス", "。", "魔女", "狩", "大将", "マシュー", "・", "ホプキンス", "。" },
@@ -113,6 +121,7 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
   }
 
   /** Tests a sentence that consists of Katakana characters */
+  @Test
   public void testUnknownKatakanaSentence() throws IOException {
     assertAnalyzesTo(analyzer, "メイフラワーアレンジメント",
             new String[] { "メイフラワーアレンジメント" },
@@ -122,6 +131,7 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
   }
 
   /** Tests a sentence that consists of Katakana characters */
+  @Test
   public void testUnknownKatakanaSentence2() throws IOException {
     assertAnalyzesTo(analyzer, "フラワーアレンジメント",
             new String[] { "フラワー", "アレンジメント" },
@@ -131,6 +141,7 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
   }
 
   /** Tests that for large documents the buffer offset is accumulated */
+  @Test
   public void testOffsetAccumulation() throws IOException {
       StringBuilder sb = new StringBuilder();
       char whitespace[] = new char[4094];
@@ -148,10 +159,12 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
    * Tokenizes random unicode strings, to ensure no exception
    * (results could be completely bogus, but makes sure we don't crash on some input)
    */
+  @Test
   public void testReliability() throws IOException {
     checkRandomData(random(), analyzer, 10000);
   }
-  
+
+  @Test
   public void testLargeDocReliability() throws IOException {
     for (int i = 0; i < 100; i++) {
       String s = TestUtil.randomUnicodeString(random(), 10000);
@@ -166,7 +179,8 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
       }
     }
   }
-  
+
+  @Test
   public void testEnd() throws IOException {
     assertTokenStreamContents(analyzer.tokenStream("foo", "これは本ではない"),
         new String[] { "これ", "は", "本", "で", "は", "ない" },
@@ -187,6 +201,7 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
 
   /**
    */
+  @Test
   public void testSymbol() throws IOException {
     assertAnalyzesTo(analyzer2, "testing 1234",
             new String[] { "testing", "1234" },
@@ -198,10 +213,9 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
   //=================================================================================================================
 
   /**
-   * New Behavior
-   *
-   * Do not concatenate consecutive Katakana tokens when a sentence has a UNKNOWN Katakana token.
+   * Test the behavior of not concatenating consecutive Katakana tokens when a sentence has a UNKNOWN Katakana token.
    */
+  @Test
   public void testDecompositionNew3() throws IOException {
     assertAnalyzesTo(analyzer2, "魔女狩大将マシュー・ホプキンス。",
             new String[] { "魔女", "狩", "大将", "マ", "シュー", "・", "ホ", "プ", "キン", "ス", "。" },
@@ -211,6 +225,7 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
   }
 
   /** Tests that sentence offset is incorporated into the resulting offsets */
+  @Test
   public void testTwoSentencesNew() throws IOException {
     assertAnalyzesTo(analyzer2, "魔女狩大将マシュー・ホプキンス。 魔女狩大将マシュー・ホプキンス。",
             new String[] { "魔女", "狩", "大将", "マ", "シュー", "・", "ホ", "プ", "キン", "ス", "。", "魔女", "狩", "大将", "マ", "シュー", "・", "ホ", "プ", "キン", "ス", "。" },
@@ -220,6 +235,7 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
   }
 
   /** Tests a sentence that consists of Katakana characters */
+  @Test
   public void testUnknownKatakanaSentenceNew() throws IOException {
     assertAnalyzesTo(analyzer2, "メイフラワーアレンジメント",
             new String[] { "メ", "イ", "フラワー", "アレンジメント" },
@@ -229,6 +245,7 @@ public class TestGosenTokenizer extends BaseTokenStreamTestCase {
   }
 
   /** Tests a sentence that consists of Katakana characters */
+  @Test
   public void testUnknownKatakanaSentenceNew2() throws IOException {
     assertAnalyzesTo(analyzer2, "フラワーアレンジメント",
             new String[] { "フラワー", "アレンジメント" },

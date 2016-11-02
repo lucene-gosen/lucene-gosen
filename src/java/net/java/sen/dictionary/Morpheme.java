@@ -348,7 +348,12 @@ public class Morpheme {
     partOfSpeechData.append((pronunciations.size() > 0) ? pronunciations.get(0) : "null");
     return partOfSpeechData.toString();
   }
-  
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
+
   /**
    * Builds a lazy proxy onto a part-of-speech stored in a Dictionary
    * 

@@ -1,9 +1,10 @@
-/**
- * Copyright 2004 The Apache Software Foundation
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -21,13 +22,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.lucene.analysis.util.CharArraySet;
+import org.apache.lucene.analysis.CharArraySet;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.gosen.GosenPartOfSpeechStopFilter;
 import org.apache.lucene.analysis.util.ResourceLoader;
 import org.apache.lucene.analysis.util.ResourceLoaderAware;
 import org.apache.lucene.analysis.util.TokenFilterFactory;
-import org.apache.lucene.util.Version;
 
 /** 
  * Factory for {@link GosenPartOfSpeechStopFilter}.
@@ -41,7 +41,6 @@ import org.apache.lucene.util.Version;
  * &lt;/fieldType&gt;</pre>
  */
 public class GosenPartOfSpeechStopFilterFactory extends TokenFilterFactory implements ResourceLoaderAware {
-  private boolean enablePositionIncrements;
   private final String stopTagFiles;
   private Set<String> stopTags;
 
@@ -49,7 +48,6 @@ public class GosenPartOfSpeechStopFilterFactory extends TokenFilterFactory imple
     super(args);
 
     stopTagFiles = require(args, "tags");
-    enablePositionIncrements = getBoolean(args, "enablePositionIncrements", true);
 
     if (args.containsKey("enablePositionIncrements")) {
       throw new IllegalArgumentException("enablePositionIncrements is not a valid option as of Lucene 5.0");
