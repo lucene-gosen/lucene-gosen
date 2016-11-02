@@ -19,6 +19,8 @@
 
 package net.java.sen.dictionary;
 
+import java.util.Objects;
+
 /**
  * A class representing a reading applied to a set of characters within a
  * sentence
@@ -48,7 +50,12 @@ public class Reading {
   public String toString() {
     return "Reading:{" + start + ":" + length + ":" + text + "}";
   }
-  
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(start, length, text);
+  }
+
   /**
    * @param start The starting point within the sentence
    * @param length The number of characters of the sentence covered by the

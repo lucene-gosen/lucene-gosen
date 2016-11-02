@@ -1,0 +1,10 @@
+/build
+/dictionary/ipadic/
+/dictionary/naist-chasen/
+/dist/
+/lib
+/target
+/src/compiled-dictionaries/
+
+*~
+*.swp

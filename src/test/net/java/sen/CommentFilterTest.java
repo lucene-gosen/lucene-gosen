@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
 
-import net.java.sen.StringTagger;
 import net.java.sen.dictionary.Morpheme;
 import net.java.sen.dictionary.Token;
 import net.java.sen.filter.stream.CommentFilter;

@@ -23,9 +23,6 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import net.java.sen.ReadingProcessor;
-import net.java.sen.SenFactory;
-import net.java.sen.StringTagger;
 import net.java.sen.dictionary.Reading;
 import net.java.sen.dictionary.Token;
 import net.java.sen.dictionary.Viterbi;
