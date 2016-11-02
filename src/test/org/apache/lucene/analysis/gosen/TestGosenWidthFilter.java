@@ -1,6 +1,4 @@
-package org.apache.lucene.analysis.gosen;
-
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -17,13 +15,15 @@ package org.apache.lucene.analysis.gosen;
  * limitations under the License.
  */
 
+package org.apache.lucene.analysis.gosen;
+
 import java.io.IOException;
-import java.io.Reader;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.BaseTokenStreamTestCase;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.core.WhitespaceTokenizer;
+import org.junit.Test;
 
 /**
  * Tests for {@link GosenWidthFilter}
@@ -40,6 +40,7 @@ public class TestGosenWidthFilter extends BaseTokenStreamTestCase {
   /**
    * Full-width ASCII forms normalized to half-width (basic latin)
    */
+  @Test
   public void testFullWidthASCII() throws IOException {
     assertAnalyzesTo(analyzer, "Ｔｅｓｔ １２３４",
       new String[] { "Test",  "1234" });
@@ -50,6 +51,7 @@ public class TestGosenWidthFilter extends BaseTokenStreamTestCase {
    * A bit trickier in some cases, since half-width forms are decomposed
    * and voice marks need to be recombined with a preceding base form. 
    */
+  @Test
   public void testHalfWidthKana() throws IOException {
     assertAnalyzesTo(analyzer, "ｶﾀｶﾅ",
       new String[] { "カタカナ" });
@@ -58,7 +60,8 @@ public class TestGosenWidthFilter extends BaseTokenStreamTestCase {
     assertAnalyzesTo(analyzer, "ﾊﾟﾅｿﾆｯｸ",
       new String[] { "パナソニック" });
   }
-  
+
+  @Test
   public void testRandomData() throws IOException {
     checkRandomData(random(), analyzer, 10000);
   }

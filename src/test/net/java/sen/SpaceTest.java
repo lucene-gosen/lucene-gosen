@@ -24,7 +24,6 @@ import static net.java.sen.SenTestUtil.*;
 import java.io.IOException;
 import java.util.List;
 
-import net.java.sen.StringTagger;
 import net.java.sen.dictionary.Morpheme;
 import net.java.sen.dictionary.Token;
 

@@ -1,11 +1,10 @@
-package org.apache.solr.analysis;
-
-/**
- * Copyright 2004 The Apache Software Foundation
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -16,12 +15,15 @@ package org.apache.solr.analysis;
  * limitations under the License.
  */
 
+package org.apache.solr.analysis;
+
 import net.java.sen.SenTestUtil;
 import org.apache.lucene.analysis.BaseTokenStreamTestCase;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.util.Version;
 import org.apache.solr.core.SolrResourceLoader;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,6 +49,7 @@ public class TestGosenPartOfSpeechStopFilterFactory extends BaseTokenStreamTestC
     super.tearDown();
   }
 
+  @Test
   public void testBasics() throws IOException {
     String tags =
         "#  verb-main:\n" +
@@ -72,6 +75,7 @@ public class TestGosenPartOfSpeechStopFilterFactory extends BaseTokenStreamTestC
     );
   }
 
+  @Test
   public void testRequireArguments() throws Exception{
     try{
       new GosenPartOfSpeechStopFilterFactory(new HashMap<String, String>() {{
@@ -83,6 +87,7 @@ public class TestGosenPartOfSpeechStopFilterFactory extends BaseTokenStreamTestC
     }
   }
 
+  @Test
   public void testBogusArguments() throws Exception{
     try{
       new GosenPartOfSpeechStopFilterFactory(new HashMap<String, String>() {{

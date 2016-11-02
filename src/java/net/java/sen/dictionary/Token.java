@@ -19,6 +19,8 @@
 
 package net.java.sen.dictionary;
 
+import java.util.Objects;
+
 /**
  * A single token from an analysed sentence
  * 
@@ -219,6 +221,11 @@ public class Token {
   @Override
   public String toString() {
     return getSurface();
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.surface, this.cost, this.start, this.length, this.morpheme);
   }
   
   /**

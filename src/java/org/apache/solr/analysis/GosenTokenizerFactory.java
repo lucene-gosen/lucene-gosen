@@ -1,9 +1,10 @@
-/**
- * Copyright 2004 The Apache Software Foundation
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -24,7 +25,6 @@ import java.util.Map;
 
 import net.java.sen.filter.stream.CompositeTokenFilter;
 
-import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.gosen.GosenTokenizer;
 import org.apache.lucene.analysis.util.TokenizerFactory;
 import org.apache.lucene.analysis.util.ResourceLoader;
@@ -54,6 +54,10 @@ public class GosenTokenizerFactory extends TokenizerFactory implements ResourceL
   private final String dirVal;
   private final boolean tokenizeUnknownKatakana;
 
+  /**
+   * Create a new GosenTokenizerFactory
+   * @param args
+   */
   public GosenTokenizerFactory(Map<String,String> args) {
     super(args);
 
@@ -66,14 +70,14 @@ public class GosenTokenizerFactory extends TokenizerFactory implements ResourceL
     }
   }
 
-  public void inform(ResourceLoader loader) {
+  @Override
+  public void inform(ResourceLoader loader) throws IOException {
     if(compositePosFile != null){
       compositeTokenFilter = new CompositeTokenFilter();
       InputStreamReader isr = null;
       BufferedReader reader = null;
       try{
-        isr = new InputStreamReader(
-            loader.openResource(compositePosFile), "UTF-8");
+        isr = new InputStreamReader(loader.openResource(compositePosFile), "UTF-8");
         reader = new BufferedReader(isr);
         compositeTokenFilter.readRules(reader);
       }
@@ -108,7 +112,8 @@ public class GosenTokenizerFactory extends TokenizerFactory implements ResourceL
     }
   }
 
-  public Tokenizer create(AttributeFactory factory) {
-    return new GosenTokenizer(compositeTokenFilter, dictionaryDir, tokenizeUnknownKatakana);
+  @Override
+  public GosenTokenizer create(AttributeFactory factory) {
+    return new GosenTokenizer(factory, compositeTokenFilter, dictionaryDir, tokenizeUnknownKatakana);
   }
 }

@@ -82,6 +82,7 @@ public class JapaneseTokenizer extends Tokenizer {
    * @param iterator The iterator to read from
    * @return The length
    */
+  @SuppressWarnings("fallthrough")
   private int findUnknownToken(CharIterator iterator) {
     int length = 0;
     
@@ -99,6 +100,7 @@ public class JapaneseTokenizer extends Tokenizer {
             length = 1;
             break;
           }
+
         default:
           length = 1;
           while (iterator.hasNext() && (getCharClass(iterator.next()) == charClass)) {

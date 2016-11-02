@@ -1,11 +1,10 @@
-package org.apache.solr.analysis;
-
-/**
- * Copyright 2004 The Apache Software Foundation
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -16,16 +15,16 @@ package org.apache.solr.analysis;
  * limitations under the License.
  */
 
-import org.apache.lucene.util.LuceneTestCase;
-import org.apache.solr.core.SolrResourceLoader;
+package org.apache.solr.analysis;
 
-import java.io.File;
-import java.lang.reflect.Field;
+import org.apache.lucene.util.LuceneTestCase;
+import org.junit.Test;
+
 import java.util.HashMap;
-import java.util.Map;
 
 public class TestGosenBasicFormFilterFactory extends LuceneTestCase {
 
+  @Test
   public void testBogusArguments() throws Exception{
     try{
       new GosenBasicFormFilterFactory(new HashMap<String, String>() {{
