@@ -1,0 +1,61 @@
+repositories {
+  mavenLocal()
+  mavenCentral()
+}
+group 'net.java.sen'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'application'
+
+version = luceneVersion
+
+dependencies {
+  compile "org.apache.lucene:lucene-core:${luceneVersion}"
+  compile "org.apache.lucene:lucene-analyzers-common:${luceneVersion}"
+  compile "org.apache.lucene:lucene-codecs:${luceneVersion}"
+  compile "org.apache.solr:solr-core:${luceneVersion}"
+  compile "org.apache.solr:solr-solrj:${luceneVersion}"
+
+  testCompile "junit:junit:${junitVersion}"
+  testCompile "org.apache.lucene:lucene-test-framework:${luceneVersion}"
+  testCompile "com.carrotsearch.randomizedtesting:randomizedtesting-runner:${randomizedrunnerVersion}"
+}
+
+jar {
+  version version
+}
+
+defaultTasks 'clean', 'jar'
+
+// Re-build dictionary with user custom dictionaries, without copy
+task reBuildDic(dependsOn: compileJava) {
+
+}
+
+// Create Jar library without dictionary
+task jarWithNaistChasen(type: Jar) {
+  classifier 'naist-chasen'
+  from files(sourceSets.main.output,
+          fileTree("dictionary" + File.separator
+            + naistDictype + File.separator + compiledDicDir).include('**/*.sen')
+  )
+}
+
+tasks.jarWithNaistChasen.dependsOn(compileJava, ":dictionary:compileNaistChasen")
+
+task jarWithIpadic(type: Jar) {
+  classifier 'ipadic'
+  from files(sourceSets.main.output,
+          fileTree("dictionary" + File.separator
+                  + ipadicDictype + File.separator + compiledDicDir).include('**/*.sen')
+  )
+}
+
+tasks.jarWithIpadic.dependsOn(compileJava, ":dictionary:compileIpadic")
+
+// Make packages for distribution
+task dist(dependsOn: [jar, jarWithIpadic, jarWithNaistChasen]) {
+}
+
+tasks.check.dependsOn(compileJava, ":dictionary:compileNaistChasen", ":dictionary:compileIpadic")

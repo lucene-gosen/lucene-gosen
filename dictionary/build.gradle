@@ -1,0 +1,158 @@
+plugins {
+    id "de.undercouch.download" version "3.1.2"
+}
+
+Properties naistProps = new Properties()
+Properties ipadicProps = new Properties()
+
+task checkBuildStatus() {
+    naistProps.load(project.file('naist-chasen.properties').newDataInputStream())
+    replaceAllProperties(naistProps)
+    ipadicProps.load(project.file('ipadic.properties').newDataInputStream())
+    replaceAllProperties(ipadicProps)
+}
+
+def replaceAllProperties(props) {
+    props.keySet().each { originalKey ->
+        props.keySet().each {
+            props.put(it,
+                props.getProperty(it).replaceAll(
+                        '\\$\\{' + originalKey + '\\}', props.getProperty(originalKey)))
+        }
+    }
+}
+
+def download(dictype, props) {
+    String archiveFileName = props.getProperty("dic.archive")
+    if (checkExistFile(dictype, archiveFileName)) {
+        println "Already archive file[" + archiveFileName + "] exists. skip donwload"
+    } else {
+        // prepare directories
+        project.mkdir(dictype)
+        download {
+            src props.getProperty("dic.home")+"/"+archiveFileName
+            dest project.file(dictype)
+        }
+    }
+}
+
+def checkExistFile(dictype, fileName) {
+    File file = project.file(dictype + File.separator + fileName)
+    return file.exists()
+}
+
+task downloadNaistChasen(dependsOn: checkBuildStatus) << {
+    download(naistDictype, naistProps)
+}
+
+task downloadIpadic(dependsOn: checkBuildStatus) << {
+    download("ipadic", ipadicProps)
+}
+
+def unpackArchive(dictype, props) {
+    String archiveFileName = props.getProperty("dic.archive")
+    String unpackedFileName = props.getProperty("dic.unpacked.file")
+    if (checkExistFile(dictype, unpackedFileName)) {
+        println "Already unpacked [" + unpackedFileName + "]. skip unpacking"
+    } else {
+        copy {
+            from tarTree(resources.gzip(dictype + File.separator + archiveFileName))
+            into project.file(dictype)
+        }
+    }
+}
+
+task unpackNaistChasen(dependsOn: downloadNaistChasen) << {
+    unpackArchive(naistDictype, naistProps)
+}
+
+task unpackIpadic(dependsOn: downloadIpadic) << {
+    unpackArchive(ipadicDictype, ipadicProps)
+}
+
+task clean << {
+    delete ipadicDictype, naistDictype
+}
+
+def cleanSen(dictype) {
+    delete fileTree(dir: dictype, include: '*.sen')
+}
+
+task cleanCompiledNaistChasen() << {
+    cleanSen(naistDictype)
+}
+
+task cleanCompiledIpadic() << {
+    cleanSen(ipadicDictype)
+}
+
+def getCompiledDicDir(dictype) {
+    return dictype + File.separator +
+            compiledDicDir + File.separator +
+            "net" + File.separator +
+            "java" + File.separator +
+            "sen"
+}
+
+def preprocessDic(dictype, props) {
+    if (checkExistFile(dictype, "dictionary.csv")
+            && checkExistFile(dictype, "connection.csv")) {
+        println "Already preprocessed. skip preprocessing"
+    } else {
+        String dicDir = props.getProperty("dic.dir")
+        project.mkdir(getCompiledDicDir(dictype))
+        javaexec {
+            main 'net.java.sen.tools.DictionaryPreprocessor'
+            classpath sourceSets.main.runtimeClasspath
+            workingDir project.file(dictype)
+            args "EUC-JP", dicDir, getCompiledDicDir(".")
+        }
+    }
+}
+
+task preprocessNaistChasen(dependsOn: unpackNaistChasen) << {
+    preprocessDic(naistDictype, naistProps)
+}
+
+task preprocessIpadic(dependsOn: unpackIpadic) << {
+    preprocessDic(ipadicDictype, ipadicProps)
+}
+
+/**
+ * If you have a custom dictionary to be compiled, specify it
+ * by -PcustomDics=/abs/path/to/dic1.csv
+ * If you have two or more custom dictionaries, specify
+ * -PcustomDics="/abs/path/to/dic1.csv /abs/path/to/dic2.csv ..."
+ */
+def compileDic(dictype, props) {
+    if (checkExistFile(getCompiledDicDir(dictype), "trie.sen") &&
+        checkExistFile(getCompiledDicDir(dictype), "connectionCost.sen") &&
+        checkExistFile(getCompiledDicDir(dictype), "partOfSpeech.sen") &&
+        checkExistFile(getCompiledDicDir(dictype), "posIndex.sen") &&
+        checkExistFile(getCompiledDicDir(dictype), "token.sen") &&
+        checkExistFile(getCompiledDicDir(dictype), "header.sen")) {
+        println "Already compiled. skip compile"
+    } else {
+        javaexec {
+            main 'net.java.sen.tools.DictionaryCompiler'
+            classpath sourceSets.main.runtimeClasspath
+            workingDir project.file(getCompiledDicDir(dictype))
+            if (hasProperty("customDics")) {
+                args getProperty("customDics")
+            }
+        }
+    }
+}
+
+task compileNaistChasen(dependsOn: preprocessNaistChasen) << {
+    compileDic(naistDictype, naistProps)
+}
+
+task compileIpadic(dependsOn: preprocessIpadic) << {
+    compileDic(ipadicDictype, ipadicProps)
+}
+
+
+
+
+

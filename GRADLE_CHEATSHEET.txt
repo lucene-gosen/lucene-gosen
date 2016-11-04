@@ -1,0 +1,7 @@
+ant prepare-dictionaries -> gradle prepareDictionaries
+ant compile -> gradle compileJava
+ant compile-tests -> gradle compileTestJava
+ant jar -Ddictype=ipadic -> gradle jarWithIpaDic
+ant jar -Ddictype=naist-chasen -> gradle jarWithNaistChasen
+ant dist ->
+cd dictionary;ant clean -> gradle :dictionary:clean
