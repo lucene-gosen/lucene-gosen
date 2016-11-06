@@ -63,7 +63,6 @@ final public class CToken implements Cloneable {
    * Read a CToken from a ByteBuffer
    *
    * @param buffer The ByteBuffer to read from
-   * @return The CToken
    */
   public void read(ByteBuffer buffer) {  
     rcAttr2 = buffer.getShort();

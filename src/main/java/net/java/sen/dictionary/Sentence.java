@@ -357,7 +357,7 @@ public class Sentence {
   }
   
   /**
-   * Sets a reading constraint on the Sentence starting at <code>position<code>;
+   * Sets a reading constraint on the Sentence starting at <code>position</code>;
    * any existing constraints that overlap the new constraint will be removed.
    *
    * @param constraint The constraint to set

@@ -26,6 +26,10 @@ jar {
   version version
 }
 
+javadoc {
+  options.locale = 'en_US'
+}
+
 defaultTasks 'clean', 'jar'
 
 // Re-build dictionary with user custom dictionaries, without copy

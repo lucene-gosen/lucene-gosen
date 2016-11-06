@@ -163,7 +163,7 @@ public class Dictionary {
   }
   
   /**
-   * @throws IOException
+   * Constructor
    */
   public Dictionary(ShortBuffer connectionCostBuffer, ByteBuffer partOfSpeechInfoBuffer, ByteBuffer tokenBuffer, IntBuffer trieBuffer, String[] posIndex,
       String[] conjTypeIndex, String[] conjFormIndex) {
