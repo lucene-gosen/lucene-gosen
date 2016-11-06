@@ -6,6 +6,8 @@ dictionary/naist-chasen
 dist
 src/compiled-dictionaries
 *.iml
+*.ipr
+*.iws
 .idea
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml

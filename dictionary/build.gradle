@@ -12,7 +12,7 @@ task checkBuildStatus() {
     replaceAllProperties(ipadicProps)
 }
 
-def replaceAllProperties(props) {
+def static replaceAllProperties(props) {
     props.keySet().each { originalKey ->
         props.keySet().each {
             props.put(it,
@@ -94,13 +94,19 @@ def getCompiledDicDir(dictype) {
             "sen"
 }
 
+def createDicdir(dictype, dicdir) {
+    if (!project.file(getCompiledDicDir(dictype)).exists()) {
+        project.mkdir(getCompiledDicDir(dictype))
+    }
+}
+
 def preprocessDic(dictype, props) {
-    if (checkExistFile(dictype, "dictionary.csv")
-            && checkExistFile(dictype, "connection.csv")) {
+    String dicDir = props.getProperty("dic.dir")
+    createDicdir(dictype, dicDir)
+    if (checkExistFile(getCompiledDicDir("."), "dictionary.csv")
+            && checkExistFile(getCompiledDicDir("."), "connection.csv")) {
         println "Already preprocessed. skip preprocessing"
     } else {
-        String dicDir = props.getProperty("dic.dir")
-        project.mkdir(getCompiledDicDir(dictype))
         javaexec {
             main 'net.java.sen.tools.DictionaryPreprocessor'
             classpath sourceSets.main.runtimeClasspath

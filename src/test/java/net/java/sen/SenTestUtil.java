@@ -49,14 +49,14 @@ public class SenTestUtil {
   /**
    * IPADIC dictionary directory path
    */
-  public static final String IPADIC_DIR = "./dictionary/ipadic";
+  public static final String IPADIC_DIR = "./dictionary/ipadic/compiled-dictionaries/net/java/sen";
   
   /**
    * Returns a StringTagger for testing
    *
    * @return The StringTagger
    */
-  public static StringTagger getStringTagger() {
+  static StringTagger getStringTagger() {
     if (stringTagger == null) {
       stringTagger = SenFactory.getStringTagger(IPADIC_DIR, false);
     }
@@ -71,7 +71,7 @@ public class SenTestUtil {
    *
    * @return The Viterbi
    */
-  public static Viterbi getViterbi() {
+  static Viterbi getViterbi() {
     if (viterbi == null) {
       viterbi = SenFactory.getViterbi(IPADIC_DIR, false);
     }
@@ -84,7 +84,7 @@ public class SenTestUtil {
    *
    * @return The Reading Processor
    */
-  public static ReadingProcessor getReadingProcessor() {
+  static ReadingProcessor getReadingProcessor() {
     if (readingProcessor == null) {
       readingProcessor = SenFactory.getReadingProcessor(IPADIC_DIR, false);
     }
@@ -100,7 +100,7 @@ public class SenTestUtil {
    * @param string The string to quote
    * @return The quoted string
    */
-  public static String quotedStringOrNull (String string) {
+  private static String quotedStringOrNull (String string) {
     return (string == null) ? "null" : ("\"" + string.replace("\\", "\\\\").replace("\"", "\\\"") + "\"");
   }
   
@@ -110,7 +110,7 @@ public class SenTestUtil {
    * @param stringList The list of strings to quote
    * @return The quoted string array
    */
-  public static String quotedStringArrayOrNull (List<String> stringList) {
+  private static String quotedStringArrayOrNull (List<String> stringList) {
     if (stringList == null) {
       return "null";
     }
@@ -134,7 +134,7 @@ public class SenTestUtil {
    *
    * @param tokens The tokens to encode
    */
-  public static void printTokenCode (List<Token> tokens) {
+  static void printTokenCode (List<Token> tokens) {
     for (Token token : tokens) {
       String morphemeString = String.format (
           "new Morpheme (%1$s, %2$s, %3$s, %4$s, %5$s, %6$s, %7$s)",
@@ -166,7 +166,7 @@ public class SenTestUtil {
    * @param expectedTokens The expected tokens
    * @param actualTokens The actual tokens
    */
-  public static void compareTokens (Token[] expectedTokens, List<Token> actualTokens) {
+  static void compareTokens (Token[] expectedTokens, List<Token> actualTokens) {
     Assert.assertEquals (expectedTokens.length, actualTokens.size());
     
     for (int i = 0; i < expectedTokens.length; i++) {  
@@ -192,7 +192,7 @@ public class SenTestUtil {
    * @param expectedReadings The expected tokens
    * @param actualReadings The actual tokens
    */
-  public static void compareReadings (Reading[] expectedReadings, List<Reading> actualReadings) {
+  static void compareReadings (Reading[] expectedReadings, List<Reading> actualReadings) {
     Assert.assertEquals (expectedReadings.length, actualReadings.size());
     
     for (int i = 0; i < expectedReadings.length; i++) {
@@ -213,7 +213,7 @@ public class SenTestUtil {
    * @param expected The expected array
    * @param actual The actual array
    */
-  public static void assertEqualsShortArray (short[] expected, short[] actual) {
+  static void assertEqualsShortArray (short[] expected, short[] actual) {
     Assert.assertEquals ("Array lengths not equal", expected.length, actual.length);
     
     for (int i = 0; i < expected.length; i++) {

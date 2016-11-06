@@ -36,8 +36,8 @@ import static net.java.sen.SenTestUtil.*;
 public class BasicDecompositionTest extends LuceneTestCase {
   /**
    * Tests string decomposition
-   * 
-   * @throws IOException 
+   *
+   * @throws IOException if there is some error in StringTagger.analyze()
    */
   @Test
   public void testBlankDecomposition() throws IOException {
@@ -55,7 +55,7 @@ public class BasicDecompositionTest extends LuceneTestCase {
   /**
    * Tests string decomposition
    * 
-   * @throws IOException 
+   * @throws IOException if there is some error in StringTagger.analyze()
    */
   @Test
   public void testDecomposition1() throws IOException {
@@ -126,7 +126,7 @@ public class BasicDecompositionTest extends LuceneTestCase {
   /**
    * Tests string decomposition
    * 
-   * @throws IOException 
+   * @throws IOException if there is some error in StringTagger.analyze()
    */
   @Test
   public void testDecomposition2() throws IOException {
@@ -157,7 +157,7 @@ public class BasicDecompositionTest extends LuceneTestCase {
   /**
    * Tests string decomposition
    * 
-   * @throws IOException 
+   * @throws IOException if there is some error in StringTagger.analyze()
    */
   @Test
   public void testDecomposition3() throws IOException {
@@ -184,7 +184,7 @@ public class BasicDecompositionTest extends LuceneTestCase {
   /**
    * Tests string decomposition
    * 
-   * @throws IOException 
+   * @throws IOException if there is some error in StringTagger.analyze()
    */
   @Test
   public void testDecomposition4() throws IOException {
@@ -210,13 +210,12 @@ public class BasicDecompositionTest extends LuceneTestCase {
   /**
    * Tests string decomposition
    * 
-   * @throws IOException 
+   * @throws IOException if there is some error in StringTagger.analyze()
    */
   @Test
   public void testDifferentDictionary01() throws IOException {
     String testString = "これは本ではない";
-    String ipadicDir = SenTestUtil.IPADIC_DIR;
-    String naistChasenDir = "./dictionary/naist-chasen";
+    String naistChasenDir = "./dictionary/naist-chasen/compiled-dictionaries/net/java/sen";
 
     Token[] expectedIpadicTokens = new Token[] {
         new Token ("これ", 1848, 0, 2, new Morpheme ("名詞-代名詞-一般", "*", "*", "*", new String[]{"コレ"}, new String[]{"コレ"}, null)),
@@ -237,7 +236,7 @@ public class BasicDecompositionTest extends LuceneTestCase {
         new Token ("ない", 7090, 6, 2, new Morpheme ("助動詞", "特殊・ナイ", "基本形", "*", new String[]{"ナイ"}, new String[]{"ナイ"}, null))
     };
 
-    StringTagger ipadicTagger = SenFactory.getStringTagger(ipadicDir, false);
+    StringTagger ipadicTagger = SenFactory.getStringTagger(SenTestUtil.IPADIC_DIR, false);
     StringTagger naistChasenTagger = SenFactory.getStringTagger(naistChasenDir, false);
 
     assertNotSame(ipadicTagger, naistChasenTagger);
@@ -252,7 +251,7 @@ public class BasicDecompositionTest extends LuceneTestCase {
   /**
    * Tests same SenFactory instance.
    *
-   * @throws IOException
+   * @throws IOException if there is some error in StringTagger.analyze()
    */
   @Test
   public void testSenFactoryInstance01() throws IOException {
