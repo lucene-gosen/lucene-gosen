@@ -2,11 +2,11 @@ repositories {
   mavenLocal()
   mavenCentral()
 }
-group 'net.java.sen'
+group 'com.github.lucene-gosen'
+description 'Japanese analysis for Apache Lucene/Solr'
 
 apply plugin: 'java'
 apply plugin: 'idea'
-apply plugin: 'application'
 
 version = luceneVersion
 
@@ -29,7 +29,6 @@ jar {
 javadoc {
   options.locale = 'en_US'
 }
-
 defaultTasks 'clean', 'jar'
 
 // Re-build dictionary with user custom dictionaries, without copy
@@ -48,7 +47,7 @@ tasks.rebuildIpadicDic.dependsOn(compileJava, ":dictionary:cleanCompiledIpadic",
 
 // Create Jar library without dictionary
 task jarWithNaistChasen(type: Jar) {
-  classifier 'naist-chasen'
+  classifier naistDictype
   from files(sourceSets.main.output,
           fileTree("dictionary" + File.separator
             + naistDictype + File.separator + compiledDicDir).include('**/*.sen')
@@ -58,7 +57,7 @@ task jarWithNaistChasen(type: Jar) {
 tasks.jarWithNaistChasen.dependsOn(compileJava, ":dictionary:compileNaistChasen")
 
 task jarWithIpadic(type: Jar) {
-  classifier 'ipadic'
+  classifier ipadicDictype
   from files(sourceSets.main.output,
           fileTree("dictionary" + File.separator
                   + ipadicDictype + File.separator + compiledDicDir).include('**/*.sen')
@@ -67,8 +66,22 @@ task jarWithIpadic(type: Jar) {
 
 tasks.jarWithIpadic.dependsOn(compileJava, ":dictionary:compileIpadic")
 
+task javadocJar(type: Jar) {
+  classifier 'javadoc'
+  from javadoc
+}
+
+task sourcesJar(type: Jar) {
+  classifier 'sources'
+  from sourceSets.main.allSource
+}
+
 // Make packages for distribution
 task dist(dependsOn: [jar, jarWithIpadic, jarWithNaistChasen, test]) {
 }
 
-tasks.check.dependsOn(compileJava, ":dictionary:compileNaistChasen", ":dictionary:compileIpadic")
+tasks.test.dependsOn(compileJava, ":dictionary:compileNaistChasen", ":dictionary:compileIpadic")
+
+if (gradle.startParameter.taskNames.contains('uploadArchives')) {
+  apply from: 'uploadArchives.gradle'
+}
