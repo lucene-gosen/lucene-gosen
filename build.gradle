@@ -29,7 +29,7 @@ jar {
 javadoc {
   options.locale = 'en_US'
 }
-defaultTasks 'clean', 'jar'
+defaultTasks 'clean', 'dist'
 
 // Re-build dictionary with user custom dictionaries, without copy
 task rebuildNaistChasenDic() << {
