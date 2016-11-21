@@ -5,3 +5,26 @@ ant jar -Ddictype=ipadic -> gradle jarWithIpaDic
 ant jar -Ddictype=naist-chasen -> gradle jarWithNaistChasen
 cd dictionary;ant clean -> gradle :dictionary:clean
 ant dist -> gradle dist
+
+
+## For committer
+
+There are some environment properties in gradle.properties.
+For uploadArchives, we need set some properties in ~/.gradle/gradle.properties
+
+Example :
+
+```
+signing.keyId=KEY_ID
+signing.secretKeyRingFile=/Users/johtani/.gnupg/secring.gpg
+sonatypeUsername=USER_NAME
+sonatypeFullname=FULL_NAME
+```
+
+Then,
+
+```
+$ gradle uploadArchives
+```
+
+the task asks you sshkey password and Sonatype password.
