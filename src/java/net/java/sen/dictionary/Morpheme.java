@@ -349,11 +349,6 @@ public class Morpheme {
     return partOfSpeechData.toString();
   }
 
-  @Override
-  public int hashCode() {
-    return getClass().hashCode();
-  }
-
   /**
    * Builds a lazy proxy onto a part-of-speech stored in a Dictionary
    * 

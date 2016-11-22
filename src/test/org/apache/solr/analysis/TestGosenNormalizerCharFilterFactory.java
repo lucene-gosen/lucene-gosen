@@ -1,5 +1,5 @@
 /**
- * Unit tests for GosenCharacterNormalizeFilterFactory
+ * Unit tests for GosenNormalizerCharFilterFactory
  */
 package org.apache.solr.analysis;
 
@@ -17,10 +17,10 @@ import java.util.Map;
 import static org.apache.lucene.analysis.BaseTokenStreamTestCase.assertTokenStreamContents;
 
 
-public class TestGosenCharacterNormalizeFilterFactory extends LuceneTestCase {
+public class TestGosenNormalizerCharFilterFactory extends LuceneTestCase {
 
   private void checkToken(Map<String, String> args, String input, String expected) throws IOException {
-    GosenCharacterNormalizeFilterFactory factory = new GosenCharacterNormalizeFilterFactory(args);
+    GosenNormalizerCharFilterFactory factory = new GosenNormalizerCharFilterFactory(args);
 
     StringReader tmpInput = new StringReader(input);
     Reader reader = factory.create(tmpInput);
@@ -45,13 +45,13 @@ public class TestGosenCharacterNormalizeFilterFactory extends LuceneTestCase {
   }
 
   /**
-   * Test nfkc nomarlization that normalize characters to half-width Katakana
+   * Test nfkc normalization that normalize characters to half-width Katakana
    * from full-width Katakana.
    *
    * @throws IOException
    */
   @Test
-  public void testNormalization01() throws IOException {
+  public void testNFKCKatakana() throws IOException {
     Map<String, String> args = new HashMap<String, String>();
     args.put("name", "nfkc");
 
@@ -65,7 +65,7 @@ public class TestGosenCharacterNormalizeFilterFactory extends LuceneTestCase {
    * @throws IOException
    */
   @Test
-  public void testNormalization02() throws IOException {
+  public void testNFKCAlphaNumeric() throws IOException {
     Map<String, String> args = new HashMap<String, String>();
     args.put("name", "nfkc");
 
@@ -73,7 +73,7 @@ public class TestGosenCharacterNormalizeFilterFactory extends LuceneTestCase {
   }
 
   @Test
-  public void testNormalization03() throws IOException {
+  public void testNFKDKatakana() throws IOException {
     Map<String, String> args = new HashMap<String, String>();
     args.put("name", "nfkc");
     args.put("mode", "decompose");
@@ -83,7 +83,7 @@ public class TestGosenCharacterNormalizeFilterFactory extends LuceneTestCase {
   }
 
   @Test
-  public void testNormalization04() throws IOException {
+  public void testNFKDHiragana() throws IOException {
     Map<String, String> args = new HashMap<String, String>();
     args.put("name", "nfkc");
     args.put("mode", "decompose");
@@ -93,7 +93,7 @@ public class TestGosenCharacterNormalizeFilterFactory extends LuceneTestCase {
   }
 
   @Test
-  public void testNormalization05() throws IOException {
+  public void testNFKCHiragana() throws IOException {
     Map<String, String> args = new HashMap<String, String>();
     args.put("name", "nfkc");
 
@@ -102,7 +102,7 @@ public class TestGosenCharacterNormalizeFilterFactory extends LuceneTestCase {
   }
 
   @Test
-  public void testNormalization06() throws IOException {
+  public void testNFKCLongSentence() throws IOException {
     Map<String, String> args = new HashMap<String, String>();
     args.put("name", "nfkc");
 
@@ -113,11 +113,11 @@ public class TestGosenCharacterNormalizeFilterFactory extends LuceneTestCase {
   }
 
   @Test
-  public void testNormalization07() throws IOException {
+  public void testNFKCWhiteSpace() throws IOException {
     Map<String, String> args = new HashMap<String, String>();
     args.put("name", "nfkc");
 
     checkToken(args, " ", " ");
-    checkToken(args, "　", " ");
+    checkToken(args, "　", " "); // Fill-Width whitespace -> Half-Width whitespace
   }
 }

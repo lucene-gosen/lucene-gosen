@@ -26,7 +26,7 @@ import java.io.Reader;
 import java.io.StringReader;
 
 
-public class GosenCharacterNormalizeFilter extends BaseCharFilter {
+public class GosenNormalizerCharFilter extends BaseCharFilter {
 
   private static final int VOICED_SOUND_MARK_CONVERT_OFFSET = 2;
   private static final int MAX_BUFFER_SIZE = 512;
@@ -48,7 +48,7 @@ public class GosenCharacterNormalizeFilter extends BaseCharFilter {
    *
    * @param reader
    */
-  public GosenCharacterNormalizeFilter(Reader reader) {
+  public GosenNormalizerCharFilter(Reader reader) {
     this(reader, DEFAULT_NORM_FORM, Normalizer2.Mode.COMPOSE);
   }
 
@@ -59,7 +59,7 @@ public class GosenCharacterNormalizeFilter extends BaseCharFilter {
    * @param name
    * @param mode
    */
-  public GosenCharacterNormalizeFilter(Reader reader, String name, Normalizer2.Mode mode) {
+  public GosenNormalizerCharFilter(Reader reader, String name, Normalizer2.Mode mode) {
     super(reader);
     this.normalizer = Normalizer2.getInstance(null, name, mode);
     buffer.reset(input);

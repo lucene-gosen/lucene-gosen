@@ -1,5 +1,5 @@
 /**
- * Unit tests for GosenCharacterNormalizeFilter
+ * Unit tests for GosenNormalizerCharFilter
  */
 package org.apache.lucene.analysis.gosen;
 
@@ -13,14 +13,14 @@ import java.io.Reader;
 import java.io.StringReader;
 
 
-public class TestGosenCharacterNormalizeFilter extends BaseTokenStreamTestCase {
+public class TestGosenNormalizerCharFilter extends BaseTokenStreamTestCase {
   @Override
   public void setUp() throws Exception {
     super.setUp();
   }
 
   private void checkToken(String input, String expected) throws IOException {
-    Reader reader = new GosenCharacterNormalizeFilter(new StringReader(input));
+    Reader reader = new GosenNormalizerCharFilter(new StringReader(input));
     Tokenizer tokenizer = new MockTokenizer(MockTokenizer.KEYWORD, false);
     tokenizer.setReader(reader);
     assertTokenStreamContents(tokenizer, new String[]{expected});
@@ -34,78 +34,82 @@ public class TestGosenCharacterNormalizeFilter extends BaseTokenStreamTestCase {
 
   // Normalize Full-width Latin to Half-width Latin
   @Test
-  public void test01() throws Exception {
+  public void testNFKCNormLatin() throws Exception {
     checkToken("ＡＢＣＤ", "ABCD");
   }
 
   // decompose EAcute into E + combining Acute
   @Test
-  public void test02() throws Exception {
+  public void testNFKCNormAcute() throws Exception {
     checkToken("\u0065\u0301", "\u00E9");
   }
 
   // Convert Full-width Latin to Half-width Latin
   @Test
-  public void test03() throws IOException {
+  public void testNFKCNormLatinLetter() throws IOException {
     checkToken("Ｘ", "X");
   }
 
   // Normalize Half-width Katanaka to Full-width Katakana
   @Test
-  public void test04() throws IOException {
+  public void testNFKCNormKatakana() throws IOException {
     checkToken("ﾆﾎﾝｺﾞﾄｴｲｺﾞ", "ニホンゴトエイゴ");
   }
 
   // Normalize Fulld-width Latin to Hlaf-width Latin
   @Test
-  public void test05() throws IOException {
+  public void testNFKCLatinPunct() throws IOException {
     checkToken("Ｃ＋＋", "C++");
   }
 
   // normalization
   @Test
-  public void test06() throws Exception {
+  public void testNFKCNormArabic() throws Exception {
     checkToken("ﴳﴺﰧ", "طمطمطم");
   }
 
   // normalization
   @Test
-  public void test07() throws Exception {
+  public void testNFKCHiraganaLetter() throws Exception {
     checkToken("が", "が");
   }
 
-  //U+3099: Combining KATAKANA-HIRAGANA Voiced Sound Mark
+  // U+3099: Combining KATAKANA-HIRAGANA Voiced Sound Mark
   @Test
-  public void test08() throws Exception {
+  public void testNFKCComposeHiragana() throws Exception {
     checkToken("か" + '\u3099', "が");
   }
 
-  //U+309B: KATAKANA-HIRAGANA Voiced Sound Mark
-  //Standard ICU doesn't support this combination.
+  // U+309B: KATAKANA-HIRAGANA Voiced Sound Mark
+  // Standard ICU doesn't support this combination.
   @Test
-  public void test09() throws Exception {
+  public void testNFKCComposeHiragaKatakanaMix() throws Exception {
     checkToken("か" + '\u309B', "が");
   }
 
-  // the filter doesn't remove 'space'
+  // The filter doesn't remove 'space'
   @Test
-  public void test10() throws Exception {
+  public void testNFKCWhiteSpace() throws Exception {
     checkToken(" ", " ");
   }
 
-  // the filter normalizes full-width space to half-width space
+  // The filter normalizes full-width space to half-width space
   @Test
-  public void test11() throws Exception {
+  public void testLatinWithWS() throws Exception {
     checkToken("　Ａ", " A");
   }
 
+  // Degree Celsius and Fahrenheit will be decomposed, which is different from
+  // what we want to normalize and expected.
   @Test
-  public void test12() throws Exception {
+  public void testUnexpectedBehavior() throws Exception {
     checkToken("℃", "°C"); // \u2103 => \u00B0 + \u0043
   }
 
+  // This behavior might be tricky when someone intentionally use Acute Accent,
+  // which will be normalized to Combined Acute Accent.
   @Test
-  public void test13() throws Exception {
+  public void testTrickyNormalization() throws Exception {
     checkToken("´", " ́");  // \u00B4 => \u0301
   }
 }

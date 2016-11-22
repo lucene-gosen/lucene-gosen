@@ -18,7 +18,7 @@
 package org.apache.solr.analysis;
 
 import com.ibm.icu.text.Normalizer2;
-import org.apache.lucene.analysis.gosen.GosenCharacterNormalizeFilter;
+import org.apache.lucene.analysis.gosen.GosenNormalizerCharFilter;
 import org.apache.lucene.analysis.util.CharFilterFactory;
 import org.apache.solr.common.SolrException;
 import org.apache.solr.common.SolrException.ErrorCode;
@@ -26,16 +26,16 @@ import org.apache.solr.common.SolrException.ErrorCode;
 import java.io.Reader;
 import java.util.Map;
 
-import static org.apache.lucene.analysis.gosen.GosenCharacterNormalizeFilter.DEFAULT_NORM_FORM;
+import static org.apache.lucene.analysis.gosen.GosenNormalizerCharFilter.DEFAULT_NORM_FORM;
 
 /**
- * GosenCharacterNormalizeFilterFactory
+ * GosenNormalizerCharFilterFactory
  *
- * Factory for {@link GosenCharacterNormalizeFilter}.
+ * Factory for {@link GosenNormalizerCharFilter}.
  *
  * &lt;fieldType name="text_norm" class="solr.TextField" positionIncrementGap="100"&gt;
  *   &lt;analyzer&gt;
- *     &lt;charFilter class="solr.GosenCharacterNormalizeFilterFactory"
+ *     &lt;charFilter class="solr.GosenNormalizerCharFilterFactory"
  *                            name="nfkc" mode="compose"/&gt;
  *
  *     &lt;tokenizer class="solr.GosenTokenizerFactory"
@@ -50,12 +50,12 @@ import static org.apache.lucene.analysis.gosen.GosenCharacterNormalizeFilter.DEF
 /**
  * Factory class for ICUCharFilter
  */
-public class GosenCharacterNormalizeFilterFactory extends CharFilterFactory {
+public class GosenNormalizerCharFilterFactory extends CharFilterFactory {
 
   private final String strNormForm;
   private final Normalizer2.Mode normMode;
 
-  public GosenCharacterNormalizeFilterFactory(Map<String, String> args) {
+  public GosenNormalizerCharFilterFactory(Map<String, String> args) {
     super(args);
 
     String strName = args.get("name");
@@ -75,12 +75,12 @@ public class GosenCharacterNormalizeFilterFactory extends CharFilterFactory {
     } else if (strMode.equals("decompose")) {
       normMode = Normalizer2.Mode.DECOMPOSE;
     } else {
-      throw new SolrException(ErrorCode.SERVER_ERROR, "Invalid normMode: " + strMode);
+      throw new SolrException(ErrorCode.SERVER_ERROR, "Invalid mode: " + strMode);
     }
   }
 
   @Override
   public Reader create(Reader reader) {
-    return new GosenCharacterNormalizeFilter(reader, strNormForm, normMode);
+    return new GosenNormalizerCharFilter(reader, strNormForm, normMode);
   }
 }
