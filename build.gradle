@@ -16,6 +16,7 @@ dependencies {
   compile "org.apache.lucene:lucene-codecs:${luceneVersion}"
   compile "org.apache.solr:solr-core:${luceneVersion}"
   compile "org.apache.solr:solr-solrj:${luceneVersion}"
+  compile "com.ibm.icu:icu4j:${icu4jVersion}"
 
   testCompile "junit:junit:${junitVersion}"
   testCompile "org.apache.lucene:lucene-test-framework:${luceneVersion}"
