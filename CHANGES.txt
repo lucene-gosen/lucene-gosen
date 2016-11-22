@@ -1,5 +1,18 @@
 lucene-gosen Change Log
 
+========== 6.2.1 / 2016-11-03 ===================================
+
+New Features & Improvements
+* Add GosenCharacterNormalizeFilterFactory
+
+Bug Fixes
+
+API Changes
+
+Javadoc Fixes
+
+Others
+
 ========== 6.0.0 / 2016-05-27 ===================================
 
 Important Notice

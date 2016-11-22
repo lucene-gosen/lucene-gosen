@@ -1,9 +1,10 @@
-/**
- * Copyright 2004 The Apache Software Foundation
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -21,13 +22,13 @@ import java.io.Reader;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.lucene.analysis.CharArraySet;
+import org.apache.lucene.analysis.StopwordAnalyzerBase;
 import org.apache.lucene.analysis.core.LowerCaseFilter;
 import org.apache.lucene.analysis.core.StopFilter;
-import org.apache.lucene.analysis.miscellaneous.SetKeywordMarkerFilter;
-import org.apache.lucene.analysis.util.StopwordAnalyzerBase;
-import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
+import org.apache.lucene.analysis.miscellaneous.SetKeywordMarkerFilter;
 
 import static org.apache.lucene.analysis.gosen.GosenTokenizer.DEFAULT_UNKNOWN_KATAKANA_TOKENIZATION;
 
@@ -140,8 +141,9 @@ public class GosenAnalyzer extends StopwordAnalyzerBase {
     stream = new GosenPunctuationFilter(stream);
     stream = new GosenPartOfSpeechStopFilter(stream, stoptags);
     stream = new StopFilter(stream, stopwords);
-    if (!stemExclusionSet.isEmpty())
+    if (!stemExclusionSet.isEmpty()) {
       stream = new SetKeywordMarkerFilter(stream, stemExclusionSet);
+    }
     stream = new GosenBasicFormFilter(stream);
     stream = new GosenKatakanaStemFilter(stream);
     stream = new LowerCaseFilter(stream);

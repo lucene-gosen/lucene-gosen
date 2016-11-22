@@ -220,7 +220,7 @@ public class Token {
   public String toString() {
     return getSurface();
   }
-  
+
   /**
    * Creates a Token from a Node
    * 

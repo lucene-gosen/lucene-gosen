@@ -21,7 +21,6 @@ package net.java.sen;
 
 import java.util.List;
 
-import net.java.sen.ReadingProcessor;
 import net.java.sen.dictionary.Reading;
 import net.java.sen.filter.reading.NumberFilter;
 

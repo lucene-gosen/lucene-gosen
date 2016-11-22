@@ -21,7 +21,8 @@
 
 package net.java.sen.util;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  * A class used to build a line of CSV data

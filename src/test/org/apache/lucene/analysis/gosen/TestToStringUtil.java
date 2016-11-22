@@ -1,11 +1,10 @@
-package org.apache.lucene.analysis.gosen;
-
-/**
- * Copyright 2004 The Apache Software Foundation
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -16,15 +15,19 @@ package org.apache.lucene.analysis.gosen;
  * limitations under the License.
  */
 
-import org.apache.lucene.analysis.gosen.ToStringUtil;
+package org.apache.lucene.analysis.gosen;
+
 import org.apache.lucene.util.LuceneTestCase;
+import org.junit.Test;
 
 public class TestToStringUtil extends LuceneTestCase {
-  
+
+  @Test
   public void testPOS() {
     assertEquals("noun-suffix-verbal", ToStringUtil.getPOSTranslation("名詞-接尾-サ変接続"));
   }
-  
+
+  @Test
   public void testHepburn() {
     assertEquals("majan", ToStringUtil.getRomanization("マージャン"));
     assertEquals("uroncha", ToStringUtil.getRomanization("ウーロンチャ"));

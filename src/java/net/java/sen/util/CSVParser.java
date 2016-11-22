@@ -29,8 +29,6 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.ArrayList;
 
-import net.java.sen.util.IOUtils;
-
 /**
  * parse CSV file and extract token.
  */

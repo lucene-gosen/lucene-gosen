@@ -1,11 +1,10 @@
-package org.apache.lucene.analysis.gosen;
-
-/**
- * Copyright 2004 The Apache Software Foundation
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -16,13 +15,15 @@ package org.apache.lucene.analysis.gosen;
  * limitations under the License.
  */
 
+package org.apache.lucene.analysis.gosen;
+
 import java.io.IOException;
 
 import net.java.sen.SenTestUtil;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.BaseTokenStreamTestCase;
-import org.apache.lucene.analysis.gosen.GosenAnalyzer;
+import org.junit.Test;
 
 /**
  * Simple tests for {@link GosenAnalyzer} 
@@ -30,6 +31,7 @@ import org.apache.lucene.analysis.gosen.GosenAnalyzer;
 public class TestGosenAnalyzer extends BaseTokenStreamTestCase {
   /** This test fails with NPE when the 
    * stopwords file is missing in classpath */
+  @Test
   public void testResourcesAvailable() {
     new GosenAnalyzer(SenTestUtil.IPADIC_DIR);
   }
@@ -39,6 +41,7 @@ public class TestGosenAnalyzer extends BaseTokenStreamTestCase {
    * lemmatization with the basic form, and that position increments
    * and offsets are correct.
    */
+  @Test
   public void testBasics() throws IOException {
     assertAnalyzesTo(new GosenAnalyzer(SenTestUtil.IPADIC_DIR), "多くの学生が試験に落ちた。",
       new String[] { "多く", "学生", "試験", "落ちる" },
@@ -51,6 +54,7 @@ public class TestGosenAnalyzer extends BaseTokenStreamTestCase {
   /**
    * Tests a sentence that consists of Katakana characters
    */
+  @Test
   public void testUnknownKatakanaSentence() throws IOException {
     assertAnalyzesTo(new GosenAnalyzer(SenTestUtil.IPADIC_DIR, false), "メイフラワーアレンジメント",
             new String[] { "メイフラワーアレンジメント" },
@@ -62,6 +66,7 @@ public class TestGosenAnalyzer extends BaseTokenStreamTestCase {
   /**
    * Tests a sentence that consists of Katakana characters
    */
+  @Test
   public void testUnknownKatakanaSentence2() throws IOException {
     assertAnalyzesTo(new GosenAnalyzer(SenTestUtil.IPADIC_DIR, true), "メイフラワーアレンジメント",
             new String[] { "メ", "イ", "フラワ", "アレンジメント" },
@@ -74,6 +79,7 @@ public class TestGosenAnalyzer extends BaseTokenStreamTestCase {
    * Analyzes random unicode strings, to ensure no exception
    * (results could be completely bogus, but makes sure we don't crash on some input)
    */
+  @Test
   public void testReliability() throws IOException {
     Analyzer analyzer = new GosenAnalyzer(SenTestUtil.IPADIC_DIR);
     checkRandomData(random(), analyzer, 10000*RANDOM_MULTIPLIER);

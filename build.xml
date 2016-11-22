@@ -6,7 +6,7 @@
   <!-- to change the dictionary type to naist-chasen, ant -Ddictype=naist-chasen -->
   <property name="dictype" value="ipadic"/>
 
-  <property name="version" value="6.0.0"/>
+  <property name="version" value="6.2.1"/>
 
   <property name="src.dir" location="src/java"/>
   <property name="cdic.dir" location="src/compiled-dictionaries"/>
@@ -28,6 +28,7 @@
       <exclude name="junit-*.jar"/>
       <exclude name="randomizedtesting-*.jar"/>
       <exclude name="lucene-test-framework-*.jar"/>
+      <exclude name="solr-test-framework-*.jar"/>
     </fileset>
   </path>
   
@@ -36,6 +37,7 @@
       <include name="junit-*.jar"/>
       <include name="randomizedtesting-*.jar"/>
       <include name="lucene-test-framework-*.jar"/>
+      <include name="solr-test-framework-*.jar"/>
     </fileset>
   </path>
 
@@ -56,9 +58,9 @@
 
   <!-- Build javadocs -->
   <target name="javadoc" description="generate Javadocs">
-    <property name="javadoc.link.java" value="http://docs.oracle.com/javase/7/docs/api/"/>
-    <property name="javadoc.link.lucene" value="https://hudson.apache.org/hudson/job/Lucene-4.x/javadoc/all/"/>
-    <property name="javadoc.link.solr" value="https://hudson.apache.org/hudson/job/Solr-4.x/javadoc/"/>
+    <property name="javadoc.link.java" value="http://docs.oracle.com/javase/8/index.html"/>
+    <property name="javadoc.link.lucene" value="http://lucene.apache.org/core/6_2_1/index.html"/>
+    <property name="javadoc.link.solr" value="https://lucene.apache.org/solr/6_2_1/index.html"/>
     <copy todir="${javadoc.dir}/prettify">
       <fileset dir="${prettify.dir}"/>
     </copy>
@@ -97,7 +99,8 @@
            debug="true"
            encoding="utf-8"
            source="1.8"
-           target="1.8">
+           target="1.8"
+           includeantruntime="false">
       <compilerarg line="-Xlint -Xlint:-serial"/>
     </javac>
     <!-- Copy the resources folder (if existent) -->
@@ -116,7 +119,8 @@
            debug="true"
            encoding="utf-8"
            source="1.8"
-           target="1.8">
+           target="1.8"
+           includeantruntime="false">
       <compilerarg line="-Xlint -Xlint:-serial"/>
     </javac>
   </target>
