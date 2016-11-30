@@ -1,0 +1,3 @@
+rootProject.name = 'lucene-gosen'
+
+include 'dictionary'

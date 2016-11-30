@@ -1,0 +1,54 @@
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+String askPassword(prompt) {
+    "${System.console().readPassword(prompt)}"
+}
+ext.'signing.password' = askPassword("Enter password for PGP key ${property('signing.keyId')}: ")
+ext.'sonatypePassword' = askPassword("Enter password for ${sonatypeUsername}@oss.sonatype.org: ")
+
+artifacts {
+  archives jar, sourcesJar, javadocJar
+  archives file: jarWithIpadic.archivePath, name: ipadicDictype, builtBy: jarWithIpadic
+  archives file: jarWithNaistChasen.archivePath, name: naistDictype, builtBy: jarWithNaistChasen
+}
+
+signing {
+  sign configurations.archives
+}
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+      repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
+        authentication(userName: sonatypeUsername, password: sonatypePassword)
+      }
+      pom.project {
+        name 'lucene-gosen'
+        packaging 'jar'
+        // optionally artifactId can be defined here
+        description 'Japanese analysis library without dictionaries for Apache Lucene/Solr'
+        url 'https://github.com/lucene-gosen/lucene-gosen'
+        scm {
+          connection 'scm:git:git@github.com:lucene-gosen/lucene-gosen.git'
+          developerConnection 'scm:git:git@github.com:lucene-gosen/lucene-gosen.git'
+          url 'https://github.com/lucene-gosen/lucene-gosen'
+        }
+        licenses {
+          license {
+            name 'The Apache License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+            distribution 'repo'
+          }
+        }
+        developers {
+          developer {
+            id 'johtani'
+            name 'Jun Ohtani'
+          }
+        }
+      }
+    }
+  }
+}

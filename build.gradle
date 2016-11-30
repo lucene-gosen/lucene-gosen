@@ -1,0 +1,88 @@
+repositories {
+  mavenLocal()
+  mavenCentral()
+}
+group 'com.github.lucene-gosen'
+description 'Japanese analysis for Apache Lucene/Solr'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+
+version = luceneVersion
+
+dependencies {
+  compile "org.apache.lucene:lucene-core:${luceneVersion}"
+  compile "org.apache.lucene:lucene-analyzers-common:${luceneVersion}"
+  compile "org.apache.lucene:lucene-codecs:${luceneVersion}"
+  compile "org.apache.solr:solr-core:${luceneVersion}"
+  compile "org.apache.solr:solr-solrj:${luceneVersion}"
+  compile "com.ibm.icu:icu4j:${icu4jVersion}"
+
+  testCompile "junit:junit:${junitVersion}"
+  testCompile "org.apache.lucene:lucene-test-framework:${luceneVersion}"
+  testCompile "com.carrotsearch.randomizedtesting:randomizedtesting-runner:${randomizedrunnerVersion}"
+}
+
+jar {
+  version version
+}
+
+javadoc {
+  options.locale = 'en_US'
+}
+defaultTasks 'clean', 'dist'
+
+// Re-build dictionary with user custom dictionaries, without copy
+task rebuildNaistChasenDic() << {
+  println "rebuilding dicitonary"
+}
+
+tasks.rebuildNaistChasenDic.dependsOn(compileJava, ":dictionary:cleanCompiledNaistChasen", ":dictionary:compileNaistChasen")
+
+task rebuildIpadicDic() << {
+  println "rebuilding dicitonary"
+}
+
+tasks.rebuildIpadicDic.dependsOn(compileJava, ":dictionary:cleanCompiledIpadic", ":dictionary:compileIpadic")
+
+
+// Create Jar library without dictionary
+task jarWithNaistChasen(type: Jar) {
+  classifier naistDictype
+  from files(sourceSets.main.output,
+          fileTree("dictionary" + File.separator
+            + naistDictype + File.separator + compiledDicDir).include('**/*.sen')
+  )
+}
+
+tasks.jarWithNaistChasen.dependsOn(compileJava, ":dictionary:compileNaistChasen")
+
+task jarWithIpadic(type: Jar) {
+  classifier ipadicDictype
+  from files(sourceSets.main.output,
+          fileTree("dictionary" + File.separator
+                  + ipadicDictype + File.separator + compiledDicDir).include('**/*.sen')
+  )
+}
+
+tasks.jarWithIpadic.dependsOn(compileJava, ":dictionary:compileIpadic")
+
+task javadocJar(type: Jar) {
+  classifier 'javadoc'
+  from javadoc
+}
+
+task sourcesJar(type: Jar) {
+  classifier 'sources'
+  from sourceSets.main.allSource
+}
+
+// Make packages for distribution
+task dist(dependsOn: [jar, jarWithIpadic, jarWithNaistChasen, test]) {
+}
+
+tasks.test.dependsOn(compileJava, ":dictionary:compileNaistChasen", ":dictionary:compileIpadic")
+
+if (gradle.startParameter.taskNames.contains('uploadArchives')) {
+  apply from: 'uploadArchives.gradle'
+}
