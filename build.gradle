@@ -1,6 +1,9 @@
 repositories {
   mavenLocal()
   mavenCentral()
+  maven {
+    url "http://maven.restlet.com"
+  }
 }
 group 'com.github.lucene-gosen'
 description 'Japanese analysis for Apache Lucene/Solr'
@@ -17,6 +20,8 @@ dependencies {
   compile "org.apache.solr:solr-core:${luceneVersion}"
   compile "org.apache.solr:solr-solrj:${luceneVersion}"
   compile "com.ibm.icu:icu4j:${icu4jVersion}"
+  compile "org.restlet.jee:org.restlet:${restletVersion}"
+  compile "org.restlet.jee:org.restlet.ext.servlet:${restletVersion}"
 
   testCompile "junit:junit:${junitVersion}"
   testCompile "org.apache.lucene:lucene-test-framework:${luceneVersion}"
