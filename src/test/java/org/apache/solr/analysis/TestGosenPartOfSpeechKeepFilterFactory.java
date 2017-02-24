@@ -22,7 +22,6 @@ import org.apache.lucene.analysis.BaseTokenStreamTestCase;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.util.Version;
-import org.apache.solr.core.SolrResourceLoader;
 import org.junit.Test;
 
 import java.io.File;
@@ -58,9 +57,7 @@ public class TestGosenPartOfSpeechKeepFilterFactory extends BaseTokenStreamTestC
     GosenTokenizerFactory tokenizerFactory = new GosenTokenizerFactory(new HashMap<String,String>(){{
       put("dictionaryDir", SenTestUtil.IPADIC_DIR);
     }});
-    SolrResourceLoader loader = new SolrResourceLoader(
-            baseDir.getAbsoluteFile().toPath(), GosenTokenizerFactory.class.getClassLoader());
-    tokenizerFactory.inform(loader);
+    tokenizerFactory.inform(new StringMockResourceLoader(""));
     Tokenizer tokenizer = tokenizerFactory.create();
     tokenizer.setReader(new StringReader("私は制限スピードを超える。"));
     Map<String,String> args = new HashMap<String,String>();

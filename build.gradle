@@ -17,8 +17,6 @@ dependencies {
   compile "org.apache.lucene:lucene-core:${luceneVersion}"
   compile "org.apache.lucene:lucene-analyzers-common:${luceneVersion}"
   compile "org.apache.lucene:lucene-codecs:${luceneVersion}"
-  compile "org.apache.solr:solr-core:${luceneVersion}"
-  compile "org.apache.solr:solr-solrj:${luceneVersion}"
   compile "com.ibm.icu:icu4j:${icu4jVersion}"
   compile "org.restlet.jee:org.restlet:${restletVersion}"
   compile "org.restlet.jee:org.restlet.ext.servlet:${restletVersion}"

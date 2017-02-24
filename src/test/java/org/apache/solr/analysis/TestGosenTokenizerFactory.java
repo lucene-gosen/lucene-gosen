@@ -22,14 +22,13 @@ import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.HashMap;
 
+import org.apache.lucene.analysis.util.ResourceLoader;
 import org.apache.lucene.util.LuceneTestCase;
-import org.apache.solr.core.SolrResourceLoader;
 import org.junit.Test;
 
 public class TestGosenTokenizerFactory extends LuceneTestCase {
   
   private File baseDir;
-  private File confDir;
   private File dicDir;
   
   @Override
@@ -38,24 +37,22 @@ public class TestGosenTokenizerFactory extends LuceneTestCase {
     File testRoot = new File(System.getProperty("java.io.tmpdir")).getCanonicalFile();
     baseDir = new File(testRoot, "core-test");
     baseDir.mkdir();
-    confDir = new File(baseDir, "conf");
-    confDir.mkdir();
-    dicDir = new File(confDir, "custom-dic");
+    dicDir = new File(baseDir, "custom-dic");
     dicDir.mkdir();
   }
   
   @Override
   public void tearDown() throws Exception {
     dicDir.delete();
-    confDir.delete();
     baseDir.delete();
     super.tearDown();
   }
 
   @Test
   public void testDictionaryDir() throws Exception {
-    
-    SolrResourceLoader loader = new SolrResourceLoader(baseDir.toPath(), GosenTokenizerFactory.class.getClassLoader());
+
+    ResourceLoader loader = new StringMockResourceLoader("");
+
     Map<String, String> args = new HashMap<String, String>();
     GosenTokenizerFactory factory = new GosenTokenizerFactory(args);
     factory.inform(loader);
@@ -67,7 +64,7 @@ public class TestGosenTokenizerFactory extends LuceneTestCase {
     args.put("dictionaryDir", dicDir.getName());
     factory = new GosenTokenizerFactory(args);
     factory.inform(loader);
-    assertEquals("dictionaryDir is incorrect.", dicDir.getAbsolutePath(), field.get(factory));
+    assertEquals("dictionaryDir is incorrect.", dicDir.getName(), field.get(factory));
     
     // absolute path
     args.put("dictionaryDir", dicDir.getAbsolutePath());
