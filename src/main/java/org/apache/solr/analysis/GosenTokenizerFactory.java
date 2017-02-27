@@ -18,7 +18,6 @@
 package org.apache.solr.analysis;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Map;
@@ -30,7 +29,6 @@ import org.apache.lucene.analysis.util.TokenizerFactory;
 import org.apache.lucene.analysis.util.ResourceLoader;
 import org.apache.lucene.util.AttributeFactory;
 import org.apache.lucene.util.IOUtils;
-import org.apache.solr.core.SolrResourceLoader;
 import org.apache.lucene.analysis.util.ResourceLoaderAware;
 
 /**
@@ -93,22 +91,8 @@ public class GosenTokenizerFactory extends TokenizerFactory implements ResourceL
       }
     }
     if (dirVal != null) {
-      // no-dic jar 
-      SolrResourceLoader solrLoader = SolrResourceLoader.class.cast(loader);
-      File d0 = new File(dirVal);
-      File d = d0;
-      if (!d.isAbsolute())
-        d = new File(solrLoader.getConfigDir() + File.separator + dirVal);
-      if (d.isDirectory() && d.canRead()) {
-        // relative path (from solr/conf)
-        dictionaryDir = d.getAbsolutePath();
-      } else if (d != d0 && d0.isDirectory() && d0.canRead()) {
-        // relative path (from user.dir java properties)
-        dictionaryDir = d0.getAbsolutePath();
-      } else {
-        // absolute path
-        dictionaryDir = dirVal;
-      }
+      // absolute path or relative path
+      dictionaryDir = dirVal;
     }
   }
 

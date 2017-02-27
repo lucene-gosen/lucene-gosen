@@ -20,8 +20,6 @@ package org.apache.solr.analysis;
 import com.ibm.icu.text.Normalizer2;
 import org.apache.lucene.analysis.gosen.GosenNormalizerCharFilter;
 import org.apache.lucene.analysis.util.CharFilterFactory;
-import org.apache.solr.common.SolrException;
-import org.apache.solr.common.SolrException.ErrorCode;
 
 import java.io.Reader;
 import java.util.Map;
@@ -75,7 +73,7 @@ public class GosenNormalizerCharFilterFactory extends CharFilterFactory {
     } else if (strMode.equals("decompose")) {
       normMode = Normalizer2.Mode.DECOMPOSE;
     } else {
-      throw new SolrException(ErrorCode.SERVER_ERROR, "Invalid mode: " + strMode);
+      throw new IllegalArgumentException("Invalid mode: " + strMode);
     }
   }
 
