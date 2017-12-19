@@ -646,7 +646,7 @@ public class ToStringUtil {
           builder.append("mu");
           break;
         case 'メ':
-          builder.append("mi");
+          builder.append("me");
           break;
         case 'モ':
           if (ch2 == 'ウ') {

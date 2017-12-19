@@ -34,5 +34,6 @@ public class TestToStringUtil extends LuceneTestCase {
     assertEquals("chahan", ToStringUtil.getRomanization("チャーハン"));
     assertEquals("chashu", ToStringUtil.getRomanization("チャーシュー"));
     assertEquals("shumai", ToStringUtil.getRomanization("シューマイ"));
+    assertEquals("merodi", ToStringUtil.getRomanization("メロディー"));
   }
 }
