@@ -20,6 +20,7 @@
 package net.java.sen;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import net.java.sen.dictionary.Morpheme;
@@ -47,7 +48,7 @@ public class BasicDecompositionTest extends LuceneTestCase {
     
     StringTagger tagger = getStringTagger();
     
-    List<Token> tokens = tagger.analyze(testString);
+    List<Token> tokens = tagger.analyze(testString, new ArrayList<>());
     
     compareTokens (testTokens, tokens);
   }
@@ -118,7 +119,7 @@ public class BasicDecompositionTest extends LuceneTestCase {
     
     StringTagger tagger = getStringTagger();
     
-    List<Token> tokens = tagger.analyze(testString);
+    List<Token> tokens = tagger.analyze(testString, new ArrayList<>());
     
     compareTokens (testTokens, tokens);
   }
@@ -149,7 +150,7 @@ public class BasicDecompositionTest extends LuceneTestCase {
     
     StringTagger tagger = getStringTagger();
     
-    List<Token> tokens = tagger.analyze(testString);
+    List<Token> tokens = tagger.analyze(testString, new ArrayList<>());
     
     compareTokens (testTokens, tokens);
   }
@@ -176,7 +177,7 @@ public class BasicDecompositionTest extends LuceneTestCase {
     
     StringTagger tagger = getStringTagger();
     
-    List<Token> tokens = tagger.analyze(testString);
+    List<Token> tokens = tagger.analyze(testString, new ArrayList<>());
     
     compareTokens (testTokens, tokens);
   }
@@ -202,7 +203,7 @@ public class BasicDecompositionTest extends LuceneTestCase {
     
     StringTagger tagger = getStringTagger();
     
-    List<Token> tokens = tagger.analyze(testString);
+    List<Token> tokens = tagger.analyze(testString, new ArrayList<>());
     
     compareTokens (testTokens, tokens);
   }
@@ -241,10 +242,10 @@ public class BasicDecompositionTest extends LuceneTestCase {
 
     assertNotSame(ipadicTagger, naistChasenTagger);
 
-    List<Token> ipadicActualTokens = ipadicTagger.analyze(testString);
+    List<Token> ipadicActualTokens = ipadicTagger.analyze(testString, new ArrayList<>());
     compareTokens (expectedIpadicTokens, ipadicActualTokens);
 
-    List<Token> naistChasenActualTokens = naistChasenTagger.analyze(testString);
+    List<Token> naistChasenActualTokens = naistChasenTagger.analyze(testString, new ArrayList<>());
     compareTokens (expectedNaistChasenTokens, naistChasenActualTokens);
   }
 

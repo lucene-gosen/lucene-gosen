@@ -21,7 +21,7 @@ package net.java.sen;
 
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import net.java.sen.dictionary.Reading;
 import net.java.sen.dictionary.Token;

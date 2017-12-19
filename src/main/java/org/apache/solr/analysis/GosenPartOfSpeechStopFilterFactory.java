@@ -72,7 +72,6 @@ public class GosenPartOfSpeechStopFilterFactory extends TokenFilterFactory imple
 
   public TokenStream create(TokenStream stream) {
     if (stopTags != null) {
-      @SuppressWarnings("deprecation")
       final TokenStream filter = new GosenPartOfSpeechStopFilter(stream, stopTags);
       return filter;
     } else {

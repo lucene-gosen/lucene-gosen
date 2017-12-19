@@ -24,6 +24,7 @@ import static net.java.sen.SenTestUtil.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.List;
 
 import net.java.sen.dictionary.Morpheme;
@@ -62,7 +63,7 @@ public class CommentFilterTest extends LuceneTestCase {
     filter.readRules (new BufferedReader (new StringReader ("< > 記号-注釈")));
     tagger.addFilter (filter);
     
-    List<Token> tokens = tagger.analyze(testString);
+    List<Token> tokens = tagger.analyze(testString, new ArrayList<>());
     
     compareTokens (testTokens, tokens);
   }
@@ -87,7 +88,7 @@ public class CommentFilterTest extends LuceneTestCase {
     filter.readRules (new BufferedReader (new StringReader ("< > 記号-注釈")));
     tagger.addFilter (filter);
     
-    List<Token> tokens = tagger.analyze(testString);
+    List<Token> tokens = tagger.analyze(testString, new ArrayList<>());
     
     compareTokens (testTokens, tokens);
   }
@@ -112,7 +113,7 @@ public class CommentFilterTest extends LuceneTestCase {
     filter.readRules (new BufferedReader (new StringReader ("< > 記号-注釈")));
     tagger.addFilter (filter);
     
-    List<Token> tokens = tagger.analyze(testString);
+    List<Token> tokens = tagger.analyze(testString, new ArrayList<>());
     
     compareTokens (testTokens, tokens);
   }
@@ -138,7 +139,7 @@ public class CommentFilterTest extends LuceneTestCase {
     filter.readRules (new BufferedReader (new StringReader ("< > 記号-注釈")));
     tagger.addFilter (filter);
     
-    List<Token> tokens = tagger.analyze(testString);
+    List<Token> tokens = tagger.analyze(testString, new ArrayList<>());
     
     compareTokens (testTokens, tokens);
   }
@@ -164,7 +165,7 @@ public class CommentFilterTest extends LuceneTestCase {
     filter.readRules (new BufferedReader (new StringReader ("< > 記号-注釈")));
     tagger.addFilter (filter);
     
-    List<Token> tokens = tagger.analyze(testString);
+    List<Token> tokens = tagger.analyze(testString, new ArrayList<>());
     
     compareTokens (testTokens, tokens);
   }
@@ -191,7 +192,7 @@ public class CommentFilterTest extends LuceneTestCase {
     filter.readRules (new BufferedReader (new StringReader ("< > 記号-注釈")));
     tagger.addFilter (filter);
     
-    List<Token> tokens = tagger.analyze(testString);
+    List<Token> tokens = tagger.analyze(testString, new ArrayList<>());
     
     compareTokens (testTokens, tokens);
   }
@@ -218,7 +219,7 @@ public class CommentFilterTest extends LuceneTestCase {
     filter.readRules (new BufferedReader (new StringReader ("《《 》》 記号-注釈")));
     tagger.addFilter (filter);
     
-    List<Token> tokens = tagger.analyze(testString);
+    List<Token> tokens = tagger.analyze(testString, new ArrayList<>());
     
     compareTokens (testTokens, tokens);
   }
