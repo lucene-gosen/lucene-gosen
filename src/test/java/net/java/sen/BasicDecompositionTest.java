@@ -262,4 +262,42 @@ public class BasicDecompositionTest extends LuceneTestCase {
     assertSame(instance, instance2);
   }
 
+  /**
+   * Test the tokenizer that is able to recognize a Latin-1 accented character as a proper Latin character,
+   * which will not handle as a separator.
+   *
+   * @throws IOException
+   */
+  @Test
+  public void testLatinAccentedCharacter() throws IOException {
+    StringTagger tagger = SenFactory.getStringTagger(SenTestUtil.IPADIC_DIR, false);
+
+    String strTest = "mündlichen";
+
+    Token[] expectedTokens = new Token[] {
+      new Token ("mündlichen", 31059, 0, 10, new Morpheme ("未知語", null, null, "*", new String[]{}, new String[]{}, null))
+    };
+
+    List<Token> analyzedTokens = tagger.analyze(strTest);
+    compareTokens (expectedTokens, analyzedTokens);
+  }
+
+  /**
+   * Test the tokenizer that a half-width Katakana character handles properly.
+   *
+   * @throws IOException
+   */
+  @Test
+  public void testKatakanaString() throws IOException {
+    StringTagger tagger = SenFactory.getStringTagger(SenTestUtil.IPADIC_DIR, false);
+
+    String strTest = "ッﾊﾞサ";
+
+    Token[] expectedTokens = new Token[] {
+      new Token ("ッﾊﾞサ", 31059, 0, 4, new Morpheme ("未知語", null, null, "*", new String[]{}, new String[]{}, null))
+    };
+
+    List<Token> analyzedTokens = tagger.analyze(strTest);
+    compareTokens (expectedTokens, analyzedTokens);
+  }
 }

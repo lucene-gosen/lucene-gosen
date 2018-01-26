@@ -28,6 +28,8 @@ import net.java.sen.dictionary.SentenceIterator;
 import net.java.sen.dictionary.Tokenizer;
 import net.java.sen.trie.CharIterator;
 
+import static java.lang.Character.UnicodeBlock.*;
+
 /**
  * A Tokenizer for Japanese text
  */
@@ -61,18 +63,31 @@ public class JapaneseTokenizer extends Tokenizer {
     // TODO: I think we are recalculating this over and over (n^2),
     // which is why the method is so sensitive to performance.
     // maybe instead we should calculate up-front in the sentence?
+    // TODO: We should utilize char.def, which was introduced with MeCab,
+    // that enables us to modify the tokenizer behavior without updating the code.
     if (c <= 0x7F) {
       return (c == ' ' || c == '\t' || c == '\r' || c == '\n') ? SPACE : Character.getType(Character.toLowerCase(c));
     } else if (c >= 0x3040 && c <= 0x309F) {
       return HIRAGANA;
-    } else if (c >= 0x30A0 && c <= 0x30FF && c != 0x30FB) {
+    } else if ((c >= 0x30A0 && c <= 0x30FF && c != 0x30FB) || (c >= 0x31F0 && c <= 0x31FF) || (c >= 0xFF66 && c <= 0xFF9F)) {
       return KATAKANA;
     } else if (c >= 0x4E00 && c <= 0x9FFF) {
       return KANJI;
-    } else if (c >= 0xFF00 && c <= 0xFFEF) {
-      return HALF_WIDTH;
     } else {
-      return OTHER;
+      Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
+      if (ub == LATIN_1_SUPPLEMENT || ub == LATIN_EXTENDED_ADDITIONAL || ub == LATIN_EXTENDED_A || ub == LATIN_EXTENDED_B || ub == LATIN_EXTENDED_C || ub == LATIN_EXTENDED_D) {
+        // Latin Letters
+        return Character.getType(Character.toLowerCase(c));
+      } else if (ub == GREEK || ub == GREEK_EXTENDED) {
+        // Greek
+        return Character.getType(Character.toLowerCase(c));
+      } else if (ub == CYRILLIC || ub == CYRILLIC_EXTENDED_A || ub == CYRILLIC_EXTENDED_B || ub == CYRILLIC_SUPPLEMENTARY) {
+        // Cyrillic
+        return Character.getType(Character.toLowerCase(c));
+      } else {
+        // Symbols
+        return OTHER;
+      }
     }
   }
   
