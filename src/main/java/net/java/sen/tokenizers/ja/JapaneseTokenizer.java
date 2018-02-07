@@ -28,7 +28,18 @@ import net.java.sen.dictionary.SentenceIterator;
 import net.java.sen.dictionary.Tokenizer;
 import net.java.sen.trie.CharIterator;
 
-import static java.lang.Character.UnicodeBlock.*;
+import static java.lang.Character.UnicodeBlock.LATIN_1_SUPPLEMENT;
+import static java.lang.Character.UnicodeBlock.LATIN_EXTENDED_ADDITIONAL;
+import static java.lang.Character.UnicodeBlock.LATIN_EXTENDED_A;
+import static java.lang.Character.UnicodeBlock.LATIN_EXTENDED_B;
+import static java.lang.Character.UnicodeBlock.LATIN_EXTENDED_C;
+import static java.lang.Character.UnicodeBlock.LATIN_EXTENDED_D;
+import static java.lang.Character.UnicodeBlock.GREEK;
+import static java.lang.Character.UnicodeBlock.GREEK_EXTENDED;
+import static java.lang.Character.UnicodeBlock.CYRILLIC;
+import static java.lang.Character.UnicodeBlock.CYRILLIC_EXTENDED_A;
+import static java.lang.Character.UnicodeBlock.CYRILLIC_EXTENDED_B;
+import static java.lang.Character.UnicodeBlock.CYRILLIC_SUPPLEMENTARY;
 
 /**
  * A Tokenizer for Japanese text
