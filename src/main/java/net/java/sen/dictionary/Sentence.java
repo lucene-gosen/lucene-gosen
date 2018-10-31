@@ -25,7 +25,7 @@ import java.util.NoSuchElementException;
 /**
  * A Sentence represents a character array to be morphologically analysed. It
  * supports breaking ignore spans, which prevent certain characters from being
- * considered for tokenisation, and reading constraints which restrict the
+ * considered for tokenization, and reading constraints which restrict the
  * returned morphemes at a certain position to those with the given reading.
  */
 public class Sentence {

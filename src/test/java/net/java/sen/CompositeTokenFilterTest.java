@@ -116,12 +116,12 @@ public class CompositeTokenFilterTest extends LuceneTestCase {
   }
   
   /**
-   * UnkownPOS composite
+   * UnknownPOS composite
    * 
    * @throws IOException 
    */
   @Test
-  public void testUnkownWordCompositeFilter() throws IOException {
+  public void testUnknownWordCompositeFilter() throws IOException {
     String testString = "ニンテンドーDSi";
     
     Token[] testTokens = new Token[] {

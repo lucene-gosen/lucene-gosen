@@ -352,7 +352,7 @@ public class Morpheme {
   /**
    * Builds a lazy proxy onto a part-of-speech stored in a Dictionary
    * 
-   * @param dictionary The dicationary to proxy upon
+   * @param dictionary The dictionary to proxy upon
    * @param partOfSpeechIndex The index into the part-of-speech file
    */
   public Morpheme(Dictionary dictionary, int partOfSpeechIndex) {
