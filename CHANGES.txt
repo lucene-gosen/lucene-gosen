@@ -1,5 +1,23 @@
 lucene-gosen Change Log
 
+========== 7.4.0 / 2018-06-29 ===================================
+
+Important Notice
+
+* https://github.com/lucene-gosen/lucene-gosen/issues/20
+
+New Features & Improvements
+* Refactor unit tests to use the latest internal API to prevent warnings.
+
+Bug Fixes
+
+API Changes
+
+Javadoc Fixes
+
+Others
+
+
 ========== 6.2.1 / 2016-11-03 ===================================
 
 New Features & Improvements

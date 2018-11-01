@@ -25,6 +25,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.List;
 
 import net.java.sen.dictionary.Morpheme;
@@ -65,7 +66,7 @@ public class CompoundWordFilterTest extends LuceneTestCase {
     CompoundWordFilter filter = new CompoundWordFilter (tempCompoundFile.getAbsolutePath());
     tagger.addFilter(filter);
     
-    List<Token> tokens = tagger.analyze(testString);
+    List<Token> tokens = tagger.analyze(testString, new ArrayList<>());
     
     compareTokens (testTokens, tokens);
   }
@@ -99,7 +100,7 @@ public class CompoundWordFilterTest extends LuceneTestCase {
     CompoundWordFilter filter = new CompoundWordFilter (tempCompoundFile.getAbsolutePath());
     tagger.addFilter(filter);
     
-    List<Token> tokens = tagger.analyze(testString);
+    List<Token> tokens = tagger.analyze(testString, new ArrayList<>());
     
     compareTokens (testTokens, tokens);
   }
