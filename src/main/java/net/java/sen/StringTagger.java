@@ -31,7 +31,7 @@ import net.java.sen.dictionary.Viterbi;
 import net.java.sen.filter.StreamFilter;
 
 /**
- * Tokenizes strings
+ * Tokenized strings
  * 
  * <p>See examples.StringTaggerDemo in the Sen source for an example of how to
  * use this class

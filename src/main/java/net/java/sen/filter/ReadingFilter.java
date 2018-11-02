@@ -38,7 +38,7 @@ public interface ReadingFilter {
   /**
    * Resets any sentence specific state held by the filter. The implementing
    * filter decides exactly what state is affected, and may choose, for
-   * instance, to exclude state relating to global or persistant settings
+   * instance, to exclude state relating to global or persistent settings
    */
   public void reset();
 }
