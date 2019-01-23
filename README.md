@@ -45,24 +45,24 @@ Add dependency to pom.xml.
 
 ## Build
 
-You can build the project using Gradle. 
+You can build the project using Gradle. And you should use `gradlew` command.
 
 Build only jar file without dictionary
 
 ```
-$ gradle jar
+$ ./gradlew jar
 ```
 
 Build jar file with IPA dictionary
 
 ```
-$ gradle jarWithIpaDic
+$ ./gradlew jarWithIpaDic
 ```
 
 Build jar file with Naist Chasen dictionary
 
 ```
-$ gradle jarWithNaistChasen
+$ ./gradlew jarWithNaistChasen
 ```
 
 Please note that you should modify the following line in `gradle.properties` if you want to build the Gosen for Solr 7.1 or before. 

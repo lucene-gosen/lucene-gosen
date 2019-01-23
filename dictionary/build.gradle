@@ -41,12 +41,16 @@ def checkExistFile(dictype, fileName) {
     return file.exists()
 }
 
-task downloadNaistChasen(dependsOn: checkBuildStatus) << {
-    download(naistDictype, naistProps)
+task downloadNaistChasen(dependsOn: checkBuildStatus) {
+    doLast {
+        download(naistDictype, naistProps)
+    }
 }
 
-task downloadIpadic(dependsOn: checkBuildStatus) << {
-    download("ipadic", ipadicProps)
+task downloadIpadic(dependsOn: checkBuildStatus) {
+    doLast {
+        download("ipadic", ipadicProps)
+    }
 }
 
 def unpackArchive(dictype, props) {
@@ -62,28 +66,38 @@ def unpackArchive(dictype, props) {
     }
 }
 
-task unpackNaistChasen(dependsOn: downloadNaistChasen) << {
-    unpackArchive(naistDictype, naistProps)
+task unpackNaistChasen(dependsOn: downloadNaistChasen) {
+    doLast {
+        unpackArchive(naistDictype, naistProps)
+    }
 }
 
-task unpackIpadic(dependsOn: downloadIpadic) << {
-    unpackArchive(ipadicDictype, ipadicProps)
+task unpackIpadic(dependsOn: downloadIpadic) {
+    doLast {
+        unpackArchive(ipadicDictype, ipadicProps)
+    }
 }
 
-task clean << {
-    delete ipadicDictype, naistDictype
+task clean {
+    doLast {
+        delete ipadicDictype, naistDictype
+    }
 }
 
 def cleanSen(dictype) {
     delete fileTree(dir: dictype, include: '*.sen')
 }
 
-task cleanCompiledNaistChasen() << {
-    cleanSen(naistDictype)
+task cleanCompiledNaistChasen() {
+    doLast {
+        cleanSen(naistDictype)
+    }
 }
 
-task cleanCompiledIpadic() << {
-    cleanSen(ipadicDictype)
+task cleanCompiledIpadic() {
+    doLast {
+        cleanSen(ipadicDictype)
+    }
 }
 
 def getCompiledDicDir(dictype) {
@@ -116,12 +130,16 @@ def preprocessDic(dictype, props) {
     }
 }
 
-task preprocessNaistChasen(dependsOn: unpackNaistChasen) << {
-    preprocessDic(naistDictype, naistProps)
+task preprocessNaistChasen(dependsOn: unpackNaistChasen) {
+    doLast {
+        preprocessDic(naistDictype, naistProps)
+    }
 }
 
-task preprocessIpadic(dependsOn: unpackIpadic) << {
-    preprocessDic(ipadicDictype, ipadicProps)
+task preprocessIpadic(dependsOn: unpackIpadic) {
+    doLast {
+        preprocessDic(ipadicDictype, ipadicProps)
+    }
 }
 
 /**
@@ -150,12 +168,16 @@ def compileDic(dictype, props) {
     }
 }
 
-task compileNaistChasen(dependsOn: preprocessNaistChasen) << {
-    compileDic(naistDictype, naistProps)
+task compileNaistChasen(dependsOn: preprocessNaistChasen) {
+    doLast {
+        compileDic(naistDictype, naistProps)
+    }
 }
 
-task compileIpadic(dependsOn: preprocessIpadic) << {
-    compileDic(ipadicDictype, ipadicProps)
+task compileIpadic(dependsOn: preprocessIpadic) {
+    doLast {
+        compileDic(ipadicDictype, ipadicProps)
+    }
 }
 
 

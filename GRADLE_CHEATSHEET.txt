@@ -1,10 +1,17 @@
-ant compile -> gradle compileJava
-ant compile-tests -> gradle compileTestJava
-ant javadoc -> gradle javadoc
-ant jar -Ddictype=ipadic -> gradle jarWithIpaDic
-ant jar -Ddictype=naist-chasen -> gradle jarWithNaistChasen
-cd dictionary;ant clean -> gradle :dictionary:clean
-ant dist -> gradle dist
+## Gradle Wrapper
+
+Use Gradle Wrapper (`./gradlew`) instead installed Gradle.
+If you want to upgradel gradle, change gradle/wrapper/gradle-wrapper.properties
+
+## Cheatsheet
+
+ant compile -> ./gradlew compileJava
+ant compile-tests -> ./gradlew compileTestJava
+ant javadoc -> ./gradlew javadoc
+ant jar -Ddictype=ipadic -> ./gradlew jarWithIpaDic
+ant jar -Ddictype=naist-chasen -> ./gradlew jarWithNaistChasen
+cd dictionary;ant clean -> ./gradlew :dictionary:clean
+ant dist -> ./gradlew dist
 
 
 ## For committer
@@ -24,7 +31,7 @@ sonatypeFullname=FULL_NAME
 Then,
 
 ```
-$ gradle uploadArchives
+$ ./gradlew uploadArchives
 ```
 
 the task asks you sshkey password and Sonatype password.

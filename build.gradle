@@ -36,14 +36,18 @@ javadoc {
 defaultTasks 'clean', 'dist'
 
 // Re-build dictionary with user custom dictionaries, without copy
-task rebuildNaistChasenDic() << {
-  println "rebuilding dicitonary"
+task rebuildNaistChasenDic() {
+  doLast {
+    println "rebuilding dicitonary"
+  }
 }
 
 tasks.rebuildNaistChasenDic.dependsOn(compileJava, ":dictionary:cleanCompiledNaistChasen", ":dictionary:compileNaistChasen")
 
-task rebuildIpadicDic() << {
-  println "rebuilding dicitonary"
+task rebuildIpadicDic() {
+  doLast {
+    println "rebuilding dicitonary"
+  }
 }
 
 tasks.rebuildIpadicDic.dependsOn(compileJava, ":dictionary:cleanCompiledIpadic", ":dictionary:compileIpadic")
