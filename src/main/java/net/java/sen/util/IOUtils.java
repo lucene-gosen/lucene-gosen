@@ -38,14 +38,14 @@ public class IOUtils {
   }
 
   /**
-   * Closes all given <tt>Closeable</tt>s.  Some of the
-   * <tt>Closeable</tt>s may be null; they are
+   * Closes all given <code>Closeable</code>s.  Some of the
+   * <code>Closeable</code>s may be null; they are
    * ignored.  After everything is closed, the method either
    * throws the first exception it hit while closing, or
    * completes normally if there were no exceptions.
-   * 
+   *
    * @param objects
-   *          objects to call <tt>close()</tt> on
+   *          objects to call <code>close()</code> on
    */
   public static void close(Closeable... objects) throws IOException {
     Throwable th = null;
@@ -71,11 +71,11 @@ public class IOUtils {
     }
   }
   /**
-   * Closes all given <tt>Closeable</tt>s, suppressing all thrown exceptions.
-   * Some of the <tt>Closeable</tt>s may be null, they are ignored.
-   * 
+   * Closes all given <code>Closeable</code>s, suppressing all thrown exceptions.
+   * Some of the <code>Closeable</code>s may be null, they are ignored.
+   *
    * @param objects
-   *          objects to call <tt>close()</tt> on
+   *          objects to call <code>close()</code> on
    */
   public static void closeWhileHandlingException(Closeable... objects) throws IOException {
     for (Closeable object : objects) {
@@ -100,5 +100,5 @@ public class IOUtils {
       }
     }
   }
-  
+
 }
