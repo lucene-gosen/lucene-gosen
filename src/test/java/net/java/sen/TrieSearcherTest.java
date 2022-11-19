@@ -24,6 +24,7 @@ import java.io.RandomAccessFile;
 import java.nio.IntBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
 import java.util.NoSuchElementException;
 
 import net.java.sen.trie.CharIterator;
@@ -78,7 +79,7 @@ public class TrieSearcherTest extends LuceneTestCase {
     };
     
     TrieBuilder builder = new TrieBuilder(keys, values, 13);
-    File tempFile = File.createTempFile("tst", null);
+    File tempFile = Files.createTempFile("tst", null).toFile();
     builder.build (tempFile.getAbsolutePath());
     
     RandomAccessFile trieFile = new RandomAccessFile(tempFile, "r");
