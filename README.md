@@ -8,11 +8,12 @@
 * group id : com.github.lucene-gosen
 * artifact id : lucene-gosen
 
-There are three types of jar files:
+There are four types of jar files:
 
 * lucene-gosen-\<version>.jar : Only java library, not include dictionary.
 * lucene-gosen-\<version>-ipadic.jar : Java library with IPA dictionary.
-* lucene-gosen-\<version>-naist-chasen.jar : Java library with Naist Chasen dictionary
+* lucene-gosen-\<version>-naist-chasen.jar : Java library with Naist Chasen dictionary.
+* lucene-gosen-\<version>-unidic.jar : Java library with UniDic dictionary (compile from source; see below).
 
 ## Installation With Apache Solr 10.x:
 
@@ -68,6 +69,25 @@ Build jar file with Naist Chasen dictionary
 
 ```
 $ ./gradlew jarWithNaistChasen
+```
+
+Build jar file with UniDic dictionary
+
+First, place the UniDic source directory (e.g. `unidic-cwj-202512_full/`) under `new_dictionary/`
+and set `unidicDictDir` in `gradle.properties` to match. Then:
+
+```
+$ ./gradlew jarWithUnidic
+```
+
+This automatically runs the two-phase preprocessing pipeline
+(`DictionaryTrainer` → `DictionaryCompiler`) before packaging the jar.
+
+To recalculate word/connection costs from the CRF weights in `model.def` (Phase 2):
+
+```
+$ ./gradlew :dictionary:preprocessUnidic -PuseModel=true
+$ ./gradlew jarWithUnidic
 ```
 
 Please note that you should modify the following line in `gradle.properties` if you want to target a different Lucene version.

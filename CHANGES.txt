@@ -12,6 +12,22 @@ New Features & Improvements
 * Migrated to Apache Lucene/Solr 10.4.0.
 * Migrated build to Gradle 9.4.0 with Java Toolchain API (JDK 21).
 * Updated dictionary download URLs to JAIST FTP mirror (OSDN is offline).
+* Added UniDic support: new two-phase preprocessing pipeline converts a
+  UniDic (MeCab format) source directory into compiled .sen binary files.
+  - Phase 1 (DictionaryTrainer / UnidicPreprocessor): reads lex.csv and
+    matrix.def, producing dictionary.csv and connection.csv with raw costs.
+  - Phase 2 (--use-model): optionally recalculates word and connection costs
+    from CRF feature weights in model.def using the MeCab formula
+    cost = round(Σ α[f] × costFactor) where costFactor defaults to 700.
+  - New Gradle tasks: :dictionary:preprocessUnidic, :dictionary:compileUnidic,
+    :dictionary:cleanCompiledUnidic, :dictionary:rebuildUnidicDic.
+  - New jar task: jarWithUnidic, producing lucene-gosen-<version>-unidic.jar.
+* Added net.java.sen.trainer package:
+  - FeatureTemplateParser: parses MeCab feature.def template definitions.
+  - FeatureExtractor: expands UNIGRAM/BIGRAM templates against token feature
+    arrays, handling mandatory (%F[n]) and optional (%F?[n]) placeholders.
+  - ModelWeightIndex: loads CRF alpha weights from model.def.
+  - CostCalculator: converts CRF weights to integer word/connection costs.
 
 API Changes
 
@@ -28,6 +44,7 @@ Others
 * Upgraded de.undercouch.download Gradle plugin to 5.6.0.
 * Replaced deprecated Project.javaexec() with injected ExecOperations
   (required by Gradle 9).
+* Added 68 unit tests covering the new trainer and UnidicPreprocessor classes.
 
 ========== 7.4.0 / 2018-06-29 ===================================
 
