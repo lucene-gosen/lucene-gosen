@@ -189,6 +189,74 @@ task compileIpadic(dependsOn: preprocessIpadic) {
     }
 }
 
+// -----------------------------------------------------------------------
+// UniDic pipeline
+//
+// The UniDic source is already present at unidicDictDir (defined in
+// gradle.properties). No download or unpack step is needed.
+//
+// Tasks:
+//   preprocessUnidic  – runs DictionaryTrainer (Phase 1, and Phase 2 if
+//                        -PuseModel=true is passed on the command line)
+//   compileUnidic     – runs DictionaryCompiler in the compiled-dictionaries
+//                        directory (same mechanism as IPAdic / NAIST Chasen)
+// -----------------------------------------------------------------------
+
+def unidicSourceDir = rootProject.file(unidicDictDir)
+
+task preprocessUnidic {
+    description = 'Converts UniDic lex.csv + matrix.def to dictionary.csv + connection.csv'
+    doLast {
+        def outputDir = project.file(getCompiledDicDir(unidicDictype))
+        outputDir.mkdirs()
+
+        def javaArgs = [
+            '--dict-dir',   unidicSourceDir.absolutePath,
+            '--output-dir', outputDir.absolutePath
+        ]
+
+        // Pass --use-model if the project property is set:
+        //   ./gradlew preprocessUnidic -PuseModel=true
+        // Optionally override cost-factor with -PcostFactor=<n>
+        if (project.hasProperty('useModel') && project.property('useModel').toString().equalsIgnoreCase('true')) {
+            javaArgs += ['--use-model']
+        }
+        if (project.hasProperty('costFactor')) {
+            javaArgs += ['--cost-factor', project.property('costFactor').toString()]
+        }
+
+        execHelper.execOperations.javaexec {
+            mainClass = 'net.java.sen.tools.DictionaryTrainer'
+            classpath rootProject.sourceSets.main.runtimeClasspath
+            args javaArgs
+        }
+    }
+}
+
+tasks.preprocessUnidic.dependsOn(rootProject.tasks.compileJava)
+
+task compileUnidic(dependsOn: preprocessUnidic) {
+    description = 'Compiles preprocessed UniDic CSVs to binary .sen files'
+    doLast {
+        compileDic(unidicDictype, [:])
+    }
+}
+
+task cleanCompiledUnidic {
+    description = 'Removes compiled UniDic .sen files'
+    doLast {
+        cleanSen(unidicDictype)
+    }
+}
+
+task rebuildUnidicDic {
+    description = 'Force-recompiles the UniDic dictionary from source'
+    doLast {
+        println "Rebuilding UniDic dictionary"
+    }
+}
+tasks.rebuildUnidicDic.dependsOn(rootProject.tasks.compileJava, cleanCompiledUnidic, compileUnidic)
+
 
 
 

@@ -75,6 +75,16 @@ task jarWithIpadic(type: Jar) {
 
 tasks.jarWithIpadic.dependsOn(compileJava, ":dictionary:compileIpadic")
 
+task jarWithUnidic(type: Jar) {
+  archiveClassifier = unidicDictype
+  from files(sourceSets.main.output,
+          fileTree("dictionary" + File.separator
+                  + unidicDictype + File.separator + compiledDicDir).include('**/*.sen')
+  )
+}
+
+tasks.jarWithUnidic.dependsOn(compileJava, ":dictionary:compileUnidic")
+
 task javadocJar(type: Jar) {
   archiveClassifier = 'javadoc'
   from javadoc
