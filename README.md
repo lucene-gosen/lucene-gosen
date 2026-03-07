@@ -73,15 +73,15 @@ $ ./gradlew jarWithNaistChasen
 
 Build jar file with UniDic dictionary
 
-First, place the UniDic source directory (e.g. `unidic-cwj-202512_full/`) under `new_dictionary/`
-and set `unidicDictDir` in `gradle.properties` to match. Then:
+The UniDic source archive is downloaded automatically from NINJAL. No manual setup is required:
 
 ```
 $ ./gradlew jarWithUnidic
 ```
 
-This automatically runs the two-phase preprocessing pipeline
-(`DictionaryTrainer` → `DictionaryCompiler`) before packaging the jar.
+This automatically downloads `unidic-cwj-202512_full.zip`, unpacks it, runs the
+two-phase preprocessing pipeline (`DictionaryTrainer` → `DictionaryCompiler`),
+and packages the resulting binary into the jar.
 
 To recalculate word/connection costs from the CRF weights in `model.def` (Phase 2):
 

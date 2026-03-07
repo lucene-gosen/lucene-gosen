@@ -13,14 +13,18 @@ New Features & Improvements
 * Migrated build to Gradle 9.4.0 with Java Toolchain API (JDK 25).
 * Updated dictionary download URLs to JAIST FTP mirror (OSDN is offline).
 * Added UniDic support: new two-phase preprocessing pipeline converts a
-  UniDic (MeCab format) source directory into compiled .sen binary files.
+  UniDic (MeCab format) source archive into compiled .sen binary files.
   - Phase 1 (DictionaryTrainer / UnidicPreprocessor): reads lex.csv and
     matrix.def, producing dictionary.csv and connection.csv with raw costs.
   - Phase 2 (--use-model): optionally recalculates word and connection costs
     from CRF feature weights in model.def using the MeCab formula
     cost = round(Σ α[f] × costFactor) where costFactor defaults to 700.
-  - New Gradle tasks: :dictionary:preprocessUnidic, :dictionary:compileUnidic,
+  - New Gradle tasks mirroring the IPAdic / NAIST Chasen pipeline:
+    :dictionary:downloadUnidic, :dictionary:unpackUnidic,
+    :dictionary:preprocessUnidic, :dictionary:compileUnidic,
     :dictionary:cleanCompiledUnidic, :dictionary:rebuildUnidicDic.
+    The source archive (unidic-cwj-202512_full.zip) is downloaded
+    automatically from NINJAL; configuration is in unidic.properties.
   - New jar task: jarWithUnidic, producing lucene-gosen-<version>-unidic.jar.
 * Added net.java.sen.trainer package:
   - FeatureTemplateParser: parses MeCab feature.def template definitions.
