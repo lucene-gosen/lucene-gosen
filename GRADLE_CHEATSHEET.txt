@@ -15,6 +15,18 @@ ant dist                 -> ./gradlew dist
 
 ## UniDic tasks
 
+Download the UniDic source archive (unidic-cwj-202512_full.zip from NINJAL):
+
+```
+$ ./gradlew :dictionary:downloadUnidic
+```
+
+Unpack the downloaded archive:
+
+```
+$ ./gradlew :dictionary:unpackUnidic
+```
+
 Preprocess UniDic source (lex.csv + matrix.def → dictionary.csv + connection.csv):
 
 ```
@@ -39,13 +51,13 @@ Compile preprocessed CSVs to binary .sen files:
 $ ./gradlew :dictionary:compileUnidic
 ```
 
-Build jar bundling the compiled UniDic:
+Build jar bundling the compiled UniDic (downloads + unpacks + preprocesses if needed):
 
 ```
 $ ./gradlew jarWithUnidic
 ```
 
-Force-recompile UniDic from scratch (clean + preprocess + compile):
+Force-recompile UniDic from scratch (clean .sen files then recompile):
 
 ```
 $ ./gradlew :dictionary:rebuildUnidicDic
@@ -57,8 +69,13 @@ Remove compiled UniDic .sen files only:
 $ ./gradlew :dictionary:cleanCompiledUnidic
 ```
 
-The UniDic source directory is configured by `unidicDictDir` in `gradle.properties`
-(default: `new_dictionary/unidic-cwj-202512_full`).
+Remove all downloaded/unpacked UniDic files:
+
+```
+$ ./gradlew :dictionary:clean
+```
+
+Archive URL and version are configured in dictionary/unidic.properties.
 
 ## For committer
 

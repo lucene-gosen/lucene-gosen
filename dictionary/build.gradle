@@ -11,14 +11,17 @@ abstract class ExecHelper {
 
 ext.execHelper = objects.newInstance(ExecHelper)
 
-Properties naistProps = new Properties()
+Properties naistProps  = new Properties()
 Properties ipadicProps = new Properties()
+Properties unidicProps = new Properties()
 
 task checkBuildStatus() {
     naistProps.load(project.file('naist-chasen.properties').newDataInputStream())
     replaceAllProperties(naistProps)
     ipadicProps.load(project.file('ipadic.properties').newDataInputStream())
     replaceAllProperties(ipadicProps)
+    unidicProps.load(project.file('unidic.properties').newDataInputStream())
+    replaceAllProperties(unidicProps)
 }
 
 def static replaceAllProperties(props) {
@@ -89,7 +92,7 @@ task unpackIpadic(dependsOn: downloadIpadic) {
 
 task clean {
     doLast {
-        delete ipadicDictype, naistDictype
+        delete ipadicDictype, naistDictype, unidicDictype
     }
 }
 
@@ -192,23 +195,44 @@ task compileIpadic(dependsOn: preprocessIpadic) {
 // -----------------------------------------------------------------------
 // UniDic pipeline
 //
-// The UniDic source is already present at unidicDictDir (defined in
-// gradle.properties). No download or unpack step is needed.
-//
-// Tasks:
+// Tasks mirror the IPAdic / NAIST Chasen pipeline:
+//   downloadUnidic    – downloads unidic-cwj-<version>_full.zip
+//   unpackUnidic      – extracts the ZIP archive
 //   preprocessUnidic  – runs DictionaryTrainer (Phase 1, and Phase 2 if
 //                        -PuseModel=true is passed on the command line)
 //   compileUnidic     – runs DictionaryCompiler in the compiled-dictionaries
 //                        directory (same mechanism as IPAdic / NAIST Chasen)
 // -----------------------------------------------------------------------
 
-def unidicSourceDir = rootProject.file(unidicDictDir)
+task downloadUnidic(dependsOn: checkBuildStatus) {
+    doLast {
+        downloadDictionary(unidicDictype, unidicProps)
+    }
+}
 
-task preprocessUnidic {
+task unpackUnidic(dependsOn: downloadUnidic) {
+    doLast {
+        String archiveFileName  = unidicProps.getProperty("dic.archive")
+        String unpackedFileName = unidicProps.getProperty("dic.unpacked.file")
+        if (checkExistFile(unidicDictype, unpackedFileName)) {
+            println "Already unpacked [" + unpackedFileName + "]. skip unpacking"
+        } else {
+            copy {
+                from zipTree(project.file(unidicDictype + File.separator + archiveFileName))
+                into project.file(unidicDictype)
+            }
+        }
+    }
+}
+
+task preprocessUnidic(dependsOn: [unpackUnidic, rootProject.tasks.compileJava]) {
     description = 'Converts UniDic lex.csv + matrix.def to dictionary.csv + connection.csv'
     doLast {
-        def outputDir = project.file(getCompiledDicDir(unidicDictype))
+        def outputDir      = project.file(getCompiledDicDir(unidicDictype))
         outputDir.mkdirs()
+
+        def unidicSourceDir = project.file(
+            unidicDictype + File.separator + unidicProps.getProperty("dic.dir"))
 
         def javaArgs = [
             '--dict-dir',   unidicSourceDir.absolutePath,
@@ -232,8 +256,6 @@ task preprocessUnidic {
         }
     }
 }
-
-tasks.preprocessUnidic.dependsOn(rootProject.tasks.compileJava)
 
 task compileUnidic(dependsOn: preprocessUnidic) {
     description = 'Compiles preprocessed UniDic CSVs to binary .sen files'
