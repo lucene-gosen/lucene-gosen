@@ -22,6 +22,8 @@ import net.java.sen.trainer.ModelWeightIndex;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * CLI entry point for preprocessing a UniDic dictionary into the intermediate
@@ -44,6 +46,12 @@ import java.io.IOException;
  *   --feature-def &lt;path&gt;  Path to feature.def. Default: &lt;dict-dir&gt;/feature.def
  *   --cost-factor &lt;n&gt;     Integer multiplier for float→int cost conversion.
  *                          Default: 700 (from UniDic dicrc)
+ *   --custom-dic  &lt;path&gt;  Path to a custom dictionary CSV file. May be
+ *                          specified multiple times. Each line must have at
+ *                          least 13 columns: surface,leftId,rightId,cost,
+ *                          pos1,pos2,pos3,pos4,cType,cForm,orthBase,pron,
+ *                          pronBase. When --use-model is active, word costs
+ *                          are recomputed from CRF weights.
  * </pre>
  *
  * <h2>Two-phase pipeline</h2>
@@ -70,6 +78,7 @@ public class DictionaryTrainer {
     File    featureFile = null;
     boolean useModel    = false;
     int     costFactor  = 700;
+    List<File> customDicFiles = new ArrayList<>();
 
     for (int i = 0; i < args.length; i++) {
       String arg = args[i];
@@ -85,6 +94,12 @@ public class DictionaryTrainer {
         useModel = true;
       } else if ("--cost-factor".equals(arg)) {
         costFactor = Integer.parseInt(args[++i]);
+      } else if ("--custom-dic".equals(arg)) {
+        File customFile = new File(args[++i]);
+        if (!customFile.isFile()) {
+          throw new IllegalArgumentException("Custom dictionary not found: " + customFile);
+        }
+        customDicFiles.add(customFile);
       } else {
         printUsage();
         throw new IllegalArgumentException("Unknown argument: " + arg);
@@ -134,8 +149,17 @@ public class DictionaryTrainer {
       System.out.println("[DictionaryTrainer] Phase 1 only: using raw costs from lex.csv / matrix.def");
     }
 
+    if (!customDicFiles.isEmpty()) {
+      System.out.println("[DictionaryTrainer] " + customDicFiles.size()
+          + " custom dictionary file(s) will be merged:");
+      for (File f : customDicFiles) {
+        System.out.println("  " + f.getAbsolutePath());
+      }
+    }
+
     // Run preprocessor
-    UnidicPreprocessor preprocessor = new UnidicPreprocessor(dictDir, costCalculator);
+    UnidicPreprocessor preprocessor = new UnidicPreprocessor(
+        dictDir, costCalculator, customDicFiles);
     preprocessor.build(outputDir);
 
     System.out.println("[DictionaryTrainer] Preprocessing complete. "
@@ -149,5 +173,6 @@ public class DictionaryTrainer {
     System.err.println("  --model      <path>     model.def (default: <dict-dir>/model.def)");
     System.err.println("  --feature-def <path>    feature.def (default: <dict-dir>/feature.def)");
     System.err.println("  --cost-factor <n>       float→int scale factor (default: 700)");
+    System.err.println("  --custom-dic  <path>    custom dictionary CSV (may be repeated)");
   }
 }

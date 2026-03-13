@@ -242,11 +242,20 @@ task preprocessUnidic(dependsOn: [unpackUnidic, rootProject.tasks.compileJava]) 
         // Pass --use-model if the project property is set:
         //   ./gradlew preprocessUnidic -PuseModel=true
         // Optionally override cost-factor with -PcostFactor=<n>
+        // Optionally merge custom dictionary entries with -PcustomDic=<path>
+        //   (space-separated for multiple files)
         if (project.hasProperty('useModel') && project.property('useModel').toString().equalsIgnoreCase('true')) {
             javaArgs += ['--use-model']
         }
         if (project.hasProperty('costFactor')) {
             javaArgs += ['--cost-factor', project.property('costFactor').toString()]
+        }
+        if (project.hasProperty('customDic')) {
+            project.property('customDic').toString().split(/\s+/).each { path ->
+                if (!path.isEmpty()) {
+                    javaArgs += ['--custom-dic', path]
+                }
+            }
         }
 
         execHelper.execOperations.javaexec {
