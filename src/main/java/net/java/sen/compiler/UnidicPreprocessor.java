@@ -26,9 +26,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -121,6 +124,18 @@ public class UnidicPreprocessor {
   static final String EOS_POS_KEY     = "文末,*,*,*,*,*,*";
   static final String UNKNOWN_POS_KEY = "名詞,サ変接続,*,*,*,*,*";
 
+  // Custom dictionary column indices (same layout as lex.csv columns 0-12)
+  private static final int CUSTOM_SURFACE   = 0;
+  private static final int CUSTOM_LEFT_ID   = 1;  // placeholder (ignored)
+  private static final int CUSTOM_RIGHT_ID  = 2;  // placeholder (ignored)
+  private static final int CUSTOM_WORD_COST = 3;  // placeholder when using model
+  private static final int CUSTOM_POS1      = 4;  // F[0]
+  private static final int CUSTOM_CFORM     = 9;  // F[5]
+  private static final int CUSTOM_ORTH_BASE = 10;
+  private static final int CUSTOM_PRON      = 11;
+  private static final int CUSTOM_PRON_BASE = 12;
+  private static final int CUSTOM_MIN_COLS  = 13;
+
   private final File dictDir;
 
   /**
@@ -130,13 +145,40 @@ public class UnidicPreprocessor {
   private final CostCalculator costCalculator;
 
   /**
+   * Optional custom dictionary files whose entries are appended to
+   * {@code dictionary.csv} with costs computed by the CRF model.
+   */
+  private final List<File> customDicFiles;
+
+  /**
    * @param dictDir        path to the unidic-cwj-202512_full directory
    * @param costCalculator use CRF weights for costs; pass {@code null} to use
    *                       the raw costs from lex.csv and matrix.def
    */
   public UnidicPreprocessor(File dictDir, CostCalculator costCalculator) {
+    this(dictDir, costCalculator, null);
+  }
+
+  /**
+   * @param dictDir        path to the unidic-cwj-202512_full directory
+   * @param costCalculator use CRF weights for costs; pass {@code null} to use
+   *                       the raw costs from lex.csv and matrix.def
+   * @param customDicFiles optional list of custom dictionary CSV files whose
+   *                       entries are appended to {@code dictionary.csv}.
+   *                       Each line must have at least 13 columns:
+   *                       surface,leftId,rightId,cost,pos1,pos2,pos3,pos4,
+   *                       cType,cForm,orthBase,pron,pronBase.
+   *                       When {@code costCalculator} is non-null, word costs
+   *                       are recomputed from CRF weights; otherwise the raw
+   *                       cost value (column 3) is used.
+   */
+  public UnidicPreprocessor(File dictDir, CostCalculator costCalculator,
+                            List<File> customDicFiles) {
     this.dictDir        = dictDir;
     this.costCalculator = costCalculator;
+    this.customDicFiles = customDicFiles != null
+        ? Collections.unmodifiableList(new ArrayList<>(customDicFiles))
+        : Collections.emptyList();
   }
 
   // --------------------------------------------------------------------------
@@ -251,7 +293,75 @@ public class UnidicPreprocessor {
         writer.write('\n');
         count++;
       }
-      System.out.println("  " + count + " word entries written");
+      System.out.println("  " + count + " word entries from lex.csv");
+
+      // Append custom dictionary entries
+      long customCount = 0;
+      for (File customFile : customDicFiles) {
+        System.out.println("  Processing custom dictionary: " + customFile.getName());
+        try (FileInputStream cfis = new FileInputStream(customFile);
+             CSVParser customParser = new CSVParser(cfis, "UTF-8")) {
+          String[] crow;
+          while ((crow = customParser.nextTokens()) != null) {
+            if (crow.length < CUSTOM_MIN_COLS) continue;
+
+            String surface  = crow[CUSTOM_SURFACE];
+            String pos1     = crow[CUSTOM_POS1];
+            String pos2     = crow[CUSTOM_POS1 + 1];
+            String pos3     = crow[CUSTOM_POS1 + 2];
+            String pos4     = crow[CUSTOM_POS1 + 3];
+            String cType    = crow[CUSTOM_POS1 + 4];
+            String cForm    = crow[CUSTOM_CFORM];
+            String orthBase = crow[CUSTOM_ORTH_BASE];
+            String pron     = crow[CUSTOM_PRON];
+            String pronBase = crow[CUSTOM_PRON_BASE];
+
+            // Build F[] array: F[0]-F[5] from custom entry, F[6]-F[15] = "*"
+            String[] f = new String[F_COUNT];
+            for (int j = 0; j < F_COUNT; j++) {
+              int col = CUSTOM_POS1 + j;
+              f[j] = (col < crow.length) ? crow[col] : "*";
+            }
+
+            // Compute word cost (CRF or raw)
+            int wordCost;
+            if (costCalculator != null) {
+              wordCost = costCalculator.computeWordCost(f, charType(surface));
+            } else {
+              wordCost = parseInt(crow[CUSTOM_WORD_COST]);
+            }
+
+            // Write row (same format as lex.csv entries)
+            writer.write(enquote(surface));
+            writer.write(',');
+            writer.write(Integer.toString(wordCost));
+            writer.write(',');
+            writer.write(escapeField(pos1));
+            writer.write(',');
+            writer.write(escapeField(pos2));
+            writer.write(',');
+            writer.write(escapeField(pos3));
+            writer.write(',');
+            writer.write(escapeField(pos4));
+            writer.write(',');
+            writer.write(escapeField(cType));
+            writer.write(',');
+            writer.write(escapeField(cForm));
+            writer.write(',');
+            writer.write(enquote(orthBase));
+            writer.write(',');
+            writer.write(enquote(pron));
+            writer.write(',');
+            writer.write(enquote(pronBase));
+            writer.write('\n');
+            customCount++;
+          }
+        }
+      }
+      if (customCount > 0) {
+        System.out.println("  " + customCount + " custom word entries appended");
+      }
+      System.out.println("  " + (count + customCount) + " total word entries written");
     }
   }
 

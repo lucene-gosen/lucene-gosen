@@ -18,11 +18,18 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import net.java.sen.trainer.CostCalculator;
+import net.java.sen.trainer.FeatureExtractor;
+import net.java.sen.trainer.FeatureTemplateParser;
+import net.java.sen.trainer.ModelWeightIndex;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.Assert.*;
 
@@ -300,5 +307,122 @@ public class UnidicPreprocessorTest {
   private String readFile(File f) throws Exception {
     byte[] bytes = java.nio.file.Files.readAllBytes(f.toPath());
     return new String(bytes, StandardCharsets.UTF_8);
+  }
+
+  // -----------------------------------------------------------------------
+  // Custom dictionary integration tests
+  // -----------------------------------------------------------------------
+
+  @Test
+  public void testCustomDicEntriesAppendedToDictionaryCsv() throws Exception {
+    File dictDir   = writeFakeDictDir();
+    File outputDir = tmp.newFolder("custom-output");
+
+    // Write a custom dictionary file
+    File customDic = tmp.newFile("custom.csv");
+    writeFile(customDic,
+        "バラク,0,0,0,名詞,固有名詞,人名,名,*,*,バラク,バラク,バラク\n" +
+        "オバマ,0,0,0,名詞,固有名詞,人名,姓,*,*,オバマ,オバマ,オバマ\n");
+
+    UnidicPreprocessor prep = new UnidicPreprocessor(
+        dictDir, null, Collections.singletonList(customDic));
+    prep.build(outputDir);
+
+    String content = readFile(new File(outputDir, "dictionary.csv"));
+    // Original entries still present
+    assertTrue("should contain 東京", content.contains("東京"));
+    assertTrue("should contain 行く", content.contains("行く"));
+    // Custom entries appended
+    assertTrue("should contain バラク", content.contains("バラク"));
+    assertTrue("should contain オバマ", content.contains("オバマ"));
+  }
+
+  @Test
+  public void testCustomDicRawCostUsedWithoutModel() throws Exception {
+    File dictDir   = writeFakeDictDir();
+    File outputDir = tmp.newFolder("custom-raw");
+
+    File customDic = tmp.newFile("custom-raw.csv");
+    writeFile(customDic,
+        "テスト,0,0,5000,名詞,普通名詞,一般,*,*,*,テスト,テスト,テスト\n");
+
+    UnidicPreprocessor prep = new UnidicPreprocessor(
+        dictDir, null, Collections.singletonList(customDic));
+    prep.build(outputDir);
+
+    String content = readFile(new File(outputDir, "dictionary.csv"));
+    // The raw cost 5000 should be used as-is
+    assertTrue("should contain テスト with raw cost",
+        content.contains("テスト,5000,"));
+  }
+
+  @Test
+  public void testCustomDicCostRecomputedWithModel() throws Exception {
+    File dictDir   = writeFakeDictDir();
+    File outputDir = tmp.newFolder("custom-model");
+
+    // Set up a simple CRF model: weight 1.0 for "A:名詞" unigram
+    File featureFile = tmp.newFile("feature.def");
+    writeFile(featureFile, "UNIGRAM A:%F[0]\n");
+
+    File modelFile = tmp.newFile("model.def");
+    writeFile(modelFile, "\n1.0\tA:名詞\n");
+
+    FeatureTemplateParser parser = new FeatureTemplateParser();
+    parser.load(featureFile);
+    ModelWeightIndex model = new ModelWeightIndex();
+    model.load(modelFile);
+    FeatureExtractor extractor = new FeatureExtractor(parser);
+    CostCalculator calc = new CostCalculator(extractor, model, 700);
+
+    File customDic = tmp.newFile("custom-model.csv");
+    // Raw cost is 0, but CRF should compute 700 (1.0 * 700)
+    writeFile(customDic,
+        "バラク,0,0,0,名詞,固有名詞,人名,名,*,*,バラク,バラク,バラク\n");
+
+    UnidicPreprocessor prep = new UnidicPreprocessor(
+        dictDir, calc, Collections.singletonList(customDic));
+    prep.build(outputDir);
+
+    String content = readFile(new File(outputDir, "dictionary.csv"));
+    // CRF-computed cost: round(1.0 * 700) = 700
+    assertTrue("custom entry should have CRF-computed cost 700",
+        content.contains("バラク,700,"));
+  }
+
+  @Test
+  public void testMultipleCustomDicFiles() throws Exception {
+    File dictDir   = writeFakeDictDir();
+    File outputDir = tmp.newFolder("multi-custom");
+
+    File customDic1 = tmp.newFile("custom1.csv");
+    writeFile(customDic1,
+        "バラク,0,0,0,名詞,固有名詞,人名,名,*,*,バラク,バラク,バラク\n");
+
+    File customDic2 = tmp.newFile("custom2.csv");
+    writeFile(customDic2,
+        "オバマ,0,0,0,名詞,固有名詞,人名,姓,*,*,オバマ,オバマ,オバマ\n");
+
+    UnidicPreprocessor prep = new UnidicPreprocessor(
+        dictDir, null, Arrays.asList(customDic1, customDic2));
+    prep.build(outputDir);
+
+    String content = readFile(new File(outputDir, "dictionary.csv"));
+    assertTrue("should contain バラク from first custom dic", content.contains("バラク"));
+    assertTrue("should contain オバマ from second custom dic", content.contains("オバマ"));
+  }
+
+  @Test
+  public void testEmptyCustomDicListProducesSameOutput() throws Exception {
+    File dictDir    = writeFakeDictDir();
+    File outputDir1 = tmp.newFolder("no-custom");
+    File outputDir2 = tmp.newFolder("empty-custom");
+
+    new UnidicPreprocessor(dictDir, null).build(outputDir1);
+    new UnidicPreprocessor(dictDir, null, Collections.<File>emptyList()).build(outputDir2);
+
+    String dict1 = readFile(new File(outputDir1, "dictionary.csv"));
+    String dict2 = readFile(new File(outputDir2, "dictionary.csv"));
+    assertEquals("empty custom list should produce identical output", dict1, dict2);
   }
 }

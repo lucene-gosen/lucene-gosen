@@ -90,6 +90,37 @@ $ ./gradlew :dictionary:preprocessUnidic -PuseModel=true
 $ ./gradlew jarWithUnidic
 ```
 
+To add custom words to the dictionary with CRF-computed costs, prepare a CSV file
+with at least 13 columns per line:
+
+```
+surface,leftId,rightId,cost,pos1,pos2,pos3,pos4,cType,cForm,orthBase,pron,pronBase
+```
+
+For example:
+
+```
+バラク,0,0,0,名詞,固有名詞,人名,名,*,*,バラク,バラク,バラク
+オバマ,0,0,0,名詞,固有名詞,人名,姓,*,*,オバマ,オバマ,オバマ
+```
+
+The `leftId`, `rightId`, and `cost` columns (0,0,0) are placeholders — when
+`-PuseModel=true` is specified, the word cost is recomputed from the CRF model
+based on the POS features. Connection costs are resolved at runtime through
+POS key matching against the existing UniDic connection cost matrix.
+
+```
+$ ./gradlew :dictionary:preprocessUnidic -PuseModel=true -PcustomDic=/path/to/custom.csv
+$ ./gradlew jarWithUnidic
+```
+
+Multiple custom dictionary files can be specified (space-separated):
+
+```
+$ ./gradlew :dictionary:preprocessUnidic -PuseModel=true \
+    -PcustomDic="/path/to/names.csv /path/to/places.csv"
+```
+
 Please note that you should modify the following line in `gradle.properties` if you want to target a different Lucene version.
 
 ```
