@@ -86,9 +86,13 @@ and packages the resulting binary into the jar.
 To recalculate word/connection costs from the CRF weights in `model.def` (Phase 2):
 
 ```
-$ ./gradlew :dictionary:preprocessUnidic -PuseModel=true
-$ ./gradlew jarWithUnidic
+$ ./gradlew jarWithUnidic -PuseModel=true
 ```
+
+The `-PuseModel=true` flag must be passed directly to `jarWithUnidic` (not to a
+separate `preprocessUnidic` step) because `jarWithUnidic` re-runs the preprocessing
+pipeline as a dependency; passing the flag on the final task ensures it is visible
+to all steps in the chain.
 
 Please note that you should modify the following line in `gradle.properties` if you want to target a different Lucene version.
 

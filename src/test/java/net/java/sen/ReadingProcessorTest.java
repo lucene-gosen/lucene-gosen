@@ -19,14 +19,18 @@
 
 package net.java.sen;
 
+import java.util.BitSet;
 import java.util.List;
+import java.util.SortedMap;
 
 import net.java.sen.dictionary.Reading;
+import net.java.sen.dictionary.Token;
 
 import org.apache.lucene.tests.util.LuceneTestCase;
 import org.junit.Test;
 
 import static net.java.sen.SenTestUtil.*;
+import static org.junit.Assert.*;
 
 /**
  * Tests the usage of ReadingProcessor
@@ -288,21 +292,90 @@ public class ReadingProcessorTest extends LuceneTestCase {
   }
   
   /**
-   * Tests a blank constraint on a kanji token 
+   * Tests a blank constraint on a kanji token
    */
   @Test
   public void testBlankConstraintKanji() {
     String testString = "見当";
-    
+
     Reading[] expectedReadings = new Reading[] {};
-    
+
     ReadingProcessor processor = getReadingProcessor();
-    
+
     processor.setText (testString);
     processor.setReadingConstraint(new Reading(0, 2, ""));
-    
+
     List<Reading> readings = processor.getDisplayReadings();
-    
+
     compareReadings (expectedReadings, readings);
+  }
+
+  // -----------------------------------------------------------------------
+  // ReadingResult API (process())
+  // -----------------------------------------------------------------------
+
+  @Test
+  public void testProcessReturnsNonNullResult() {
+    ReadingProcessor processor = getReadingProcessor();
+    processor.setText("東京");
+    ReadingProcessor.ReadingResult result = processor.process();
+    assertNotNull(result);
+  }
+
+  @Test
+  public void testProcessGetTokensNotEmpty() {
+    ReadingProcessor processor = getReadingProcessor();
+    processor.setText("東京");
+    ReadingProcessor.ReadingResult result = processor.process();
+    List<Token> tokens = result.getTokens();
+    assertNotNull(tokens);
+    assertFalse("should have at least one token", tokens.isEmpty());
+  }
+
+  @Test
+  public void testProcessGetBaseReadings() {
+    ReadingProcessor processor = getReadingProcessor();
+    processor.setText("東京");
+    ReadingProcessor.ReadingResult result = processor.process();
+    SortedMap<Integer, Reading> base = result.getBaseReadings();
+    assertNotNull(base);
+  }
+
+  @Test
+  public void testProcessGetDisplayReadings() {
+    ReadingProcessor processor = getReadingProcessor();
+    processor.setText("東京");
+    ReadingProcessor.ReadingResult result = processor.process();
+    SortedMap<Integer, Reading> display = result.getDisplayReadings();
+    assertNotNull(display);
+    assertFalse("東京 should have display readings", display.isEmpty());
+  }
+
+  @Test
+  public void testProcessGetVisibleTokens() {
+    ReadingProcessor processor = getReadingProcessor();
+    processor.setText("東京");
+    ReadingProcessor.ReadingResult result = processor.process();
+    BitSet visible = result.getVisibleTokens();
+    assertNotNull(visible);
+  }
+
+  @Test
+  public void testProcessGetPossibleTokens() {
+    ReadingProcessor processor = getReadingProcessor();
+    processor.setText("東京");
+    ReadingProcessor.ReadingResult result = processor.process();
+    List<Token> possible = result.getPossibleTokens(0);
+    assertNotNull(possible);
+    assertFalse("should find candidates at position 0", possible.isEmpty());
+  }
+
+  @Test
+  public void testProcessKanaInputHasNoDisplayReadings() {
+    ReadingProcessor processor = getReadingProcessor();
+    processor.setText("とうきょう");
+    ReadingProcessor.ReadingResult result = processor.process();
+    // Pure kana: no kanji → display readings should be empty
+    assertTrue(result.getDisplayReadings().isEmpty());
   }
 }

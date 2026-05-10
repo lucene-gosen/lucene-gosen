@@ -1,6 +1,6 @@
 lucene-gosen Change Log
 
-========== 10.4.0 / 2026-05-07 ===================================
+========== 10.4.0 / 2026-05-10 ===================================
 
 Important Notice
 
@@ -33,6 +33,13 @@ New Features & Improvements
   - ModelWeightIndex: loads CRF alpha weights from model.def.
   - CostCalculator: converts CRF weights to integer word/connection costs.
 
+Bug Fixes
+
+* Fixed infinite loop and OutOfMemoryError in UnidicPreprocessor.parseCsvLine()
+  when a CSV line ended without a trailing delimiter. The off-by-one condition
+  (while i <= len) caused the parser to re-enter the quoted-field branch on the
+  NUL character past the end of the string. Fixed to while i < len.
+
 API Changes
 
 * Factory classes updated for Lucene 10 API: package moves from
@@ -49,6 +56,13 @@ Others
 * Replaced deprecated Project.javaexec() with injected ExecOperations
   (required by Gradle 9).
 * Added 68 unit tests covering the new trainer and UnidicPreprocessor classes.
+* Added 43 additional unit tests to improve coverage of existing classes
+  (DictionaryUtil, CToken, IOUtils, CompositeTokenFilter.Rule,
+  ReadingProcessor.ReadingResult), raising instruction coverage to 95.3%
+  and branch coverage to 87.5%.
+* Added JaCoCo coverage gate: build fails if instruction coverage falls
+  below 90% (net.java.sen.compiler and net.java.sen.tools excluded as
+  CLI/compiler entry points not suited to unit testing).
 
 ========== 7.4.0 / 2018-06-29 ===================================
 
