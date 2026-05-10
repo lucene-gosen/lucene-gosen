@@ -1,18 +1,81 @@
 ## Gradle Wrapper
 
 Use Gradle Wrapper (`./gradlew`) instead installed Gradle.
-If you want to upgradel gradle, change gradle/wrapper/gradle-wrapper.properties
+If you want to upgrade Gradle, change gradle/wrapper/gradle-wrapper.properties
 
 ## Cheatsheet
 
-ant compile -> ./gradlew compileJava
-ant compile-tests -> ./gradlew compileTestJava
-ant javadoc -> ./gradlew javadoc
+ant compile              -> ./gradlew compileJava
+ant compile-tests        -> ./gradlew compileTestJava
+ant javadoc              -> ./gradlew javadoc
 ant jar -Ddictype=ipadic -> ./gradlew jarWithIpaDic
 ant jar -Ddictype=naist-chasen -> ./gradlew jarWithNaistChasen
-cd dictionary;ant clean -> ./gradlew :dictionary:clean
-ant dist -> ./gradlew dist
+cd dictionary;ant clean  -> ./gradlew :dictionary:clean
+ant dist                 -> ./gradlew dist
 
+## UniDic tasks
+
+Download the UniDic source archive (unidic-cwj-202512_full.zip from NINJAL):
+
+```
+$ ./gradlew :dictionary:downloadUnidic
+```
+
+Unpack the downloaded archive:
+
+```
+$ ./gradlew :dictionary:unpackUnidic
+```
+
+Preprocess UniDic source (lex.csv + matrix.def → dictionary.csv + connection.csv):
+
+```
+$ ./gradlew :dictionary:preprocessUnidic
+```
+
+Preprocess using CRF weights from model.def (Phase 2):
+
+```
+$ ./gradlew :dictionary:preprocessUnidic -PuseModel=true
+```
+
+Override the cost scaling factor (default 700):
+
+```
+$ ./gradlew :dictionary:preprocessUnidic -PuseModel=true -PcostFactor=500
+```
+
+Compile preprocessed CSVs to binary .sen files:
+
+```
+$ ./gradlew :dictionary:compileUnidic
+```
+
+Build jar bundling the compiled UniDic (downloads + unpacks + preprocesses if needed):
+
+```
+$ ./gradlew jarWithUnidic
+```
+
+Force-recompile UniDic from scratch (clean .sen files then recompile):
+
+```
+$ ./gradlew :dictionary:rebuildUnidicDic
+```
+
+Remove compiled UniDic .sen files only:
+
+```
+$ ./gradlew :dictionary:cleanCompiledUnidic
+```
+
+Remove all downloaded/unpacked UniDic files:
+
+```
+$ ./gradlew :dictionary:clean
+```
+
+Archive URL and version are configured in dictionary/unidic.properties.
 
 ## For committer
 

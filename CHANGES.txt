@@ -1,6 +1,6 @@
 lucene-gosen Change Log
 
-========== 10.4.0 / 2026-05-07 ===================================
+========== 10.4.0 / 2026-05-10 ===================================
 
 Important Notice
 
@@ -12,6 +12,33 @@ New Features & Improvements
 * Migrated to Apache Lucene/Solr 10.4.0.
 * Migrated build to Gradle 9.4.0 with Java Toolchain API (JDK 21).
 * Updated dictionary download URLs to JAIST FTP mirror (OSDN is offline).
+* Added UniDic support: new two-phase preprocessing pipeline converts a
+  UniDic (MeCab format) source archive into compiled .sen binary files.
+  - Phase 1 (DictionaryTrainer / UnidicPreprocessor): reads lex.csv and
+    matrix.def, producing dictionary.csv and connection.csv with raw costs.
+  - Phase 2 (--use-model): optionally recalculates word and connection costs
+    from CRF feature weights in model.def using the MeCab formula
+    cost = round(Σ α[f] × costFactor) where costFactor defaults to 700.
+  - New Gradle tasks mirroring the IPAdic / NAIST Chasen pipeline:
+    :dictionary:downloadUnidic, :dictionary:unpackUnidic,
+    :dictionary:preprocessUnidic, :dictionary:compileUnidic,
+    :dictionary:cleanCompiledUnidic, :dictionary:rebuildUnidicDic.
+    The source archive (unidic-cwj-202512_full.zip) is downloaded
+    automatically from NINJAL; configuration is in unidic.properties.
+  - New jar task: jarWithUnidic, producing lucene-gosen-<version>-unidic.jar.
+* Added net.java.sen.trainer package:
+  - FeatureTemplateParser: parses MeCab feature.def template definitions.
+  - FeatureExtractor: expands UNIGRAM/BIGRAM templates against token feature
+    arrays, handling mandatory (%F[n]) and optional (%F?[n]) placeholders.
+  - ModelWeightIndex: loads CRF alpha weights from model.def.
+  - CostCalculator: converts CRF weights to integer word/connection costs.
+
+Bug Fixes
+
+* Fixed infinite loop and OutOfMemoryError in UnidicPreprocessor.parseCsvLine()
+  when a CSV line ended without a trailing delimiter. The off-by-one condition
+  (while i <= len) caused the parser to re-enter the quoted-field branch on the
+  NUL character past the end of the string. Fixed to while i < len.
 
 API Changes
 
@@ -28,6 +55,14 @@ Others
 * Upgraded de.undercouch.download Gradle plugin to 5.6.0.
 * Replaced deprecated Project.javaexec() with injected ExecOperations
   (required by Gradle 9).
+* Added 68 unit tests covering the new trainer and UnidicPreprocessor classes.
+* Added 43 additional unit tests to improve coverage of existing classes
+  (DictionaryUtil, CToken, IOUtils, CompositeTokenFilter.Rule,
+  ReadingProcessor.ReadingResult), raising instruction coverage to 95.3%
+  and branch coverage to 87.5%.
+* Added JaCoCo coverage gate: build fails if instruction coverage falls
+  below 90% (net.java.sen.compiler and net.java.sen.tools excluded as
+  CLI/compiler entry points not suited to unit testing).
 
 ========== 7.4.0 / 2018-06-29 ===================================
 
