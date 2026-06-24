@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -179,7 +180,7 @@ public class VirtualTupleList implements Closeable {
   public VirtualTupleList() throws IOException {
     File tempFile;
     
-    tempFile = File.createTempFile("_tok", null);
+    tempFile = Files.createTempFile("_tok", null).toFile();
     tempFile.deleteOnExit();
     this.file = new RandomAccessFile(tempFile, "rw");
     this.fos = new FileOutputStream(tempFile);

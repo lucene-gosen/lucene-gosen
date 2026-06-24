@@ -25,6 +25,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class CompoundWordFilterTest extends LuceneTestCase {
   @Test
   public void testCompound1() throws IOException {
     String testCompound = "駆け出し,3649,名詞,一般,*,*,*,*,*,カケダシ,カケダシ,\"駆け,3649,名詞,一般,*,*,*,*,*,カケ,カケ, 出し,3649,名詞,一般,*,*,*,*,*,ダシ,ダシ,\"";
-    File tempCompoundFile = File.createTempFile("tmp", "tmp");
+    File tempCompoundFile = Files.createTempFile("tmp", "tmp").toFile();
     tempCompoundFile.deleteOnExit();
     
     BufferedReader reader = new BufferedReader (new StringReader (testCompound));
@@ -80,7 +81,7 @@ public class CompoundWordFilterTest extends LuceneTestCase {
   public void testCompound2() throws IOException {
     
     String testCompound = "駆け出し,3508,動詞,自立,*,*,五段・サ行,連用形,駆け出す,カケダシ,カケダシ,\"駆け,3649,名詞,一般,*,*,*,*,*,カケ,カケ, 出し,3649,名詞,一般,*,*,*,*,*,ダシ,ダシ,\"";
-    File tempCompoundFile = File.createTempFile("tmp", "tmp");
+    File tempCompoundFile = Files.createTempFile("tmp", "tmp").toFile();
     tempCompoundFile.deleteOnExit();
     
     BufferedReader reader = new BufferedReader (new StringReader (testCompound));
